@@ -1,0 +1,112 @@
+<!-- 
+File Name : pre-loved
+Description : 중고거래 페이지
+Author : 이유민
+
+History
+Date        Author      Status      Description
+2024.11.04  이유민      Created     
+2024.11.04  이유민      Modified    중고거래 페이지 추가
+2024.11.05  이유민      Modified    검색 및 정렬 추가
+-->
+<!-- 모달 -->
+<%- include("../views/components/modal", {modalTitle: '내 물건 등록하기',
+modalBody: 'remakeRequest', modalCloseBtn: '취소', modalCheckBtn: '등록'})%>
+
+<!-- 설명 -->
+<div class="page-box" style="background-color: #f8d7da; padding-top: 182px; padding-bottom: 182px">
+  <div style="margin-right: 12px">
+    <p class="page-theme">
+      내 이웃과 나누는<br />
+      믿음 있는 거래
+    </p>
+    <p class="page-detail" style="margin-top: 58px">
+      가까운 이웃들과 따뜻하고<br />
+      신뢰할 수 있는 거래를 경험해보세요.
+    </p>
+    <button type="button" class="global-btn" style="width: 174px" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      내 물건 등록하기
+    </button>
+  </div>
+  <img src="/assets/images/pre-loved.svg" style="height: 390px; width: auto; padding-top: 8px" />
+</div>
+
+<!-- 검색 및 정렬 -->
+<div style="
+    display: flex;
+    justify-content: center;
+    margin-top: 41px;
+    margin-bottom: 41px;
+  ">
+  <div class="input-group mb-3" style="width: 437px; margin-right: 30px">
+    <input type="text" class="form-control" id="form-select" placeholder="물품을 검색해보세요." aria-label="Username" />
+  </div>
+
+  <div>
+    <select class="form-select" id="form-select" aria-label="Default select example" style="width: 110px; text-align: center">
+      <option selected value="이름순">이름순</option>
+      <option value="최신순">최신순</option>
+    </select>
+  </div>
+</div>
+
+<!-- 카드 -->
+<div class="card-contents">
+  <a href="/pre-loved/click">
+    <div class="card" style="width: 18rem">
+      <img src="/assets/images/pre-loved-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
+      <div class="card-body">
+        <h5 class="card-title">컨버스 척테일러 올스타 클래식 블랙</h5>
+        <p class="card-text">25,000원</p>
+      </div>
+    </div>
+  </a>
+  <a href="/pre-loved/click">
+    <div class="card" style="width: 18rem">
+      <img src="/assets/images/pre-loved-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
+      <div class="card-body">
+        <h5 class="card-title">컨버스 척테일러 올스타 클래식 블랙</h5>
+        <p class="card-text">25,000원</p>
+      </div>
+    </div>
+  </a>
+  <a href="/pre-loved/click">
+    <div class="card" style="width: 18rem">
+      <img src="/assets/images/pre-loved-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
+      <div class="card-body">
+        <h5 class="card-title">컨버스 척테일러 올스타 클래식 블랙</h5>
+        <p class="card-text">25,000원</p>
+      </div>
+    </div>
+  </a>
+</div>
+
+<div class="card-contents" style="margin-top: 47px">
+  <a href="/pre-loved/click">
+    <div class="card" style="width: 18rem">
+      <img src="/assets/images/pre-loved-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
+      <div class="card-body">
+        <h5 class="card-title">컨버스 척테일러 올스타 클래식 블랙</h5>
+        <p class="card-text">25,000원</p>
+      </div>
+    </div>
+  </a>
+  <a href="/pre-loved/click">
+    <div class="card" style="width: 18rem">
+      <img src="/assets/images/pre-loved-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
+      <div class="card-body">
+        <h5 class="card-title">컨버스 척테일러 올스타 클래식 블랙</h5>
+        <p class="card-text">25,000원</p>
+      </div>
+    </div>
+  </a>
+  <a href="/pre-loved/click">
+    <div class="card" style="width: 18rem">
+      <img src="/assets/images/pre-loved-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
+      <div class="card-body">
+        <h5 class="card-title">컨버스 척테일러 올스타 클래식 블랙</h5>
+        <p class="card-text">25,000원</p>
+      </div>
+    </div>
+  </a>
+</div>

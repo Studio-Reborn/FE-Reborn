@@ -1,0 +1,57 @@
+<!-- 
+File Name : modal
+Description : 모달 컴포넌트
+Author : 이유민
+
+History
+Date        Author      Status      Description
+2024.11.05  이유민      Created     
+2024.11.05  이유민      Modified    모달 컴포넌트 추가
+-->
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 623px; width: 100%">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel" style="font-family: LINESeed-BD; font-size: 16px">
+          <%= modalTitle %>
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <% if (modalBody === 'remakeRequest') { %>
+        <div class="input-group mb-3" style="width: 586px">
+          <input type="text" class="form-control" id="form-select" placeholder="원하는 제품을 요청해주세요." aria-label="nickname" />
+        </div>
+        <% } else { %> <%= modalBody %> <% } %>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="font-family: LINESeed-BD; font-size: 16px; padding: 8px 15px;">
+          <%= modalCloseBtn %>
+        </button>
+        <button type="button" class="global-btn" id="submitBtn" style="font-family: LINESeed-BD; font-size: 16px">
+          <%= modalCheckBtn %>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document
+    .getElementById("submitBtn")
+    .addEventListener("click", function() {
+      // 모달 닫기
+      var modal = bootstrap.Modal.getInstance(document.getElementById("exampleModal"));
+      modal.hide();
+
+      var toast = new bootstrap.Toast(
+        document.getElementById("productRequestToast")
+      );
+      toast.show();
+    });
+</script>
+
+<%- include("../views/components/toast", 
+  {toastMessage: "제품 요청이 접수되었습니다. 감사합니다!"}) %>

@@ -1,0 +1,78 @@
+<!-- 
+File Name : auth
+Description : 회원가입 화면
+Author : 이유민
+
+History
+Date        Author      Status      Description
+2024.11.05  이유민      Created     
+2024.11.05  이유민      Modified    회원가입 추가
+-->
+<div style="
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+  ">
+  <!-- 로고 -->
+  <div style="display: flex; justify-content: center">
+    <a href="/">
+      <img src="/assets/images/Reborn_logo2.svg" style="width: 472px; height: auto" alt="Reborn" />
+    </a>
+  </div>
+
+  <div style="
+      border: 1px solid #adb5bd;
+      padding-top: 25px;
+      padding-bottom: 25px;
+      width: 430px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border-radius: 20px;
+    ">
+    <!-- 닉네임 입력 -->
+    <div class="input-group mb-3" style="width: 373px">
+      <input type="text" class="form-control" id="form-select" placeholder="닉네임" aria-label="nickname" />
+    </div>
+
+    <!-- 이메일 입력 -->
+    <div class="input-group mb-3" style="width: 373px">
+      <input type="text" class="form-control" id="form-select" placeholder="이메일" aria-label="email" />
+    </div>
+
+    <!-- 비밀번호 입력 -->
+    <div class="input-group mb-3" style="width: 373px">
+      <input type="password" class="form-control" id="form-select" placeholder="비밀번호" aria-label="password" />
+    </div>
+
+    <!-- 비밀번호 확인 입력 -->
+    <div class="input-group mb-3" style="width: 373px">
+      <input type="password" class="form-control" id="form-select" placeholder="비밀번호 확인" aria-label="password-check" />
+    </div>
+
+    <!-- 경고문구 (없을 때는 display: none으로) -->
+    <div style="display: block">
+      <p style="color: #e35d6a; font-family: LINESeed-BD; font-size: 14px">
+        이미 사용 중인 이메일 주소입니다. 다른 이메일을 입력해 주세요.
+      </p>
+    </div>
+
+    <!-- 회원가입 버튼 -->
+    <div>
+      <button type="button" class="global-btn" style="width: 373px">
+        회원가입
+      </button>
+    </div>
+  </div>
+
+  <!-- 칸 아래 -->
+  <div class="login-texts" style="display: flex; padding-top: 18px">
+    <div>
+      <a href="/login">로그인 화면으로 돌아가기</a>
+    </div>
+  </div>
+</div>

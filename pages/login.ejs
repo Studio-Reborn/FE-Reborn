@@ -1,0 +1,65 @@
+<!-- 
+File Name : login
+Description : 로그인 화면
+Author : 이유민
+
+History
+Date        Author      Status      Description
+2024.11.05  이유민      Created     
+2024.11.05  이유민      Modified    로그인 추가
+-->
+<div style="
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+  ">
+  <!-- 로고 -->
+  <div style="display: flex; justify-content: center">
+    <a href="/">
+      <img src="/assets/images/Reborn_logo2.svg" style="width: 472px; height: auto" alt="Reborn" />
+    </a>
+  </div>
+
+  <div style="
+      border: 1px solid #adb5bd;
+      padding-top: 25px;
+      padding-bottom: 25px;
+      width: 430px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border-radius: 20px;
+    ">
+    <!-- 이메일 입력 -->
+    <div class="input-group mb-3" style="width: 373px">
+      <input type="text" class="form-control" id="form-select" placeholder="이메일" aria-label="email" />
+    </div>
+
+    <!-- 비밀번호 입력 -->
+    <div class="input-group mb-3" style="width: 373px">
+      <input type="password" class="form-control" id="form-select" placeholder="비밀번호" aria-label="password" />
+    </div>
+
+    <!-- 로그인 버튼 -->
+    <div>
+      <button type="button" class="global-btn" style="width: 373px">
+        로그인
+      </button>
+    </div>
+  </div>
+
+  <!-- 칸 아래 -->
+  <div class="login-texts" style="display: flex; padding-top: 18px">
+    <div>
+      <a href="/auth">회원가입</a>
+    </div>
+    <div style="padding-left: 30px; padding-right: 30px" onclick="alert('아직 구현 안 됨')">
+      <a href="">비밀번호 찾기</a>
+    </div>
+    <div onclick="alert('아직 구현 안 됨')"><a href="">아이디 찾기</a></div>
+  </div>
+</div>

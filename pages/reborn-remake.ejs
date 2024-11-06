@@ -1,0 +1,111 @@
+<!-- 
+File Name : reborn-remake
+Description : 리본 리메이크 페이지
+Author : 이유민
+
+History
+Date        Author      Status      Description
+2024.11.04  이유민      Created     
+2024.11.04  이유민      Modified    리본 리메이크 페이지 추가
+-->
+<div class="page-box" style="background-color: #e2d9f3; padding-top: 182px; padding-bottom: 182px">
+  <div style="margin-right: 12px">
+    <p class="page-theme">
+      새로운 가치를 담은<br />
+      특별한 리메이크
+    </p>
+    <p class="page-detail" style="margin-top: 58px">
+      보낸 물품이 새롭게 변신해 돌아오는,<br />
+      특별한 가치를 더하는 리메이크 경험을 제공합니다.
+    </p>
+    <button type="button" class="global-btn" style="width: 174px" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      맞츰 리메이크 추천
+    </button>
+  </div>
+  <img src="/assets/images/reborn-remake.svg" style="height: 341px; width: auto; padding-bottom: 8px; margin-left: 8px" />
+</div>
+
+<div style="
+    display: flex;
+    justify-content: center;
+    margin-top: 41px;
+    margin-bottom: 41px;
+  ">
+  <p style="font-family: LINESeed-BD; font-size: 40px">
+    원하는 제품을 선택해 보세요!
+  </p>
+</div>
+
+<!-- 카드 -->
+<div class="card-contents">
+  <div class="card" style="width: 18rem">
+    <img src="/assets/images/reborn-remake-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
+    <div class="card-body">
+      <h5 class="card-title">리사이클링 에코백</h5>
+      <p class="card-text">천, 플라스틱, 종이 등</p>
+      <p class="card-text" style="color: #6c757d">7,000원</p>
+    </div>
+  </div>
+  <div class="card" style="width: 18rem">
+    <img src="/assets/images/reborn-remake-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
+    <div class="card-body">
+      <h5 class="card-title">리사이클링 에코백</h5>
+      <p class="card-text">천, 플라스틱, 종이 등</p>
+      <p class="card-text" style="color: #6c757d">7,000원</p>
+    </div>
+  </div>
+  <div class="card" style="width: 18rem">
+    <img src="/assets/images/reborn-remake-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
+    <div class="card-body">
+      <h5 class="card-title">리사이클링 에코백</h5>
+      <p class="card-text">천, 플라스틱, 종이 등</p>
+      <p class="card-text" style="color: #6c757d">7,000원</p>
+    </div>
+  </div>
+</div>
+
+<div class="card-contents" style="margin-top: 47px">
+  <div class="card" style="width: 18rem">
+    <img src="/assets/images/reborn-remake-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
+    <div class="card-body">
+      <h5 class="card-title">리사이클링 에코백</h5>
+      <p class="card-text">천, 플라스틱, 종이 등</p>
+      <p class="card-text" style="color: #6c757d">7,000원</p>
+    </div>
+  </div>
+  <div class="card" style="width: 18rem">
+    <img src="/assets/images/reborn-remake-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
+    <div class="card-body">
+      <h5 class="card-title">리사이클링 에코백</h5>
+      <p class="card-text">천, 플라스틱, 종이 등</p>
+      <p class="card-text" style="color: #6c757d">7,000원</p>
+    </div>
+  </div>
+  <div class="card" style="width: 18rem">
+    <img src="/assets/images/reborn-remake-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
+    <div class="card-body">
+      <h5 class="card-title">리사이클링 에코백</h5>
+      <p class="card-text">천, 플라스틱, 종이 등</p>
+      <p class="card-text" style="color: #6c757d">7,000원</p>
+    </div>
+  </div>
+</div>
+
+<div style="
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 41px;
+  ">
+  <p style="font-family: LINESeed-BD; font-size: 40px">
+    원하는 제품을 만들어 달라고 요청해 보세요!
+  </p>
+
+  <button type="button" class="global-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    요청하기
+  </button>
+</div>
+
+<!-- 모달 -->
+<%- include("../views/components/modal", {modalTitle: '제품 요청하기',
+modalBody: 'remakeRequest', modalCloseBtn: '취소', modalCheckBtn: '제출'})%>

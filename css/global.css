@@ -1,0 +1,176 @@
+@font-face {
+  font-family: "LINESeed-BD";
+  src: url("/assets/fonts/LINESeedKR-Bd.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "LINESeed-RG";
+  src: url("/assets/fonts/LINESeedKR-Rg.ttf") format("truetype");
+}
+
+header {
+  font-family: "LINESeed-BD";
+}
+
+footer {
+  max-width: 800px;
+  margin: 0 auto;
+  bottom: 0px;
+  position: static;
+  left: 0;
+  right: 0;
+  text-align: left;
+  padding-top: 49px;
+  padding-bottom: 49px;
+  font-family: LINESeed-RG;
+}
+
+input {
+  font-family: LINESeed-RG;
+}
+
+a {
+  text-decoration-line: none;
+}
+
+.nav-link.active {
+  color: #6bbc1a;
+}
+
+.login-btn {
+  background-color: white; /* 원하는 배경색 */
+  color: black; /* 텍스트 색상 */
+  border: 1px solid #dedede;
+  border-radius: 6px; /* 둥근 모서리 */
+  font-size: 19px; /* 글자 크기 */
+}
+
+.login-btn:hover {
+  background-color: #20c997; /* 호버 시 색상 변화 */
+  color: white;
+}
+
+.sort-btn {
+  background-color: #dee2e6;
+  color: black;
+  font-size: 19px;
+}
+
+.sort-btn:hover {
+  background-color: #20c997;
+  color: white;
+}
+
+.page-box {
+  height: 368px;
+  display: flex; /* Flexbox 사용 */
+  align-items: center; /* 수직 정렬 */
+  justify-content: center; /* 세로 방향 중앙 정렬 */
+}
+
+.page-theme {
+  font-family: "LINESeed-BD";
+  font-size: 37px;
+}
+
+.page-detail {
+  font-family: "LINESeed-RG";
+  font-size: 18px;
+}
+
+#form-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #a3cfbb;
+  border: 1px solid #479f76;
+}
+
+.card-title {
+  font-family: LINESeed-BD;
+}
+
+.card-text {
+  font-family: LINESeed-RG;
+}
+
+.card-contents {
+  display: flex;
+  gap: 54px;
+  align-items: center; /* 수직 정렬 */
+  justify-content: center; /* 세로 방향 중앙 정렬 */
+}
+
+.card {
+  cursor: pointer;
+}
+
+.global-btn {
+  background: #479f76;
+  color: white;
+  font-family: "LINESeed-BD";
+  font-size: 14px;
+  border-radius: 6px; /* 둥근 모서리 */
+  padding: 8px 15px; /* 버튼 패딩 추가 (부트스트랩 기본값) */
+  border: 1px solid transparent; /* 버튼의 테두리 없애기 */
+  cursor: pointer; /* 마우스를 올렸을 때 포인터로 변경 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+  display: inline-block; /* 버튼 형태로 */
+  vertical-align: middle; /* 세로 중앙 정렬 */
+  user-select: none; /* 텍스트 선택 방지 */
+}
+
+.global-btn:hover {
+  background: #198754;
+  color: white;
+  text-decoration: none; /* hover 시 텍스트에 밑줄이 생기지 않도록 */
+}
+
+.global-btn:active {
+  background: #198754;
+  color: white;
+  box-shadow: none;
+}
+
+.global-btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.login-texts div a {
+  color: #adb5bd;
+  font-family: "LINESeed-BD";
+  font-size: 14px;
+  text-decoration-line: none;
+}
+
+.message {
+  display: flex;
+  padding: 8px 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+  font-size: 15px;
+  font-family: "LINESeed-RG";
+  max-width: 70%; /* 최대 너비 설정 */
+  width: fit-content; /* 콘텐츠 크기에 맞게 너비 조정 */
+  word-wrap: break-word; /* 긴 텍스트가 자동으로 줄바꿈 되도록 */
+  flex-wrap: wrap; /* 메시지가 여러 줄로 나눠질 수 있도록 */
+}
+
+.message.sent {
+  background-color: #f7f3e9;
+  align-self: flex-end;
+  text-align: left;
+  margin-left: auto;
+  margin-right: 20px;
+}
+
+.message.received {
+  background-color: #b0e0e6;
+  align-self: flex-start;
+  text-align: left;
+  margin-right: auto;
+  margin-left: 20px;
+}
+
+.message p {
+  margin: 0;
+}

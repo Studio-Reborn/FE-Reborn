@@ -1,0 +1,97 @@
+<!-- 
+File Name : pre-loved-click
+Description : 중고거래 상품 조회
+Author : 이유민
+
+History
+Date        Author      Status      Description
+2024.11.05  이유민      Created     
+2024.11.05  이유민      Modified    중고거래 상품 조회 추가
+-->
+<!-- 상품 이미지 -->
+<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 21px">
+  <img src="/assets/icons/caret-right.svg" style="margin-right: 7px; transform: rotate(180deg);">
+  <img src="/assets/images/eco-market-product.svg" style="width: 500px; heigth: 500px; object-fit: cover; border-radius: 20px; margin-top: 37px;">
+  <img src="/assets/icons/caret-right.svg" style="margin-left: 7px">
+</div>
+
+<!-- 프로필 및 설명 -->
+<div style="max-width: 738px; margin: 0 auto;">
+  <div style="display: flex; align-items: center; margin-bottom: 9px">
+    <img src="/assets/images/eco-market-example.svg" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; margin-right: 10px;">
+    <p style="font-family: LINESeed-BD; font-size: 20px; margin: 0;">만수마켓</p>
+  </div>
+
+  <hr id="gray-500" style="width: 738px; margin: 0; padding-bottom: 16px" />
+
+  <!-- 상품 설명 -->
+  <div>
+    <div style="padding-bottom: 9px; font-size: 20px; font-family: LINESeed-BD">
+      구름 모양 코스터
+    </div>
+    <div style="padding-bottom: 9px; font-size: 15px; font-family: LINESeed-BD">
+      30,000원
+    </div>
+    <div style="padding-bottom: 9px; font-size: 15px; font-family: LINESeed-RG">
+      이 특별한 코스터는 버려지는 플라스틱 우유통을 재활용하여 만든 친환경 제품이에요.<br />
+      <br />
+      플라스틱 우유통을 이용했다보니 일반 코스터에 비해 내구성이 강해 보다 더 오래 사용할 수 있어요.<br />
+      또한, 일반적인 리사이클링 코스터처럼 원 모양이 아닌 구름 모양으로 제작해 방 꾸밀 때 사용하는 소품으로도 이용 가능합니다!<br />
+      <br />
+      코스터 두께는 두 가지로 취향에 맞게 선택 가능합니다.<br />
+      <br />
+      일상의 소품이지만, 환경을 생각한 착한 소비로 작은 변화를 만들어 보세요.<br />
+      만수마켓과 함께 지구를 위한 지속 가능한 생활을 응원합니다😁
+    </div>
+    <div style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG">
+      관심 17
+    </div>
+  </div>
+</div>
+
+<!-- 하단바 -->
+<nav class="navbar navbar-light bg-light" style="position: fixed; bottom: 0; width: 100%; display: flex; font-family: LINESeed-RG;">
+  <!-- 총 금액-->
+  <div style="padding-left: 130px; font-family: LINESeed-BD; font-size: 20px;">총 금액 30,000원</div>
+
+  <!-- 옵션 선택 -->
+  <div style="position: absolute; left: 50%; transform: translateX(-50%); z-index: 1;">
+    <select class="form-select" id="form-select" aria-label="Default select example" style="width: 507px;">
+      <option selected value="option">옵션 선택하기</option>
+      <option value="최신순">최신순</option>
+    </select>
+  </div>
+
+  <!-- 수량 선택 및 결제 버튼 컨테이너 -->
+  <div style="display: flex; align-items: center; padding-right: 130px; gap: 30px;">
+    <!-- 수량 선택 컴포넌트 -->
+    <div class="input-group" style="width: 120px;">
+      <button class="btn btn-outline-secondary" type="button" onclick="decreaseQuantity()">-</button>
+      <input type="text" class="form-control text-center" id="quantityInput" value="1" readonly />
+      <button class="btn btn-outline-secondary" type="button" onclick="increaseQuantity()">+</button>
+    </div>
+
+    <!-- 결제 버튼 -->
+    <a href="/payments">
+      <button type="button" class="global-btn" style="width: 77px;">결제</button>
+    </a>
+  </div>
+</nav>
+
+<script>
+  function decreaseQuantity() {
+    const quantityInput = document.getElementById("quantityInput");
+    let quantity = parseInt(quantityInput.value, 10);
+    if (quantity > 1) {
+      quantity--;
+      quantityInput.value = quantity;
+    }
+  }
+
+  function increaseQuantity() {
+    const quantityInput = document.getElementById("quantityInput");
+    let quantity = parseInt(quantityInput.value, 10);
+    quantity++;
+    quantityInput.value = quantity;
+  }
+</script>
