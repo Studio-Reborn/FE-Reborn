@@ -18,66 +18,66 @@ app.get("/", (req, res) => {
   res.render("index", { title: "홈", currentPage: "home" });
 });
 app.get("/login", (req, res) => {
-  res.render("login", { currentPage: "login" });
+  res.render("../pages/auth/login", { currentPage: "login" });
 });
 app.get("/auth", (req, res) => {
-  res.render("auth", { currentPage: "auth" });
+  res.render("../pages/auth/auth", { currentPage: "auth" });
 });
 app.get("/pre-loved", (req, res) => {
-  res.render("pre-loved", { currentPage: "pre-loved" });
+  res.render("../pages/pre-loved/pre-loved", { currentPage: "pre-loved" });
 });
 app.get("/pre-loved/click", (req, res) => {
-  res.render("pre-loved-click", {
+  res.render("../pages/pre-loved/pre-loved-click", {
     currentPage: "pre-loved",
   });
 });
 app.get("/eco-market", (req, res) => {
-  res.render("eco-market", {
+  res.render("../pages/eco-market/eco-market", {
     currentPage: "eco-market",
   });
 });
 app.get("/eco-market/click", (req, res) => {
-  res.render("eco-market-click", {
+  res.render("../pages/eco-market/eco-market-click", {
     currentPage: "eco-market",
   });
 });
 app.get("/eco-market/product", (req, res) => {
-  res.render("eco-market-product", {
+  res.render("../pages/eco-market/eco-market-product", {
     currentPage: "eco-market",
   });
 });
 app.get("/reborn-remake", (req, res) => {
-  res.render("reborn-remake", {
+  res.render("../pages/reborn-remake/reborn-remake", {
     currentPage: "reborn-remake",
   });
 });
 app.get("/payments", (req, res) => {
-  res.render("payments", {
+  res.render("../pages/payments/payments", {
     currentPage: "payments",
   });
 });
 app.get("/payments/success", (req, res) => {
-  res.render("payments-success", {
+  res.render("../pages/payments/payments-success", {
     currentPage: "payments",
   });
 });
 app.get("/mypage", (req, res) => {
-  res.render("mypage", {
+  res.render("../pages/mypage/mypage", {
     currentPage: "mypage",
   });
 });
 app.get("/mypage/update", (req, res) => {
-  res.render("mypage-update", {
+  res.render("../pages/mypage/mypage-update", {
     currentPage: "mypage",
   });
 });
 app.get("/chatting", (req, res) => {
-  res.render("chatting", {
+  res.render("../pages/chatting/chatting", {
     currentPage: "chatting",
   });
 });
 app.get("/chatting/detail", (req, res) => {
-  res.render("chatting-detail", {
+  res.render("../pages/chatting/chatting-detail", {
     currentPage: "chatting",
   });
 });
