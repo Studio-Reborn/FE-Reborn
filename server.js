@@ -12,7 +12,7 @@ app.set("views", ["./views", "./pages"]);
 
 app.use("/css", express.static(path.join(__dirname, "css")));
 app.use("/assets", express.static(path.join(__dirname, "assets")));
-app.use(express.static(path.join(__dirname, "public")));
+app.use("/js", express.static(path.join(__dirname, "js")));
 
 app.get("/", (req, res) => {
   res.render("index", { title: "홈", currentPage: "home" });

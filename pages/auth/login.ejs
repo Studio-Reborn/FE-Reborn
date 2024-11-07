@@ -7,6 +7,7 @@ History
 Date        Author      Status      Description
 2024.11.05  이유민      Created     
 2024.11.05  이유민      Modified    로그인 추가
+2024.11.07  이유민      Modified    API 연동
 -->
 <div style="
     display: flex;
@@ -35,18 +36,24 @@ Date        Author      Status      Description
       border-radius: 20px;
     ">
     <!-- 이메일 입력 -->
-    <div class="input-group mb-3" style="width: 373px">
-      <input type="text" class="form-control" id="form-select" placeholder="이메일" aria-label="email" />
+    <div class="form-floating mb-3" style="width: 373px">
+      <input type="email" class="form-control" id="email" placeholder="이메일">
+      <label for="floatingInput">이메일</label>
     </div>
 
     <!-- 비밀번호 입력 -->
-    <div class="input-group mb-3" style="width: 373px">
-      <input type="password" class="form-control" id="form-select" placeholder="비밀번호" aria-label="password" />
+    <div class="form-floating mb-3" style="width: 373px">
+      <input type="password" class="form-control" id="password" placeholder="비밀번호">
+      <label for="floatingInput">비밀번호</label>
     </div>
+
+    <!-- 경고문구 -->
+    <p style="color: #e35d6a; font-family: LINESeed-BD; font-size: 14px; block: none" id="warningText">
+    </p>
 
     <!-- 로그인 버튼 -->
     <div>
-      <button type="button" class="global-btn" style="width: 373px">
+      <button type="button" class="global-btn" style="width: 373px" id="loginBtn">
         로그인
       </button>
     </div>
@@ -63,3 +70,5 @@ Date        Author      Status      Description
     <div onclick="alert('아직 구현 안 됨')"><a href="">아이디 찾기</a></div>
   </div>
 </div>
+
+<script src="/js/auth/loginHandler.js"></script>
