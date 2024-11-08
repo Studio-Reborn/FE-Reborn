@@ -8,6 +8,8 @@ Date        Author      Status      Description
 2024.11.04  이유민      Created     
 2024.11.04  이유민      Modified    리본 리메이크 페이지 추가
 2024.11.07  이유민      Modified    모달 script 추가
+2024.11.08  이유민      Modified    리본 리메이크 API 연동
+2024.11.08  이유민      Modified    토스트 메시지 추가
 -->
 <div class="page-box" style="background-color: #e2d9f3; padding-top: 182px; padding-bottom: 182px">
   <div style="margin-right: 12px">
@@ -37,59 +39,7 @@ Date        Author      Status      Description
   </p>
 </div>
 
-<!-- 카드 -->
-<div class="card-contents">
-  <div class="card" style="width: 18rem">
-    <img src="/assets/images/reborn-remake-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
-    <div class="card-body">
-      <h5 class="card-title">리사이클링 에코백</h5>
-      <p class="card-text">천, 플라스틱, 종이 등</p>
-      <p class="card-text" style="color: #6c757d">7,000원</p>
-    </div>
-  </div>
-  <div class="card" style="width: 18rem">
-    <img src="/assets/images/reborn-remake-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
-    <div class="card-body">
-      <h5 class="card-title">리사이클링 에코백</h5>
-      <p class="card-text">천, 플라스틱, 종이 등</p>
-      <p class="card-text" style="color: #6c757d">7,000원</p>
-    </div>
-  </div>
-  <div class="card" style="width: 18rem">
-    <img src="/assets/images/reborn-remake-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
-    <div class="card-body">
-      <h5 class="card-title">리사이클링 에코백</h5>
-      <p class="card-text">천, 플라스틱, 종이 등</p>
-      <p class="card-text" style="color: #6c757d">7,000원</p>
-    </div>
-  </div>
-</div>
-
-<div class="card-contents" style="margin-top: 47px">
-  <div class="card" style="width: 18rem">
-    <img src="/assets/images/reborn-remake-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
-    <div class="card-body">
-      <h5 class="card-title">리사이클링 에코백</h5>
-      <p class="card-text">천, 플라스틱, 종이 등</p>
-      <p class="card-text" style="color: #6c757d">7,000원</p>
-    </div>
-  </div>
-  <div class="card" style="width: 18rem">
-    <img src="/assets/images/reborn-remake-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
-    <div class="card-body">
-      <h5 class="card-title">리사이클링 에코백</h5>
-      <p class="card-text">천, 플라스틱, 종이 등</p>
-      <p class="card-text" style="color: #6c757d">7,000원</p>
-    </div>
-  </div>
-  <div class="card" style="width: 18rem">
-    <img src="/assets/images/reborn-remake-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
-    <div class="card-body">
-      <h5 class="card-title">리사이클링 에코백</h5>
-      <p class="card-text">천, 플라스틱, 종이 등</p>
-      <p class="card-text" style="color: #6c757d">7,000원</p>
-    </div>
-  </div>
+<div id="remakeContainer">
 </div>
 
 <div style="
@@ -108,7 +58,6 @@ Date        Author      Status      Description
 </div>
 
 <!-- 모달 -->
-
 <%- include("../views/components/modal", {
   modalTitle: '',
   modalBody: '',
@@ -117,33 +66,8 @@ Date        Author      Status      Description
   modalCheck: ''
 }) %>
 
-<script>
-  function setModalContent(type) {
-    const modalTitle = document.getElementById('modalTitle');
-    const modalBody = document.querySelector('.modal-body');
-    const modalContainer = document.getElementById('modalContainer');
+<!-- 토스트 메시지 -->
+<%- include("../views/components/toast", 
+  {toastMessage: "제품 요청이 접수되었습니다. 감사합니다!"}) %>
 
-    if (type === 'recommend') {
-      modalTitle.textContent = '제품 추천받기';
-      modalBody.innerHTML = `
-        <div class="input-group mb-3" style="width: 586px">
-          <input type="text" class="form-control" id="recommendInput" placeholder="재료를 적어주세요." aria-label="nickname" />
-        </div>
-        <div id="recommendResult" style="font-family: LINESeed-RG">
-        </div>
-        <div style="font-family: LINESeed-RG; font-size: 12px; display: none" id="gray-600">
-          * 제품명을 클릭하면 추천 제품 페이지로 이동합니다.
-        </div>
-      `;
-      modalContainer.setAttribute('data-modal-check', 'recommend');
-    } else if (type === 'request') {
-      modalTitle.textContent = '제품 요청하기';
-      modalBody.innerHTML = `
-        <div class="input-group mb-3" style="width: 586px">
-          <input type="text" class="form-control" id="requestInput" placeholder="원하는 제품을 요청해주세요." aria-label="nickname" />
-        </div>
-      `;
-      modalContainer.setAttribute('data-modal-check', 'request');
-    }
-  }
-</script>
+<script src="/js/rebornRemakeHandler.js"></script>
