@@ -9,6 +9,8 @@ Date        Author      Status      Description
 2024.11.04  이유민      Modified    중고거래 페이지 추가
 2024.11.05  이유민      Modified    검색 및 정렬 추가
 2024.11.07  이유민      Modified    모달 body 수정
+2024.11.08  이유민      Modified    중고거래 물품 조회 API 연동
+2024.11.08  이유민      Modified    토스트 메시지 추가
 -->
 <!-- 설명 -->
 <div class="page-box" style="background-color: #f8d7da; padding-top: 182px; padding-bottom: 182px">
@@ -48,64 +50,7 @@ Date        Author      Status      Description
 </div>
 
 <!-- 카드 -->
-<div class="card-contents">
-  <a href="/pre-loved/click">
-    <div class="card" style="width: 18rem">
-      <img src="/assets/images/pre-loved-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
-      <div class="card-body">
-        <h5 class="card-title">컨버스 척테일러 올스타 클래식 블랙</h5>
-        <p class="card-text">25,000원</p>
-      </div>
-    </div>
-  </a>
-  <a href="/pre-loved/click">
-    <div class="card" style="width: 18rem">
-      <img src="/assets/images/pre-loved-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
-      <div class="card-body">
-        <h5 class="card-title">컨버스 척테일러 올스타 클래식 블랙</h5>
-        <p class="card-text">25,000원</p>
-      </div>
-    </div>
-  </a>
-  <a href="/pre-loved/click">
-    <div class="card" style="width: 18rem">
-      <img src="/assets/images/pre-loved-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
-      <div class="card-body">
-        <h5 class="card-title">컨버스 척테일러 올스타 클래식 블랙</h5>
-        <p class="card-text">25,000원</p>
-      </div>
-    </div>
-  </a>
-</div>
-
-<div class="card-contents" style="margin-top: 47px">
-  <a href="/pre-loved/click">
-    <div class="card" style="width: 18rem">
-      <img src="/assets/images/pre-loved-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
-      <div class="card-body">
-        <h5 class="card-title">컨버스 척테일러 올스타 클래식 블랙</h5>
-        <p class="card-text">25,000원</p>
-      </div>
-    </div>
-  </a>
-  <a href="/pre-loved/click">
-    <div class="card" style="width: 18rem">
-      <img src="/assets/images/pre-loved-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
-      <div class="card-body">
-        <h5 class="card-title">컨버스 척테일러 올스타 클래식 블랙</h5>
-        <p class="card-text">25,000원</p>
-      </div>
-    </div>
-  </a>
-  <a href="/pre-loved/click">
-    <div class="card" style="width: 18rem">
-      <img src="/assets/images/pre-loved-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
-      <div class="card-body">
-        <h5 class="card-title">컨버스 척테일러 올스타 클래식 블랙</h5>
-        <p class="card-text">25,000원</p>
-      </div>
-    </div>
-  </a>
+<div id="productContainer">
 </div>
 
 
@@ -113,7 +58,7 @@ Date        Author      Status      Description
 modalBody: `
     <!-- 파일 선택-->
         <div class="input-group mb-3" style="width: 586px">
-          <input type="file" class="form-control" id="inputGroupFile02">
+          <input type="file" class="form-control" id="inputGroupFile02" multiple>
           <label class="input-group-text" for="inputGroupFile02">Upload</label>
         </div>
 
@@ -135,3 +80,9 @@ modalBody: `
           <label for="floatingInput">제품 설명</label>
         </div>
   `, modalCloseBtn: '취소', modalCheckBtn: '등록', modalCheck: 'createProduct'})%>
+
+<!-- 토스트 메시지 -->
+<%- include("../views/components/toast", 
+  {toastMessage: "물건이 등록되었습니다."}) %>
+
+<script src="/js/preLovedHandler.js"></script>
