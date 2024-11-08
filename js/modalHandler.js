@@ -9,6 +9,7 @@ Date        Author      Status      Description
 2024.11.07  이유민      Modified    중고거래 물품 등록 API 연동
 2024.11.07  이유민      Modified    리본 리메이크 제품 추천 API 연동
 2024.11.07  이유민      Modified    리본 리메이크 제품 요청 API 연동
+2024.11.08  이유민      Modified    토스트 메시지 추가
 */
 document
   .getElementById("modalSubmitBtn")
@@ -41,6 +42,20 @@ document
           document.getElementById("modalContainer")
         );
         modal.hide();
+
+        // 정보 최신화
+        preLoved();
+
+        // 입력칸 초기화
+        document.getElementById("productName").value = "";
+        document.getElementById("productPrice").value = "";
+        document.getElementById("productDetail").value = "";
+
+        // 토스트 메시지
+        var toast = new bootstrap.Toast(
+          document.getElementById("productRequestToast")
+        );
+        toast.show();
       } catch (err) {
         console.log(err);
       }
@@ -80,7 +95,17 @@ document
           }
         );
 
-        console.log("요청 완");
+        //  모달 닫기
+        var modal = bootstrap.Modal.getInstance(
+          document.getElementById("modalContainer")
+        );
+        modal.hide();
+
+        // 토스트 메시지
+        var toast = new bootstrap.Toast(
+          document.getElementById("productRequestToast")
+        );
+        toast.show();
       } catch (err) {
         console.log(err);
       }

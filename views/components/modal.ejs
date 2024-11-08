@@ -8,6 +8,7 @@ Date        Author      Status      Description
 2024.11.05  이유민      Created     
 2024.11.05  이유민      Modified    모달 컴포넌트 추가
 2024.11.07  이유민      Modified    body 수정
+2024.11.08  이유민      Modified    토스트 메시지 분리
 -->
 <div class="modal fade" id="modalContainer" tabindex="-1" aria-labelledby="modalContainerLabel" aria-hidden="true" data-modal-check="<%= modalCheck %>">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 623px; width: 100%">
@@ -35,5 +36,3 @@ Date        Author      Status      Description
 </div>
 
 <script src="/js/modalHandler.js"></script>
-<%- include("../views/components/toast", 
-  {toastMessage: "제품 요청이 접수되었습니다. 감사합니다!"}) %>
