@@ -7,6 +7,7 @@ History
 Date        Author      Status      Description
 2024.11.07  이유민      Created     
 2024.11.07  이유민      Modified    회원가입 API 연동
+2024.11.08  이유민      Modified    API 경로 수정
 */
 document
   .getElementById("signUpBtn")
@@ -35,7 +36,7 @@ document
     }
 
     try {
-      const response = await axios.post(`http://localhost:4000/signup`, {
+      const response = await axios.post(`http://localhost:4000/auth/signup`, {
         nickname,
         email,
         password,
