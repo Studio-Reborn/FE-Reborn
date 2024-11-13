@@ -7,6 +7,8 @@ History
 Date        Author      Status      Description
 2024.11.06  이유민      Created     
 2024.11.06  이유민      Modified    회원 정보 수정 추가
+2024.11.13  이유민      Modified    프로필 변경 API 연동
+2024.11.13  이유민      Modified    닉네임 변경 API 연동
 -->
 <div style="max-width: 738px; margin: 0 auto; padding-top: 36px">
   <!-- 제목 -->
@@ -21,7 +23,7 @@ Date        Author      Status      Description
   <div class="card mb-3" style="width: 738px; height: 265px">
     <div class="row g-0" style="height: 100%;">
       <div class="col-md-4" style="height: 100%; position: relative; cursor: pointer" onclick="document.getElementById('inputGroupFile01').click();">
-        <img src="/assets/images/profile.svg" class="img-fluid rounded-start" alt="프로필" style="height: 100%; width: auto; object-fit: cover" />
+        <img id="userProfileImg" class="img-fluid rounded-start" alt="프로필" style="height: 100%; width: auto; object-fit: cover" />
         <!-- 반투명 오버레이 -->
         <div style="position: absolute; top: 0; left: 0; width: 263px; height: 100%; 
               background-color: rgba(255, 255, 255, 0.5);"></div>
@@ -30,16 +32,16 @@ Date        Author      Status      Description
         <img src="/assets/icons/file-image.svg" alt="아이콘" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);" />
 
         <!-- 파일 선택 -->
-        <input type="file" class="form-control" id="inputGroupFile01" style="display: none">
+        <input type="file" class="form-control" id="inputGroupFile01" style="display: none" onchange="uploadFile()">
       </div>
       <div class="col-md-8">
         <div class="card-body">
-          <!-- 현재 비밀번호 입력 -->
+          <!-- 닉네임 -->
           <span style="font-family: LINESeed-RG; font-size: 20px; display: block; padding-top: 20px" id="gray-600">
             닉네임
           </span>
           <div class="input-group mb-3" style="width: 90%; padding-top: 5px">
-            <input type="text" class="form-control" id="form-select" placeholder="카레빵맨" aria-label="nickname" />
+            <input type="text" class="form-control" id="userNickname" aria-label="nickname" />
           </div>
         </div>
       </div>
@@ -91,8 +93,10 @@ Date        Author      Status      Description
     <button type="button" class="global-btn" style="font-size: 20px; width: 47%;">
       회원 탈퇴
     </button>
-    <button type="button" class="global-btn" style="font-size: 20px; width: 47%; margin-left: auto">
+    <button type="button" class="global-btn" style="font-size: 20px; width: 47%; margin-left: auto" id="submitBtn">
       저장하기
     </button>
   </div>
 </div>
+
+<script src="/js/mypageUpdateHandler.js"></script>
