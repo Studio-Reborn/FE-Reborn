@@ -9,6 +9,7 @@ Date        Author      Status      Description
 2024.11.12  이유민      Modified    스크립트 파일 분리
 2024.11.12  이유민      Modified    로그인 확인 추가
 2024.11.13  이유민      Modified    토큰 검증 추가
+2024.11.13  이유민      Modified    프로필 이미지 API 연동
 */
 // 토큰 있을 경우 로드될 때마다 토큰 검증
 window.addEventListener("load", () => {
@@ -31,6 +32,7 @@ document.querySelectorAll(".dropdown-item").forEach((item) => {
 async function loginCheckInHeader() {
   if (localStorage.getItem("access_token")) {
     let nickname = "";
+    let profileImageUrl = "";
     try {
       const response = await axios.get(`http://localhost:4000/users`, {
         headers: {
@@ -38,7 +40,14 @@ async function loginCheckInHeader() {
         },
       });
 
+      const profile = await axios.get(`http://localhost:4000/profile`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+
       nickname = response.data.nickname;
+      profileImageUrl = profile.data.url;
     } catch (err) {
       console.log(err);
     }
@@ -47,7 +56,7 @@ async function loginCheckInHeader() {
     <div class="dropdown">
       <div style="margin-right: 100px; display: flex; align-items: center; cursor: pointer" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
         <p style="font-family: LINESeed-BD; font-size: 19px; margin: 0; line-height: 45px;">${nickname}</p>
-        <img src="/assets/images/profile.svg" style="width: 45px; height: 45px; border-radius: 50%; margin-left: 10px;" />
+        <img src="http://localhost:4000/${profileImageUrl}" style="width: 45px; height: 45px; border-radius: 50%; margin-left: 10px;" />
       </div>
 
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="margin-top: 25px; margin-left: 50px">

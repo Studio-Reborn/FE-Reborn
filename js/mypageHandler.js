@@ -9,8 +9,9 @@ Date        Author      Status      Description
 2024.11.08  이유민      Modified    모달 버튼 제거
 2024.11.08  이유민      Modified    툴팁 추가
 2024.11.13  이유민      Modified    사용자 정보 가져오기 추가
+2024.11.13  이유민      Modified    프로필 이미지 API 연동
 */
-// 토큰 엾을 경우 마이페이지 접근 금지
+// 토큰 없을 경우 마이페이지 접근 금지
 window.addEventListener("load", () => {
   if (!localStorage.getItem("access_token")) location.href = "/login";
 
@@ -38,6 +39,8 @@ const tooltipList = [...tooltipTriggerList].map(
 
 async function getUserInfo() {
   const userNickname = document.getElementById("userNickname");
+  const userProfileImage = document.getElementById("userProfileImage");
+
   try {
     const response = await axios.get(`http://localhost:4000/users`, {
       headers: {
@@ -45,7 +48,14 @@ async function getUserInfo() {
       },
     });
 
+    const profile = await axios.get(`http://localhost:4000/profile`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    });
+
     userNickname.innerHTML = response.data.nickname;
+    userProfileImage.src = `http://localhost:4000/${profile.data.url}`;
   } catch (err) {
     console.log(err);
   }
