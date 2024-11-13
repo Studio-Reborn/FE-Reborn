@@ -8,6 +8,7 @@ Date        Author      Status      Description
 2024.11.13  이유민      Created     
 2024.11.13  이유민      Modified    프로필 변경 API 연동
 2024.11.13  이유민      Modified    닉네임 변경 API 연동
+2024.11.13  이유민      Modified    비밀번호 변경 API 연동
 */
 // 토큰 없을 경우 마이페이지 접근 금지
 window.addEventListener("load", () => {
@@ -20,14 +21,22 @@ window.addEventListener("load", () => {
 document
   .getElementById("submitBtn")
   .addEventListener("click", async function () {
-    try {
-      updateNickname();
-    } catch (err) {
-      alert("오류가 발생했습니다.");
-    }
+    const nickname = document.getElementById("userNickname").value;
 
-    alert("회원 정보가 수정되었습니다.");
-    location.href = "/mypage";
+    const changePassword = document.getElementById("changePassword").value;
+    const passwordCheck = document.getElementById("passwordCheck").value;
+    const password = document.getElementById("password").value;
+
+    try {
+      if (nickname) await updateNickname(nickname);
+      if (changePassword || passwordCheck || password)
+        await updatePassword(password, changePassword, passwordCheck);
+
+      alert("회원 정보가 수정되었습니다.");
+      location.href = "/mypage";
+    } catch (err) {
+      console.log(err);
+    }
   });
 
 // 프로필 이미지 변경
@@ -85,8 +94,7 @@ async function getUserInfo() {
 }
 
 // 닉네임 수정
-async function updateNickname() {
-  const nickname = document.getElementById("userNickname").value;
+async function updateNickname(nickname) {
   try {
     await axios.patch(
       `http://localhost:4000/users/nickname`,
@@ -99,5 +107,43 @@ async function updateNickname() {
     );
   } catch (err) {
     console.log(err);
+  }
+}
+
+// 비밀번호 변경
+async function updatePassword(password, changePassword, passwordCheck) {
+  if (!password || !changePassword || !passwordCheck) {
+    alert("비밀번호 변경에서 입력하지 않은 값이 있습니다.");
+    throw new Error();
+  }
+
+  if (passwordCheck !== changePassword) {
+    alert(
+      "입력하신 비밀번호와 확인 비밀번호가 일치하지 않습니다. 다시 확인해 주세요."
+    );
+    throw new Error();
+  }
+
+  try {
+    const response = await axios.patch(
+      `http://localhost:4000/auth/change-password`,
+      {
+        password,
+        changePassword,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      }
+    );
+
+    if (response.data.message !== "비밀번호가 변경되었습니다.")
+      throw new Error();
+
+    return response;
+  } catch (err) {
+    alert(err.response.data.message);
+    throw err;
   }
 }
