@@ -7,7 +7,15 @@ History
 Date        Author      Status      Description
 2024.11.08  이유민      Created     
 2024.11.08  이유민      Modified    중고거래 물품 조회 API 연동
+2024.11.12  이유민      Modified    로그인 확인 추가
 */
+function createModal() {
+  if (!localStorage.getItem("access_token")) {
+    alert("로그인 후 이용 가능합니다.");
+
+    location.href = "/login";
+  }
+}
 
 async function preLoved() {
   const container = document.getElementById("productContainer");

@@ -8,7 +8,13 @@ Date        Author      Status      Description
 2024.11.07  이유민      Created     
 2024.11.07  이유민      Modified    회원가입 API 연동
 2024.11.08  이유민      Modified    API 경로 수정
+2024.11.13  이유민      Modified    로그인 확인 추가
 */
+// 이미 로그인 된 경우 회원가입 페이지 접근 불가능
+window.addEventListener("load", () => {
+  if (localStorage.getItem("access_token")) location.href = "/mypage";
+});
+
 document
   .getElementById("signUpBtn")
   .addEventListener("click", async function () {

@@ -10,6 +10,8 @@ Date        Author      Status      Description
 2024.11.07  이유민      Modified    리본 리메이크 제품 추천 API 연동
 2024.11.07  이유민      Modified    리본 리메이크 제품 요청 API 연동
 2024.11.08  이유민      Modified    토스트 메시지 추가
+2024.11.12  이유민      Modified    물건 등록 시 헤더 추가
+2024.11.12  이유민      Modified    제품 요청 시 헤더 추가
 */
 document
   .getElementById("modalSubmitBtn")
@@ -30,12 +32,20 @@ document
       }
 
       try {
-        const response = await axios.post(`http://localhost:4000/product`, {
-          name,
-          price,
-          detail,
-          theme: "user",
-        });
+        const response = await axios.post(
+          `http://localhost:4000/product`,
+          {
+            name,
+            price,
+            detail,
+            theme: "user",
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
 
         //  모달 닫기
         var modal = bootstrap.Modal.getInstance(
@@ -92,6 +102,11 @@ document
           `http://localhost:4000/remake/request`,
           {
             remake_product,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
           }
         );
 
