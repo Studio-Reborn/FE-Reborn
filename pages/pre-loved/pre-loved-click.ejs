@@ -7,6 +7,8 @@ History
 Date        Author      Status      Description
 2024.11.05  이유민      Created     
 2024.11.05  이유민      Modified    중고거래 상품 조회 추가
+2024.11.08  이유민      Modified    오타 수정
+2024.11.18  이유민      Modified    상품 개별 조회 API 연동
 -->
 <!-- 상품 이미지 -->
 <div style="display: flex; align-items: center; justify-content: center; padding-bottom: 21px">
@@ -18,25 +20,23 @@ Date        Author      Status      Description
 <!-- 프로필 및 설명 -->
 <div style="max-width: 738px; margin: 0 auto;">
   <div style="display: flex; align-items: center; margin-bottom: 9px">
-    <img src="/assets/images/eco-market-example.svg" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; margin-right: 10px;">
-    <p style="font-family: LINESeed-BD; font-size: 20px; margin: 0;">만수마켓</p>
+    <img id="sellUserProfile" src="/assets/images/eco-market-example.svg" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; margin-right: 10px;">
+    <p id="sellUserName" style="font-family: LINESeed-BD; font-size: 20px; margin: 0;"></p>
   </div>
 
   <hr id="gray-500" style="width: 738px; margin: 0; padding-bottom: 16px" />
 
-  <div">
-    <div style="padding-bottom: 9px; font-size: 20px; font-family: LINESeed-BD">
-      컨버스 척테일러 올스타 클래식 블랙
+  <div>
+    <div id="productName" style="padding-bottom: 9px; font-size: 20px; font-family: LINESeed-BD">
     </div>
-    <div style="padding-bottom: 9px; font-size: 15px; font-family: LINESeed-BD">
-      25,000원
+    <div id="productPrice" style="padding-bottom: 9px; font-size: 15px; font-family: LINESeed-BD">
     </div>
-    <div style="padding-bottom: 9px; font-size: 15px; font-family: LINESeed-RG">
-      사이즈 230이고, 한 번 신었어요. 제 발이랑 안 맞아서 판매하게 됐습니다..ㅠㅠ<br />
-      외관에 흠직이나 얼룩 없고 거의 새 상태입니다!
+    <div id="productDetail" style="padding-bottom: 9px; font-size: 15px; font-family: LINESeed-RG">
     </div>
     <div style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG">
       관심 17
     </div>
+  </div>
 </div>
-</div>
+
+<script src="/js/pre-loved/preLovedClickHandler.js"></script>
