@@ -10,6 +10,7 @@ Date        Author      Status      Description
 2024.11.12  이유민      Modified    로그인 확인 추가
 2024.11.13  이유민      Modified    토큰 검증 추가
 2024.11.13  이유민      Modified    프로필 이미지 API 연동
+2024.11.18  이유민      Modified    API 경로 수정
 */
 // 토큰 있을 경우 로드될 때마다 토큰 검증
 window.addEventListener("load", () => {
@@ -34,13 +35,13 @@ async function loginCheckInHeader() {
     let nickname = "";
     let profileImageUrl = "";
     try {
-      const response = await axios.get(`http://localhost:4000/users`, {
+      const response = await axios.get(`${window.API_SERVER_URL}/users`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
 
-      const profile = await axios.get(`http://localhost:4000/profile`, {
+      const profile = await axios.get(`${window.API_SERVER_URL}/profile`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
@@ -56,7 +57,7 @@ async function loginCheckInHeader() {
     <div class="dropdown">
       <div style="margin-right: 100px; display: flex; align-items: center; cursor: pointer" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
         <p style="font-family: LINESeed-BD; font-size: 19px; margin: 0; line-height: 45px;">${nickname}</p>
-        <img src="http://localhost:4000/${profileImageUrl}" style="width: 45px; height: 45px; border-radius: 50%; margin-left: 10px;" />
+        <img src="${window.API_SERVER_URL}/${profileImageUrl}" style="width: 45px; height: 45px; border-radius: 50%; margin-left: 10px;" />
       </div>
 
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="margin-top: 25px; margin-left: 50px">
@@ -84,7 +85,7 @@ function logout() {
 // 토큰 검증
 async function verifyToken() {
   try {
-    const response = await axios.get(`http://localhost:4000/auth/verify`, {
+    const response = await axios.get(`${window.API_SERVER_URL}/auth/verify`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },

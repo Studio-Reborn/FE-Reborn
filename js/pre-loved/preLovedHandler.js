@@ -8,6 +8,7 @@ Date        Author      Status      Description
 2024.11.08  이유민      Created     
 2024.11.08  이유민      Modified    중고거래 물품 조회 API 연동
 2024.11.12  이유민      Modified    로그인 확인 추가
+2024.11.18  이유민      Modified    API 경로 수정
 2024.11.18  이유민      Modified    개별 제품 클릭 시 이동 경로 변경
 2024.11.18  이유민      Modified    폴더 구조 변경
 */
@@ -25,7 +26,7 @@ async function preLoved() {
 
   try {
     const products = await axios.get(
-      `http://localhost:4000/product?theme=user`
+      `${window.API_SERVER_URL}/product?theme=user`
     );
 
     for (let i = 0; i < products.data.length; i++) {

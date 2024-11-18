@@ -9,6 +9,7 @@ Date        Author      Status      Description
 2024.11.07  이유민      Modified    회원가입 API 연동
 2024.11.08  이유민      Modified    API 경로 수정
 2024.11.13  이유민      Modified    로그인 확인 추가
+2024.11.18  이유민      Modified    API 경로 수정
 */
 // 이미 로그인 된 경우 회원가입 페이지 접근 불가능
 window.addEventListener("load", () => {
@@ -42,12 +43,15 @@ document
     }
 
     try {
-      const response = await axios.post(`http://localhost:4000/auth/signup`, {
-        nickname,
-        email,
-        password,
-        phone,
-      });
+      const response = await axios.post(
+        `${window.API_SERVER_URL}/auth/signup`,
+        {
+          nickname,
+          email,
+          password,
+          phone,
+        }
+      );
 
       alert("회원가입이 성공적으로 완료되었습니다.");
       location.href = "/login";
