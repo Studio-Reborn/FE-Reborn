@@ -12,6 +12,7 @@ Date        Author      Status      Description
 2024.11.08  이유민      Modified    토스트 메시지 추가
 2024.11.12  이유민      Modified    물건 등록 시 헤더 추가
 2024.11.12  이유민      Modified    제품 요청 시 헤더 추가
+2024.11.18  이유민      Modified    API 경로 수정
 */
 document
   .getElementById("modalSubmitBtn")
@@ -33,7 +34,7 @@ document
 
       try {
         const response = await axios.post(
-          `http://localhost:4000/product`,
+          `${window.API_SERVER_URL}/product`,
           {
             name,
             price,
@@ -81,7 +82,7 @@ document
       }
 
       try {
-        const response = await axios.get(`http://localhost:4000/remake`, {
+        const response = await axios.get(`${window.API_SERVER_URL}/remake`, {
           params: {
             thing,
           },
@@ -99,7 +100,7 @@ document
 
       try {
         const response = await axios.post(
-          `http://localhost:4000/remake/request`,
+          `${window.API_SERVER_URL}/remake/request`,
           {
             remake_product,
           },

@@ -8,6 +8,7 @@ Date        Author      Status      Description
 2024.11.08  이유민      Created     
 2024.11.08  이유민      Modified    리본 리메이크 API 연동
 2024.11.12  이유민      Modified    로그인 확인 추가
+2024.11.18  이유민      Modified    API 경로 수정
 */
 function setModalContent(type) {
   if (!localStorage.getItem("access_token")) {
@@ -49,7 +50,7 @@ async function rebornRemake() {
   let contentHTML = "";
 
   try {
-    const products = await axios.get(`http://localhost:4000/remake/product`);
+    const products = await axios.get(`${window.API_SERVER_URL}/remake/product`);
 
     for (let i = 0; i < products.data.length; i++) {
       if (i % 3 === 0) {

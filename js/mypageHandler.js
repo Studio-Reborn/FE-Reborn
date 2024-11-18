@@ -10,6 +10,7 @@ Date        Author      Status      Description
 2024.11.08  이유민      Modified    툴팁 추가
 2024.11.13  이유민      Modified    사용자 정보 가져오기 추가
 2024.11.13  이유민      Modified    프로필 이미지 API 연동
+2024.11.18  이유민      Modified    API 경로 수정
 */
 // 토큰 없을 경우 마이페이지 접근 금지
 window.addEventListener("load", () => {
@@ -42,20 +43,20 @@ async function getUserInfo() {
   const userProfileImage = document.getElementById("userProfileImage");
 
   try {
-    const response = await axios.get(`http://localhost:4000/users`, {
+    const response = await axios.get(`${window.API_SERVER_URL}/users`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },
     });
 
-    const profile = await axios.get(`http://localhost:4000/profile`, {
+    const profile = await axios.get(`${window.API_SERVER_URL}/profile`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },
     });
 
     userNickname.innerHTML = response.data.nickname;
-    userProfileImage.src = `http://localhost:4000/${profile.data.url}`;
+    userProfileImage.src = `${window.API_SERVER_URL}/${profile.data.url}`;
   } catch (err) {
     console.log(err);
   }

@@ -9,6 +9,7 @@ Date        Author      Status      Description
 2024.11.13  이유민      Modified    프로필 변경 API 연동
 2024.11.13  이유민      Modified    닉네임 변경 API 연동
 2024.11.13  이유민      Modified    비밀번호 변경 API 연동
+2024.11.18  이유민      Modified    API 경로 수정
 */
 // 토큰 없을 경우 마이페이지 접근 금지
 window.addEventListener("load", () => {
@@ -50,7 +51,7 @@ async function uploadFile() {
       formData.append("file", file); // 파일을 FormData에 추가
 
       const response = await axios.post(
-        `http://localhost:4000/upload/profile`,
+        `${window.API_SERVER_URL}/upload/profile`,
         formData,
         {
           headers: {
@@ -74,20 +75,20 @@ async function getUserInfo() {
   const userProfileImg = document.getElementById("userProfileImg");
 
   try {
-    const response = await axios.get(`http://localhost:4000/users`, {
+    const response = await axios.get(`${window.API_SERVER_URL}/users`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },
     });
 
-    const profile = await axios.get(`http://localhost:4000/profile`, {
+    const profile = await axios.get(`${window.API_SERVER_URL}/profile`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },
     });
 
     userNickname.placeholder = response.data.nickname;
-    userProfileImg.src = `http://localhost:4000/${profile.data.url}`;
+    userProfileImg.src = `${window.API_SERVER_URL}/${profile.data.url}`;
   } catch (err) {
     console.log(err);
   }
@@ -97,7 +98,7 @@ async function getUserInfo() {
 async function updateNickname(nickname) {
   try {
     await axios.patch(
-      `http://localhost:4000/users/nickname`,
+      `${window.API_SERVER_URL}/users/nickname`,
       { nickname },
       {
         headers: {
@@ -126,7 +127,7 @@ async function updatePassword(password, changePassword, passwordCheck) {
 
   try {
     const response = await axios.patch(
-      `http://localhost:4000/auth/change-password`,
+      `${window.API_SERVER_URL}/auth/change-password`,
       {
         password,
         changePassword,

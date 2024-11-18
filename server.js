@@ -1,9 +1,9 @@
 const express = require("express");
 const path = require("path");
 const expressLayouts = require("express-ejs-layouts");
+require("dotenv").config();
 
 const app = express();
-const PORT = 3000;
 
 app.set("view engine", "ejs");
 
@@ -82,6 +82,16 @@ app.get("/chatting/detail", (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running at http://localhost:${PORT}`);
+// api url 관련
+app.get("/config.js", (req, res) => {
+  res.type("application/javascript");
+  res.send(
+    `window.API_SERVER_URL = "${
+      process.env.API_SERVER_URL || "http://localhost:4000"
+    }";`
+  );
+});
+
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running at http://localhost:${process.env.PORT}`);
 });
