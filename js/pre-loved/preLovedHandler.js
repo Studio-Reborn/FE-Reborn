@@ -8,6 +8,8 @@ Date        Author      Status      Description
 2024.11.08  이유민      Created     
 2024.11.08  이유민      Modified    중고거래 물품 조회 API 연동
 2024.11.12  이유민      Modified    로그인 확인 추가
+2024.11.18  이유민      Modified    개별 제품 클릭 시 이동 경로 변경
+2024.11.18  이유민      Modified    폴더 구조 변경
 */
 function createModal() {
   if (!localStorage.getItem("access_token")) {
@@ -36,7 +38,7 @@ async function preLoved() {
       }
 
       contentHTML += `
-      <a href="/pre-loved/click">
+      <a href="/pre-loved/${products.data[i].id}">
         <div class="card" style="width: 18rem">
           <img
             src="/assets/images/pre-loved-example.svg"

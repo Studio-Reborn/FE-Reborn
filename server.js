@@ -26,7 +26,7 @@ app.get("/auth", (req, res) => {
 app.get("/pre-loved", (req, res) => {
   res.render("../pages/pre-loved/pre-loved", { currentPage: "pre-loved" });
 });
-app.get("/pre-loved/click", (req, res) => {
+app.get("/pre-loved/:id", (req, res) => {
   res.render("../pages/pre-loved/pre-loved-click", {
     currentPage: "pre-loved",
   });
