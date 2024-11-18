@@ -21,25 +21,23 @@ async function readProductData(id) {
   const userName = document.getElementById("sellUserName");
   const userProfile = document.getElementById("sellUserProfile");
   try {
-    const response = await axios.get(`http://localhost:4000/product/${id}`);
+    const response = await axios.get(`${window.API_SERVER_URL}/product/${id}`);
 
     productName.innerHTML = response.data.name;
     productPrice.innerHTML = response.data.price;
     productDetail.innerHTML = response.data.detail;
 
     const user = await axios.get(
-      `http://localhost:4000/users/${response.data.user_id}`
+      `${window.API_SERVER_URL}/users/${response.data.user_id}`
     );
 
     userName.innerHTML = user.data.nickname;
 
     const profile = await axios.get(
-      `http://localhost:4000/profile/${user.data.profile_image_id}`
+      `${window.API_SERVER_URL}/profile/${user.data.profile_image_id}`
     );
 
-    userProfile.src = `http://localhost:4000/${profile.data.url}`;
-
-    console.log(profile);
+    userProfile.src = `${window.API_SERVER_URL}/${profile.data.url}`;
 
     return;
   } catch (err) {
