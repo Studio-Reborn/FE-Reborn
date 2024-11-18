@@ -10,6 +10,7 @@ Date        Author      Status      Description
 2024.11.08  이유민      Modified    API 경로 수정
 2024.11.12  이유민      Modified    토큰 로컬스토리지 저장 추가
 2024.11.13  이유민      Modified    로그인 확인 추가
+2024.11.18  이유민      Modified    API 경로 수정
 */
 // 이미 로그인 된 경우 로그인 페이지 접근 불가능
 window.addEventListener("load", () => {
@@ -31,10 +32,13 @@ document
     }
 
     try {
-      const response = await axios.post(`http://localhost:4000/auth/signin`, {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        `${window.API_SERVER_URL}/auth/signin`,
+        {
+          email,
+          password,
+        }
+      );
 
       localStorage.setItem("access_token", response.data["Authorization"]);
       location.href = "/";
