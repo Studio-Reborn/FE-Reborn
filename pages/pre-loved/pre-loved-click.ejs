@@ -9,6 +9,8 @@ Date        Author      Status      Description
 2024.11.05  이유민      Modified    중고거래 상품 조회 추가
 2024.11.08  이유민      Modified    오타 수정
 2024.11.18  이유민      Modified    상품 개별 조회 API 연동
+2024.11.19  이유민      Modified    수정 삭제 글자 추가
+2024.11.19  이유민      Modified    수정 삭제 모달 추가
 -->
 <!-- 상품 이미지 -->
 <div style="display: flex; align-items: center; justify-content: center; padding-bottom: 21px">
@@ -27,16 +29,37 @@ Date        Author      Status      Description
   <hr id="gray-500" style="width: 738px; margin: 0; padding-bottom: 16px" />
 
   <div>
+    <!-- 제품 관련 -->
     <div id="productName" style="padding-bottom: 9px; font-size: 20px; font-family: LINESeed-BD">
     </div>
     <div id="productPrice" style="padding-bottom: 9px; font-size: 15px; font-family: LINESeed-BD">
     </div>
     <div id="productDetail" style="padding-bottom: 9px; font-size: 15px; font-family: LINESeed-RG">
     </div>
-    <div style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG">
-      관심 17
+    <!-- 관심, 수정, 삭제-->
+    <div style="display: flex">
+      <div id="heartText" style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG">
+        관심 17
+      </div>
+      <div id="principalCheck" style="margin-left: auto; display: none; gap: 10px;">
+        <div id="updateText" style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG; cursor: pointer" data-bs-toggle="modal" data-bs-target="#modalContainer" onclick="setModalContent('update')">
+          수정
+        </div>
+        <div id="deleteText" style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG; cursor: pointer" data-bs-toggle="modal" data-bs-target="#modalContainer" onclick="setModalContent('delete')">
+          삭제
+        </div>
+      </div>
     </div>
   </div>
 </div>
+
+<!-- 모달 -->
+<%- include("../views/components/modal", {
+  modalTitle: '',
+  modalBody: '',
+  modalCloseBtn: '취소',
+  modalCheckBtn: '',
+  modalCheck: ''
+}) %>
 
 <script src="/js/pre-loved/preLovedClickHandler.js"></script>
