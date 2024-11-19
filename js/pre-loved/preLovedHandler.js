@@ -11,6 +11,8 @@ Date        Author      Status      Description
 2024.11.18  이유민      Modified    API 경로 수정
 2024.11.18  이유민      Modified    개별 제품 클릭 시 이동 경로 변경
 2024.11.18  이유민      Modified    폴더 구조 변경
+2024.11.19  이유민      Modified    Number 명시
+2024.11.19  이유민      Modified    제품명 최대 12글자 표시
 */
 function createModal() {
   if (!localStorage.getItem("access_token")) {
@@ -48,10 +50,15 @@ async function preLoved() {
             style="height: 214px; object-fit: cover"
           />
           <div class="card-body">
-            <h5 class="card-title">${products.data[i].name}</h5>
-            <p class="card-text">${products.data[
-              i
-            ].price.toLocaleString()}원</p>
+          <!-- 판매명이 13글자 이상이면 12글자까지 잘라서 화면에 표시 -->
+            <h5 class="card-title">${
+              products.data[i].name.length > 12
+                ? products.data[i].name.slice(0, 12) + "..."
+                : products.data[i].name
+            }</h5>
+            <p class="card-text">${Number(
+              products.data[i].price
+            ).toLocaleString()}원</p>
           </div>
         </div>
       </a>

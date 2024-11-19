@@ -13,6 +13,7 @@ Date        Author      Status      Description
 2024.11.12  이유민      Modified    물건 등록 시 헤더 추가
 2024.11.12  이유민      Modified    제품 요청 시 헤더 추가
 2024.11.18  이유민      Modified    API 경로 수정
+2024.11.07  이유민      Modified    중고거래 물품 수정 및 삭제 API 연동
 */
 document
   .getElementById("modalSubmitBtn")
@@ -25,7 +26,9 @@ document
       // pre-loved 물건 등록
       const name = document.getElementById("productName").value;
       const price = document.getElementById("productPrice").value;
-      const detail = document.getElementById("productDetail").value;
+      const detail = document
+        .getElementById("productDetail")
+        .value.replace(/\n/g, "<br>");
 
       if (!name || !price || !detail) {
         alert("입력하지 않은 값이 있습니다.");
@@ -67,6 +70,53 @@ document
           document.getElementById("productRequestToast")
         );
         toast.show();
+      } catch (err) {
+        console.log(err);
+      }
+    } else if (modalCheck === "updatePreLoved" || "deletePreLoved") {
+      // pre-loved 물건 수정 또는 삭제
+      const id = window.location.pathname.split("/").pop();
+
+      try {
+        if (modalCheck === "updatePreLoved") {
+          // 물건 수정 시
+          const name = document.getElementById("productNameNew").value;
+          const price = document.getElementById("productPriceNew").value;
+          const detail = document
+            .getElementById("productDetailNew")
+            .value.replace(/\n/g, "<br>");
+
+          const response = await axios.patch(
+            `${window.API_SERVER_URL}/product/${id}`,
+            {
+              name,
+              price,
+              detail,
+              theme: "user",
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+              },
+            }
+          );
+
+          alert(response.data.message);
+          location.href = `/pre-loved/${id}`;
+        } else {
+          // 물건 삭제 시
+          const response = await axios.delete(
+            `${window.API_SERVER_URL}/product/${id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+              },
+            }
+          );
+
+          alert(response.data.message);
+          location.href = `/pre-loved`;
+        }
       } catch (err) {
         console.log(err);
       }
