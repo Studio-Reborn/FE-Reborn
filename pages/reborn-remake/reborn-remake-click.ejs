@@ -1,0 +1,56 @@
+<!-- 
+File Name : reborn-remake-click
+Description : 리본 리메이크 상품 조회 페이지
+Author : 이유민
+
+History
+Date        Author      Status      Description
+2024.11.19  이유민      Created     
+2024.11.19  이유민      Modified    리메이크 제품 상품 조회 추가
+-->
+<!-- 상품 이미지 -->
+<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 21px">
+  <img src="/assets/icons/caret-right.svg" style="margin-right: 7px; transform: rotate(180deg);">
+  <img src="/assets/images/reborn-remake-example.svg" style="width: 500px; heigth: 500px; object-fit: cover; border-radius: 20px; margin-top: 37px;">
+  <img src="/assets/icons/caret-right.svg" style="margin-left: 7px">
+</div>
+
+<!-- 프로필 및 설명 -->
+<div style="max-width: 738px; margin: 0 auto;">
+  <hr id="gray-500" style="width: 738px; margin: 0; padding-bottom: 16px" />
+
+  <div>
+    <!-- 제품 관련 -->
+    <div id="productName" style="padding-bottom: 9px; font-size: 20px; font-family: LINESeed-BD">
+    </div>
+    <div id="productPrice" style="padding-bottom: 9px; font-size: 15px; font-family: LINESeed-BD">
+    </div>
+    <div id="productDetail" style="padding-bottom: 9px; font-size: 15px; font-family: LINESeed-RG">
+    </div>
+    <!-- 관심, 수정, 삭제-->
+    <div style="display: flex">
+      <div id="heartText" style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG">
+        관심 17
+      </div>
+      <div id="remakePrincipalCheck" style="margin-left: auto; display: none; gap: 10px;">
+        <div id="updateRemakeProduct" style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG; cursor: pointer" data-bs-toggle="modal" data-bs-target="#modalContainer" onclick="setModalContent('updateRemakeProduct')">
+          수정
+        </div>
+        <div id="deleteRemakeProduct" style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG; cursor: pointer" data-bs-toggle="modal" data-bs-target="#modalContainer" onclick="setModalContent('deleteRemakeProduct')">
+          삭제
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 모달 -->
+<%- include("../views/components/modal", {
+  modalTitle: '',
+  modalBody: '',
+  modalCloseBtn: '취소',
+  modalCheckBtn: '',
+  modalCheck: ''
+}) %>
+
+<script src="/js/reborn-remake/rebornRemakeClickHandler.js"></script>
