@@ -10,7 +10,72 @@ Date        Author      Status      Description
 2024.11.12  이유민      Modified    로그인 확인 추가
 2024.11.18  이유민      Modified    API 경로 수정
 2024.11.19  이유민      Modified    관리자 제품 생성 추가
+2024.11.19  이유민      Modified    폴더 구조 변경
+2024.11.19  이유민      Modified    링크 추가
 */
+window.addEventListener("load", () => {
+  rebornRemake();
+});
+
+async function rebornRemake() {
+  const container = document.getElementById("remakeContainer");
+  let contentHTML = "";
+
+  try {
+    const products = await axios.get(`${window.API_SERVER_URL}/remake/product`);
+
+    for (let i = 0; i < products.data.length; i++) {
+      if (i % 3 === 0) {
+        contentHTML += `<div class="card-contents"`;
+
+        i === 0
+          ? (contentHTML += `">`)
+          : (contentHTML += ` style="margin-top: 47px">`);
+      }
+
+      contentHTML += `
+        <a href="/reborn-remake/${products.data[i].id}">
+          <div class="card" style="width: 18rem">
+              <img src="/assets/images/reborn-remake-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
+              <div class="card-body">
+                  <h5 class="card-title">${
+                    products.data[i].name.length > 12
+                      ? products.data[i].name.slice(0, 12) + "..."
+                      : products.data[i].name
+                  }</h5>
+                  <p class="card-text">${products.data[i].matter}</p>
+                  <p class="card-text" style="color: #6c757d">${Number(
+                    products.data[i].price
+                  ).toLocaleString()}원</p>
+              </div>
+          </div>
+        </a>
+        `;
+
+      if (i % 3 === 2 || i === products.data.length - 1)
+        contentHTML += `</div>`;
+    }
+
+    container.innerHTML = contentHTML;
+
+    // 관리자인지 확인
+    if (localStorage.getItem("access_token")) {
+      const response = await axios.get(`${window.API_SERVER_URL}/users`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+
+      // 관리자일 때만 제품 생성 버튼 생김
+      if (response.data.id === 1)
+        document.getElementById("remakeProductCreateBtn").style.display = "";
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+// 모달
 function setModalContent(type) {
   if (!localStorage.getItem("access_token")) {
     alert("로그인 후 이용 가능합니다.");
@@ -82,57 +147,3 @@ function setModalContent(type) {
     );
   }
 }
-
-async function rebornRemake() {
-  const container = document.getElementById("remakeContainer");
-  let contentHTML = "";
-
-  try {
-    const products = await axios.get(`${window.API_SERVER_URL}/remake/product`);
-
-    for (let i = 0; i < products.data.length; i++) {
-      if (i % 3 === 0) {
-        contentHTML += `<div class="card-contents"`;
-
-        i === 0
-          ? (contentHTML += `">`)
-          : (contentHTML += ` style="margin-top: 47px">`);
-      }
-
-      contentHTML += `
-        <div class="card" style="width: 18rem">
-            <img src="/assets/images/reborn-remake-example.svg" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
-            <div class="card-body">
-                <h5 class="card-title">${products.data[i].name}</h5>
-                <p class="card-text">${products.data[i].matter}</p>
-                <p class="card-text" style="color: #6c757d">${Number(
-                  products.data[i].price
-                ).toLocaleString()}원</p>
-            </div>
-        </div>
-        `;
-
-      if (i % 3 === 2 || i === products.data.length - 1)
-        contentHTML += `</div>`;
-    }
-
-    container.innerHTML = contentHTML;
-
-    // 관리자인지 확인
-    if (localStorage.getItem("access_token")) {
-      const response = await axios.get(`${window.API_SERVER_URL}/users`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      });
-
-      // 관리자일 때만 제품 생성 버튼 생김
-      if (response.data.id === 1)
-        document.getElementById("remakeProductCreateBtn").style.display = "";
-    }
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-window.onload = rebornRemake;
