@@ -13,7 +13,8 @@ Date        Author      Status      Description
 2024.11.12  이유민      Modified    물건 등록 시 헤더 추가
 2024.11.12  이유민      Modified    제품 요청 시 헤더 추가
 2024.11.18  이유민      Modified    API 경로 수정
-2024.11.07  이유민      Modified    중고거래 물품 수정 및 삭제 API 연동
+2024.11.19  이유민      Modified    중고거래 물품 수정 및 삭제 API 연동
+2024.11.19  이유민      Modified    리본 리메이크 제품 생성 API 연동
 */
 document
   .getElementById("modalSubmitBtn")
@@ -73,7 +74,10 @@ document
       } catch (err) {
         console.log(err);
       }
-    } else if (modalCheck === "updatePreLoved" || "deletePreLoved") {
+    } else if (
+      modalCheck === "updatePreLoved" ||
+      modalCheck === "deletePreLoved"
+    ) {
       // pre-loved 물건 수정 또는 삭제
       const id = window.location.pathname.split("/").pop();
 
@@ -172,6 +176,27 @@ document
           document.getElementById("productRequestToast")
         );
         toast.show();
+      } catch (err) {
+        console.log(err);
+      }
+    } else if (modalCheck === "createRebornRemakeProduct") {
+      // reborn-remake 제품 생성
+      const name = document.getElementById("remakeProductName").value;
+      const matter = document.getElementById("remakeProductMatter").value;
+      const price = document.getElementById("remakeProductPrice").value;
+      const detail = document.getElementById("remakeProductDetail").value;
+      console.log(name);
+
+      try {
+        await axios.post(`${window.API_SERVER_URL}/remake/product`, {
+          name,
+          matter,
+          price,
+          detail,
+        });
+
+        alert("리본 리메이크 제품이 성공적으로 등록되었습니다.");
+        location.href = "/reborn-remake";
       } catch (err) {
         console.log(err);
       }

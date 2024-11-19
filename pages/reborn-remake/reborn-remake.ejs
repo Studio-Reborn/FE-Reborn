@@ -10,6 +10,7 @@ Date        Author      Status      Description
 2024.11.07  이유민      Modified    모달 script 추가
 2024.11.08  이유민      Modified    리본 리메이크 API 연동
 2024.11.08  이유민      Modified    토스트 메시지 추가
+2024.11.19  이유민      Modified    리메이크 제품 생성 버튼 추가
 -->
 <div class="page-box" style="background-color: #e2d9f3; padding-top: 182px; padding-bottom: 182px">
   <div style="margin-right: 12px">
@@ -23,6 +24,9 @@ Date        Author      Status      Description
     </p>
     <button type="button" class="global-btn" style="width: 174px" data-bs-toggle="modal" data-bs-target="#modalContainer" onclick="setModalContent('recommend')">
       맞츰 리메이크 추천
+    </button>
+    <button type="button" id="remakeProductCreateBtn" class="global-btn" style="width: 100px; display: none" data-bs-toggle="modal" data-bs-target="#modalContainer" onclick="setModalContent('createRebornRemake')">
+      제품 생성
     </button>
   </div>
   <img src="/assets/images/reborn-remake.svg" style="height: 341px; width: auto; padding-bottom: 8px; margin-left: 8px" />

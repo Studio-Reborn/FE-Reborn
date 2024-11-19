@@ -9,6 +9,7 @@ Date        Author      Status      Description
 2024.11.08  이유민      Modified    리본 리메이크 API 연동
 2024.11.12  이유민      Modified    로그인 확인 추가
 2024.11.18  이유민      Modified    API 경로 수정
+2024.11.19  이유민      Modified    관리자 제품 생성 추가
 */
 function setModalContent(type) {
   if (!localStorage.getItem("access_token")) {
@@ -42,6 +43,43 @@ function setModalContent(type) {
         </div>
       `;
     modalContainer.setAttribute("data-modal-check", "request");
+  } else if (type === "createRebornRemake") {
+    modalTitle.textContent = "리본 리메이크 제품 생성하기";
+    modalBody.innerHTML = `
+       <!-- 파일 선택-->
+        <div class="input-group mb-3" style="width: 586px">
+          <input type="file" class="form-control" id="inputGroupFile02" multiple>
+          <label class="input-group-text" for="inputGroupFile02">Upload</label>
+        </div>
+
+        <!-- 제품명 -->
+        <div class="form-floating mb-3" style="width: 586px">
+          <input type="text" class="form-control" id="remakeProductName" placeholder="제품명">
+          <label for="remakeProductName">제품명</label>
+        </div>
+
+        <!-- 제품 재료 -->
+        <div class="form-floating mb-3" style="width: 586px">
+          <input type="text" class="form-control" id="remakeProductMatter" placeholder="제품 재료">
+          <label for="remakeProductMatter">제품 재료</label>
+        </div>
+
+        <!-- 제품 가격 -->
+        <div class="form-floating mb-3" style="width: 586px">
+          <input type="number" class="form-control" id="remakeProductPrice" placeholder="제품가격">
+          <label for="remakeProductPrice">제품 가격</label>
+        </div>
+
+        <!-- 제품 설명 -->
+        <div class="form-floating mb-3" style="width: 586px">
+          <textarea class="form-control" id="remakeProductDetail" placeholder="제품 설명" style="height: 150px"></textarea>
+          <label for="remakeProductDetail">제품 설명</label>
+        </div>
+      `;
+    modalContainer.setAttribute(
+      "data-modal-check",
+      "createRebornRemakeProduct"
+    );
   }
 }
 
@@ -67,7 +105,9 @@ async function rebornRemake() {
             <div class="card-body">
                 <h5 class="card-title">${products.data[i].name}</h5>
                 <p class="card-text">${products.data[i].matter}</p>
-                <p class="card-text" style="color: #6c757d">${products.data[i].price}원</p>
+                <p class="card-text" style="color: #6c757d">${Number(
+                  products.data[i].price
+                ).toLocaleString()}원</p>
             </div>
         </div>
         `;
@@ -77,6 +117,19 @@ async function rebornRemake() {
     }
 
     container.innerHTML = contentHTML;
+
+    // 관리자인지 확인
+    if (localStorage.getItem("access_token")) {
+      const response = await axios.get(`${window.API_SERVER_URL}/users`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+
+      // 관리자일 때만 제품 생성 버튼 생김
+      if (response.data.id === 1)
+        document.getElementById("remakeProductCreateBtn").style.display = "";
+    }
   } catch (err) {
     console.log(err);
   }
