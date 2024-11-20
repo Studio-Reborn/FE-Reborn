@@ -13,7 +13,8 @@ Date        Author      Status      Description
 2024.11.12  이유민      Modified    물건 등록 시 헤더 추가
 2024.11.12  이유민      Modified    제품 요청 시 헤더 추가
 2024.11.18  이유민      Modified    API 경로 수정
-2024.11.07  이유민      Modified    중고거래 물품 수정 및 삭제 API 연동
+2024.11.19  이유민      Modified    중고거래 물품 수정 및 삭제 API 연동
+2024.11.20  이유민      Modified    제품 이미지 업로드 API 연동
 */
 document
   .getElementById("modalSubmitBtn")
@@ -34,16 +35,16 @@ document
         alert("입력하지 않은 값이 있습니다.");
         return;
       }
+      const product_image_id = Number(
+        document
+          .getElementById("preLovedProductImagesId")
+          .getAttribute("data-value")
+      );
 
       try {
-        const response = await axios.post(
+        await axios.post(
           `${window.API_SERVER_URL}/product`,
-          {
-            name,
-            price,
-            detail,
-            theme: "user",
-          },
+          { product_image_id, name, price, detail, theme: "user" },
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("access_token")}`,
@@ -64,6 +65,9 @@ document
         document.getElementById("productName").value = "";
         document.getElementById("productPrice").value = "";
         document.getElementById("productDetail").value = "";
+        document
+          .getElementById("preLovedProductImagesId")
+          .setAttribute("data-value", "0");
 
         // 토스트 메시지
         var toast = new bootstrap.Toast(
@@ -85,10 +89,16 @@ document
           const detail = document
             .getElementById("productDetailNew")
             .value.replace(/\n/g, "<br>");
+          const product_image_id = Number(
+            document
+              .getElementById("preLovedProductImagesIdNew")
+              .getAttribute("data-value-new")
+          );
 
           const response = await axios.patch(
             `${window.API_SERVER_URL}/product/${id}`,
             {
+              product_image_id,
               name,
               price,
               detail,
