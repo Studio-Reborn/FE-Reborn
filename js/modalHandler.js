@@ -14,6 +14,8 @@ Date        Author      Status      Description
 2024.11.12  이유민      Modified    제품 요청 시 헤더 추가
 2024.11.18  이유민      Modified    API 경로 수정
 2024.11.19  이유민      Modified    중고거래 물품 수정 및 삭제 API 연동
+2024.11.19  이유민      Modified    리본 리메이크 제품 생성 API 연동
+2024.11.19  이유민      Modified    리본 리메이크 제품 수정 및 삭제 API 연동
 2024.11.20  이유민      Modified    제품 이미지 업로드 API 연동
 */
 document
@@ -77,7 +79,10 @@ document
       } catch (err) {
         console.log(err);
       }
-    } else if (modalCheck === "updatePreLoved" || "deletePreLoved") {
+    } else if (
+      modalCheck === "updatePreLoved" ||
+      modalCheck === "deletePreLoved"
+    ) {
       // pre-loved 물건 수정 또는 삭제
       const id = window.location.pathname.split("/").pop();
 
@@ -182,6 +187,78 @@ document
           document.getElementById("productRequestToast")
         );
         toast.show();
+      } catch (err) {
+        console.log(err);
+      }
+    } else if (modalCheck === "createRebornRemakeProduct") {
+      // reborn-remake 제품 생성
+      const name = document.getElementById("remakeProductName").value;
+      const matter = document.getElementById("remakeProductMatter").value;
+      const price = document.getElementById("remakeProductPrice").value;
+      const detail = document
+        .getElementById("remakeProductDetail")
+        .value.replace(/\n/g, "<br>");
+
+      try {
+        await axios.post(`${window.API_SERVER_URL}/remake/product`, {
+          name,
+          matter,
+          price,
+          detail,
+        });
+
+        alert("리본 리메이크 제품이 성공적으로 등록되었습니다.");
+        location.href = "/reborn-remake";
+      } catch (err) {
+        console.log(err);
+      }
+    } else if (
+      modalCheck === "updateRemakeProduct" ||
+      modalCheck === "deleteRemakeProduct"
+    ) {
+      // reborn-remake 제품 수정 및 삭제
+      const id = window.location.pathname.split("/").pop();
+
+      try {
+        // reborn-remake 제품 수정 시
+        if (modalCheck === "updateRemakeProduct") {
+          const name = document.getElementById("remakeProductNameNew").value;
+          const matter = document.getElementById(
+            "remakeProductMatterNew"
+          ).value;
+          const price = document.getElementById("remakeProductPriceNew").value;
+          const detail = document
+            .getElementById("remakeProductDetailNew")
+            .value.replace(/\n/g, "<br>");
+
+          const response = await axios.patch(
+            `${window.API_SERVER_URL}/remake/product/${id}`,
+            { name, matter, price, detail },
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+              },
+            }
+          );
+          alert(response.data.message);
+          location.href = `/reborn-remake/${id}`;
+
+          return;
+        }
+
+        // reborn-remake 제품 삭제 시
+        const response = await axios.delete(
+          `${window.API_SERVER_URL}/remake/product/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
+        alert(response.data.message);
+        location.href = `/reborn-remake`;
+
+        return;
       } catch (err) {
         console.log(err);
       }
