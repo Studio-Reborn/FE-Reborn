@@ -51,6 +51,11 @@ app.get("/reborn-remake", (req, res) => {
     currentPage: "reborn-remake",
   });
 });
+app.get("/reborn-remake/:id", (req, res) => {
+  res.render("../pages/reborn-remake/reborn-remake-click", {
+    currentPage: "reborn-remake",
+  });
+});
 app.get("/payments", (req, res) => {
   res.render("../pages/payments/payments", {
     currentPage: "payments",

@@ -13,6 +13,7 @@ Date        Author      Status      Description
 2024.11.08  이유민      Modified    토스트 메시지 추가
 2024.11.18  이유민      Modified    폴더 구조 변경
 2024.11.19  이유민      Modified    입력칸 변경
+2024.11.20  이유민      Modified    제품 이미지 업로드 API 연동
 -->
 <!-- 설명 -->
 <div class="page-box" style="background-color: #f8d7da; padding-top: 182px; padding-bottom: 182px">
@@ -25,7 +26,7 @@ Date        Author      Status      Description
       가까운 이웃들과 따뜻하고<br />
       신뢰할 수 있는 거래를 경험해보세요.
     </p>
-    <button type="button" class="global-btn" style="width: 174px" data-bs-toggle="modal" data-bs-target="#modalContainer">
+    <button type="button" class="global-btn" style="width: 174px" data-bs-toggle="modal" data-bs-target="#modalContainer" id="preLovedProductCreateBtn">
       내 물건 등록하기
     </button>
   </div>
@@ -60,8 +61,9 @@ Date        Author      Status      Description
 modalBody: `
     <!-- 파일 선택-->
         <div class="input-group mb-3" style="width: 586px">
-          <input type="file" class="form-control" id="inputGroupFile02" multiple>
-          <label class="input-group-text" for="inputGroupFile02">Upload</label>
+          <input type="file" class="form-control" id="preLovedProductImages" multiple>
+          <label class="input-group-text" for="preLovedProductImages">Upload</label>
+          <span id="preLovedProductImagesId" style="display: none" data-value="3"></span>
         </div>
 
         <!-- 제품명 -->

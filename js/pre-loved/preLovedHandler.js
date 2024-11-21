@@ -13,16 +13,18 @@ Date        Author      Status      Description
 2024.11.18  이유민      Modified    폴더 구조 변경
 2024.11.19  이유민      Modified    Number 명시
 2024.11.19  이유민      Modified    제품명 최대 12글자 표시
+2024.11.20  이유민      Modified    제품 이미지 업로드 API 연동
+2024.11.20  이유민      Modified    제품 이미지 조회 API 연동
 */
-function createModal() {
-  if (!localStorage.getItem("access_token")) {
-    alert("로그인 후 이용 가능합니다.");
-
-    location.href = "/login";
-  }
-}
+window.addEventListener("load", () => {
+  preLoved();
+});
 
 async function preLoved() {
+  // 로그인 안 한 경우 생성 버튼 나타나지 않음
+  if (!localStorage.getItem("access_token"))
+    document.getElementById("preLovedProductCreateBtn").style.display = "none";
+
   const container = document.getElementById("productContainer");
   let contentHTML = "";
 
@@ -32,6 +34,10 @@ async function preLoved() {
     );
 
     for (let i = 0; i < products.data.length; i++) {
+      const productImages = await axios.get(
+        `${window.API_SERVER_URL}/product-image/${products.data[i].product_image_id}`
+      );
+
       if (i % 3 === 0) {
         contentHTML += `<div class="card-contents"`;
 
@@ -44,7 +50,7 @@ async function preLoved() {
       <a href="/pre-loved/${products.data[i].id}">
         <div class="card" style="width: 18rem">
           <img
-            src="/assets/images/pre-loved-example.svg"
+            src="${window.API_SERVER_URL}/${productImages.data.url[0]}"
             class="card-img-top"
             alt="..."
             style="height: 214px; object-fit: cover"
@@ -74,5 +80,52 @@ async function preLoved() {
   }
 }
 
-window.preLoved = preLoved;
-window.onload = preLoved;
+// 물건 이미지 업로드 관련
+document
+  .getElementById("preLovedProductImages")
+  .addEventListener("change", async (event) => {
+    const files = event.target.files;
+
+    if (files.length === 0) {
+      alert("파일을 선택해주세요.");
+      return;
+    }
+
+    const formData = new FormData();
+    for (const file of files) {
+      formData.append("files", file);
+    }
+
+    try {
+      const response = await fetch(
+        `${window.API_SERVER_URL}/upload/product-image`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        alert("파일 업로드에 오류가 발생했습니다.");
+        return;
+      }
+
+      const result = await response.json();
+
+      document
+        .getElementById("preLovedProductImagesId")
+        .setAttribute("data-value", result.id);
+
+      return;
+    } catch (err) {
+      console.error(err);
+    }
+  });
+
+function createModal() {
+  if (!localStorage.getItem("access_token")) {
+    alert("로그인 후 이용 가능합니다.");
+
+    location.href = "/login";
+  }
+}
