@@ -14,6 +14,7 @@ Date        Author      Status      Description
 2024.11.18  이유민      Modified    폴더 구조 변경
 2024.11.19  이유민      Modified    입력칸 변경
 2024.11.20  이유민      Modified    제품 이미지 업로드 API 연동
+2024.11.22  이유민      Modified    모달 문구 추가
 -->
 <!-- 설명 -->
 <div class="page-box" style="background-color: #f8d7da; padding-top: 182px; padding-bottom: 182px">
@@ -56,10 +57,10 @@ Date        Author      Status      Description
 <div id="productContainer">
 </div>
 
-
 <%- include("../views/components/modal", {modalTitle: '내 물건 등록하기',
 modalBody: `
     <!-- 파일 선택-->
+        <div style="font-family: LINESeed-RG; color: #6c757d; font-size: 15px">📢 물건 이미지를 선택해주세요.</div>
         <div class="input-group mb-3" style="width: 586px">
           <input type="file" class="form-control" id="preLovedProductImages" multiple>
           <label class="input-group-text" for="preLovedProductImages">Upload</label>

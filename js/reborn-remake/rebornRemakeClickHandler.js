@@ -7,12 +7,14 @@ History
 Date        Author      Status      Description
 2024.11.19  이유민      Created     
 2024.11.19  이유민      Modified    리본 리메이크 API 연동
+2024.11.22  이유민      Modified    상품 이미지 API 연동
 */
 const productData = {
   name: "",
   price: 0,
   detail: "",
   matter: "",
+  imageId: 0,
 };
 
 window.addEventListener("load", () => {
@@ -21,6 +23,25 @@ window.addEventListener("load", () => {
   readProductData(id);
 });
 
+// 상품 이미지 관련
+let imageList = [];
+let currentIndex = 0;
+
+const mainImage = document.getElementById("mainRemakeProductImage");
+const caretLeftBtn = document.getElementById("caretLeftBtn");
+const caretRightBtn = document.getElementById("caretRightBtn");
+
+caretLeftBtn.addEventListener("click", () => {
+  currentIndex = (currentIndex - 1 + imageList.length) % imageList.length;
+  mainImage.src = `${window.API_SERVER_URL}/${imageList[currentIndex]}`;
+});
+
+caretRightBtn.addEventListener("click", () => {
+  currentIndex = (currentIndex + 1) % imageList.length;
+  mainImage.src = `${window.API_SERVER_URL}/${imageList[currentIndex]}`;
+});
+
+// 정보
 async function readProductData(id) {
   const productName = document.getElementById("productName");
   const productPrice = document.getElementById("productPrice");
@@ -31,6 +52,14 @@ async function readProductData(id) {
       `${window.API_SERVER_URL}/remake/product/${id}`
     );
 
+    // 상품 이미지 불러오기
+    const images = await axios.get(
+      `${window.API_SERVER_URL}/product-image/${product.data.product_image_id}`
+    );
+
+    imageList = images.data.url;
+    mainImage.src = `${window.API_SERVER_URL}/${imageList[0]}`;
+
     productName.innerHTML = product.data.name;
     productPrice.innerHTML = `${Number(product.data.price).toLocaleString()}원`;
     productDetail.innerHTML = product.data.detail;
@@ -40,6 +69,7 @@ async function readProductData(id) {
     productData.price = product.data.price;
     productData.detail = product.data.detail;
     productData.matter = product.data.matter;
+    productData.imageId = images.data.id;
 
     // 관리자인지 확인
     if (localStorage.getItem("access_token")) {
@@ -77,8 +107,9 @@ function setModalContent(type) {
     modalBody.innerHTML = `
        <!-- 파일 선택-->
         <div class="input-group mb-3" style="width: 586px">
-          <input type="file" class="form-control" id="inputGroupFile02" multiple>
-          <label class="input-group-text" for="inputGroupFile02">Upload</label>
+          <input type="file" class="form-control" id="remakeProductImagesNew" onchange="productImagesUpload(event)" multiple>
+          <label class="input-group-text" for="remakeProductImagesNew">Upload</label>
+          <span id="remakeProductImagesIdNew" style="display: none" data-value="${productData.imageId}"></span>
         </div>
 
         <!-- 제품명 -->
@@ -120,3 +151,67 @@ function setModalContent(type) {
     modalContainer.setAttribute("data-modal-check", "deleteRemakeProduct");
   }
 }
+
+// 물품 이미지 업로드
+async function productImagesUpload(event) {
+  const files = event.target.files;
+
+  if (files.length === 0) {
+    alert("파일을 선택해주세요.");
+    return;
+  }
+
+  const formData = new FormData();
+  for (const file of files) {
+    formData.append("files", file);
+  }
+
+  try {
+    const response = await fetch(
+      `${window.API_SERVER_URL}/upload/product-image`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    if (!response.ok) {
+      alert("파일 업로드에 오류가 발생했습니다.");
+      return;
+    }
+
+    const result = await response.json();
+
+    document
+      .getElementById("remakeProductImagesIdNew")
+      .setAttribute("data-value", result.id);
+    productData.imageId = result.id;
+  } catch (err) {
+    console.error("파일 업로드 중 오류 발생:", err);
+  }
+}
+
+// 이미지 클릭 시 크게 보이도록 하는 함수
+function openModal(imageSrc) {
+  const modal = document.getElementById("imageModal");
+  const modalImage = document.getElementById("modalImage");
+
+  // 모달 이미지 src 설정
+  modalImage.src = imageSrc;
+
+  // 모달 보이기
+  modal.style.display = "flex";
+}
+
+// 이미지 모달 닫기
+function closeModal() {
+  const modal = document.getElementById("imageModal");
+  modal.style.display = "none";
+}
+
+// ESC 키로 이미지 모달 닫기
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeModal();
+  }
+});

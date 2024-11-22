@@ -10,6 +10,7 @@ Date        Author      Status      Description
 2024.11.19  이유민      Modified    상품 수정 API 연동
 2024.11.19  이유민      Modified    상품 삭제 API 연동
 2024.11.20  이유민      Modified    상품 이미지 수정 API 연동
+2024.11.21  이유민      Modified    이미지 모달창 추가
 */
 // 제품 데이터 객체로 사용하기 위함
 const productData = {
@@ -52,7 +53,9 @@ async function readProductData(id) {
   const userProfile = document.getElementById("sellUserProfile");
   try {
     // 제품 정보 가져오기
-    const product = await axios.get(`${window.API_SERVER_URL}/product/${id}`);
+    const product = await axios.get(
+      `${window.API_SERVER_URL}/product/details/${id}`
+    );
 
     productName.innerHTML = product.data.name;
     productPrice.innerHTML = `${Number(product.data.price).toLocaleString()}원`;
@@ -200,3 +203,28 @@ function setModalContent(type) {
     modalContainer.setAttribute("data-modal-check", "deletePreLoved");
   }
 }
+
+// 이미지 클릭 시 크게 보이도록 하는 함수
+function openModal(imageSrc) {
+  const modal = document.getElementById("imageModal");
+  const modalImage = document.getElementById("modalImage");
+
+  // 모달 이미지 src 설정
+  modalImage.src = imageSrc;
+
+  // 모달 보이기
+  modal.style.display = "flex";
+}
+
+// 이미지 모달 닫기
+function closeModal() {
+  const modal = document.getElementById("imageModal");
+  modal.style.display = "none";
+}
+
+// ESC 키로 이미지 모달 닫기
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeModal();
+  }
+});
