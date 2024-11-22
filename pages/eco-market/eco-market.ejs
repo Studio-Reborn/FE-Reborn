@@ -8,6 +8,10 @@ Date        Author      Status      Description
 2024.11.04  이유민      Created     
 2024.11.04  이유민      Modified    에코 마켓 페이지 추가
 2024.11.05  이유민      Modified    검색 및 정렬 추가
+2024.11.21  이유민      Modified    에코 마켓 생성 버튼 추가
+2024.11.21  이유민      Modified    마켓 전체 조회 API 연동
+2024.11.22  이유민      Modified    모달 수정
+2024.11.22  이유민      Modified    토스트 메시지 추가
 -->
 <div class="page-box" style="background-color: #cfe2ff; padding-top: 182px; padding-bottom: 182px">
   <div style="margin-right: 12px">
@@ -21,6 +25,9 @@ Date        Author      Status      Description
       <br />
       다양한 제품들을 만날 수 있습니다.
     </p>
+    <button type="button" class="global-btn" style="width: 174px" data-bs-toggle="modal" data-bs-target="#modalContainer" id="createEcoMarketBtn">
+      에코 마켓 신청하기
+    </button>
   </div>
   <img src="/assets/images/eco-market.svg" style="height: 277px; width: auto; margin-left: 8px" />
 </div>
@@ -45,94 +52,50 @@ Date        Author      Status      Description
 </div>
 
 <!-- 카드 -->
-<div class="card-contents" style="gap: 66px">
-  <a href="/eco-market/click">
-    <div class="card mb-3" style="width: 562px">
-      <div class="row g-0">
-        <div class="col-md-4">
-          <img src="/assets/images/eco-market-example.svg" class="img-fluid rounded-start" alt="..." />
-        </div>
-        <div class="col-md-8">
-          <div class="card-body">
-            <h5 class="card-title">만수마켓</h5>
-            <p class="card-text">
-              우리 동네에서 직접 수집한 재활용 명품들! 만수마켓에서 만나는 소중한
-              가치를 느껴보세요.
-            </p>
-            <p class="card-text">
-              <small class="text-body-secondary">후기 2,829 단골 1,203</small>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </a>
+<div id="ecoMarketContainer"></div>
 
-  <a href="/eco-market/click">
-    <div class="card mb-3" style="width: 562px">
-      <div class="row g-0">
-        <div class="col-md-4">
-          <img src="/assets/images/eco-market-example.svg" class="img-fluid rounded-start" alt="..." />
-        </div>
-        <div class="col-md-8">
-          <div class="card-body">
-            <h5 class="card-title">만수마켓</h5>
-            <p class="card-text">
-              우리 동네에서 직접 수집한 재활용 명품들! 만수마켓에서 만나는 소중한
-              가치를 느껴보세요.
-            </p>
-            <p class="card-text">
-              <small class="text-body-secondary">후기 2,829 단골 1,203</small>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </a>
-</div>
 
-<div class="card-contents" style="gap: 66px">
-  <a href="/eco-market/click">
-    <div class="card mb-3" style="width: 562px">
-      <div class="row g-0">
-        <div class="col-md-4">
-          <img src="/assets/images/eco-market-example.svg" class="img-fluid rounded-start" alt="..." />
-        </div>
-        <div class="col-md-8">
-          <div class="card-body">
-            <h5 class="card-title">만수마켓</h5>
-            <p class="card-text">
-              우리 동네에서 직접 수집한 재활용 명품들! 만수마켓에서 만나는 소중한
-              가치를 느껴보세요.
-            </p>
-            <p class="card-text">
-              <small class="text-body-secondary">후기 2,829 단골 1,203</small>
-            </p>
+<%- include("../views/components/modal", {modalTitle: '에코 마켓 신청하기',
+modalBody: `
+        <div style="font-family: LINESeed-RG; font-size: 15px; padding: 30px; border: 2px solid #6b8e23; border-radius: 10px; background-color: #f0f8e8; color: #333; text-align: center;">
+          <div style="font-size: 15px; line-height: 1.6;">
+              <p style="margin: 0 0 10px;">
+                  🚨 <strong style="color: #3a7d44;">알림</strong> 🚨
+              </p>
+              <p style="margin: 0 0 10px;">
+                  에코마켓 신청 후 관리자의 확인이 필요합니다.<br />
+                  관리자 확인이 완료되면 에코마켓이 생성됩니다.<br />
+                  최대 1주일의 시간이 소요될 수 있습니다.
+              </p>
+              <p style="margin: 0;">
+                  신청이 완료되면, 연락처로 문자 알림이 발송될 수 있습니다.
+              </p>
           </div>
         </div>
-      </div>
-    </div>
-  </a>
 
-  <a href="/eco-market/click">
-    <div class="card mb-3" style="width: 562px">
-      <div class="row g-0">
-        <div class="col-md-4">
-          <img src="/assets/images/eco-market-example.svg" class="img-fluid rounded-start" alt="..." />
+        <!-- 파일 선택-->
+        <div style="font-family: LINESeed-RG; color: #6c757d; font-size: 15px; padding-top: 15px">📢 마켓 프로필 이미지를 선택해주세요.</div>
+        <div class="input-group mb-3" style="width: 586px">
+          <input type="file" class="form-control" id="ecoMarketProfileImage" onchange="uploadProfileImage()">
+          <label class="input-group-text" for="ecoMarketProfileImage">Upload</label>
+          <span id="ecoMarketProfileImageId" style="display: none" data-value=""></span>
         </div>
-        <div class="col-md-8">
-          <div class="card-body">
-            <h5 class="card-title">만수마켓</h5>
-            <p class="card-text">
-              우리 동네에서 직접 수집한 재활용 명품들! 만수마켓에서 만나는 소중한
-              가치를 느껴보세요.
-            </p>
-            <p class="card-text">
-              <small class="text-body-secondary">후기 2,829 단골 1,203</small>
-            </p>
-          </div>
+
+        <!-- 마켓명 -->
+        <div class="form-floating mb-3" style="width: 586px">
+          <input type="text" class="form-control" id="ecoMarketName" placeholder="마켓명">
+          <label for="ecoMarketName">마켓명</label>
         </div>
-      </div>
-    </div>
-  </a>
-</div>
+
+        <!-- 마켓 설명 -->
+        <div class="form-floating mb-3" style="width: 586px">
+          <textarea class="form-control" id="ecoMarketDetail" placeholder="마켓 설명" style="height: 150px"></textarea>
+          <label for="ecoMarketDetail">마켓 설명</label>
+        </div>
+  `, modalCloseBtn: '취소', modalCheckBtn: '등록', modalCheck: 'createEcoMarket'})%>
+
+<!-- 토스트 메시지 -->
+<%- include("../views/components/toast", 
+  {toastMessage: "마켓 요청이 접수되었습니다.<br />검토 후 연락드리겠습니다. 감사합니다!"}) %>
+
+<script src="/js/eco-market/ecoMarketHandler.js"></script>

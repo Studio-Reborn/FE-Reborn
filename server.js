@@ -36,12 +36,12 @@ app.get("/eco-market", (req, res) => {
     currentPage: "eco-market",
   });
 });
-app.get("/eco-market/click", (req, res) => {
+app.get("/eco-market/:id", (req, res) => {
   res.render("../pages/eco-market/eco-market-click", {
     currentPage: "eco-market",
   });
 });
-app.get("/eco-market/product", (req, res) => {
+app.get("/eco-market/:id/:product_id", (req, res) => {
   res.render("../pages/eco-market/eco-market-product", {
     currentPage: "eco-market",
   });
@@ -84,6 +84,11 @@ app.get("/chatting", (req, res) => {
 app.get("/chatting/detail", (req, res) => {
   res.render("../pages/chatting/chatting-detail", {
     currentPage: "chatting",
+  });
+});
+app.get("/404", (req, res) => {
+  res.render("../pages/notFound", {
+    currentPage: "404",
   });
 });
 
