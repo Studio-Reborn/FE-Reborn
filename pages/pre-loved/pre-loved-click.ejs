@@ -1,0 +1,75 @@
+<!-- 
+File Name : pre-loved-click
+Description : 중고거래 상품 조회
+Author : 이유민
+
+History
+Date        Author      Status      Description
+2024.11.05  이유민      Created     
+2024.11.05  이유민      Modified    중고거래 상품 조회 추가
+2024.11.08  이유민      Modified    오타 수정
+2024.11.18  이유민      Modified    상품 개별 조회 API 연동
+2024.11.19  이유민      Modified    수정 삭제 글자 추가
+2024.11.19  이유민      Modified    수정 삭제 모달 추가
+2024.11.20  이유민      Modified    상품 이미지 조회 API 연동
+2024.11.22  이유민      Modified    이미지 모달창 추가
+-->
+<!-- 상품 이미지 -->
+<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 21px">
+  <img id="caretLeftBtn" src="/assets/icons/caret-right.svg" style="margin-right: 7px; transform: rotate(180deg); cursor: pointer">
+  <img id="mainPreLovedProductImage" src="" alt="상품 이미지" style="width: 500px; height: 500px; object-fit: cover; border-radius: 20px; margin-top: 37px;" onclick="openModal(this.src)">
+  <img id="caretRightBtn" src="/assets/icons/caret-right.svg" style="margin-left: 7px; cursor: pointer">
+</div>
+
+<!-- 프로필 및 설명 -->
+<div style="max-width: 738px; margin: 0 auto;">
+  <div style="display: flex; align-items: center; margin-bottom: 9px">
+    <img id="sellUserProfile" src="/assets/images/eco-market-example.svg" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; margin-right: 10px;">
+    <p id="sellUserName" style="font-family: LINESeed-BD; font-size: 20px; margin: 0;"></p>
+  </div>
+
+  <hr id="gray-500" style="width: 738px; margin: 0; padding-bottom: 16px" />
+
+  <div>
+    <!-- 제품 관련 -->
+    <div id="productName" style="padding-bottom: 9px; font-size: 20px; font-family: LINESeed-BD">
+    </div>
+    <div id="productPrice" style="padding-bottom: 9px; font-size: 15px; font-family: LINESeed-BD">
+    </div>
+    <div id="productDetail" style="padding-bottom: 9px; font-size: 15px; font-family: LINESeed-RG">
+    </div>
+    <!-- 관심, 수정, 삭제-->
+    <div style="display: flex">
+      <div id="heartText" style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG">
+        관심 17
+      </div>
+      <div id="principalCheck" style="margin-left: auto; display: none; gap: 10px;">
+        <div id="updateText" style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG; cursor: pointer" data-bs-toggle="modal" data-bs-target="#modalContainer" onclick="setModalContent('update')">
+          수정
+        </div>
+        <div id="deleteText" style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG; cursor: pointer" data-bs-toggle="modal" data-bs-target="#modalContainer" onclick="setModalContent('delete')">
+          삭제
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 이미지 모달 -->
+<div id="imageModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); justify-content: center; align-items: center; z-index: 1000;" onclick="closeModal()">
+  <img id="modalImage" src="" style="max-width: 90%; max-height: 90%; border-radius: 20px;" alt="Expanded View">
+  <button onclick="closeModal()" style="position: absolute; top: 10px; right: 20px; background: none; border: none; font-size: 24px; color: white; cursor: pointer;">
+    &times;
+  </button>
+</div>
+
+<!-- 모달 -->
+<%- include("../views/components/modal", {
+  modalTitle: '',
+  modalBody: '',
+  modalCloseBtn: '취소',
+  modalCheckBtn: '',
+  modalCheck: ''
+}) %>
+
+<script src="/js/pre-loved/preLovedClickHandler.js"></script>

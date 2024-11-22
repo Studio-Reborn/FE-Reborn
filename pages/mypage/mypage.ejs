@@ -1,0 +1,159 @@
+<!-- 
+File Name : mypage
+Description : 마이페이지
+Author : 이유민
+
+History
+Date        Author      Status      Description
+2024.11.06  이유민      Created     
+2024.11.06  이유민      Modified    마이페이지 추가
+2024.11.08  이유민      Modified    등급 설명 모달 추가
+2024.11.08  이유민      Modified    툴팁 추가
+2024.11.13  이유민      Modified    사용자 정보 가져오기 추가
+-->
+<div style="max-width: 738px; margin: 0 auto; padding-top: 36px">
+  <!-- 제목 -->
+  <span style="font-family: LINESeed-BD; font-size: 45px;">
+    마이페이지
+  </span>
+
+  <!-- 수평선 -->
+  <hr id="gray-500" style="width: 738px; padding-top: 16px;" />
+
+  <!-- 프로필 -->
+  <div class="card mb-3" style="width: 738px; height: 265px">
+    <div class="row g-0" style="height: 100%">
+      <div class="col-md-4" style="height: 100%">
+        <img class="img-fluid rounded-start" alt="프로필" style="height: 100%; width: auto; object-fit: cover" id="userProfileImage" />
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title" id="userNickname"></h5>
+          <p class="card-text">
+            <small class="text-body-secondary">
+              <span data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="모든 등급 설명 보기">
+                <span data-bs-toggle="modal" data-bs-target="#modalContainer">잎새 리본 🌿</span>
+              </span>
+              <br />
+              <br />
+              <br />
+              <a href="/mypage/update" style="color: #6c757d">회원정보 수정</a>
+            </small>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 수평선 -->
+  <hr id="gray-500" style="width: 738px; margin-top: 32px;" />
+
+  <!-- 중고거래 판매 내역 -->
+  <div style="max-width: 738px; margin: 0 auto;">
+    <span style="font-family: LINESeed-BD; font-size: 30px; display: block;">
+      중고거래 판매 내역
+    </span>
+    <br />
+    <span style="font-family: LINESeed-RG; font-size: 20px; color: #6c757d; display: block; text-align: center;">
+      중고거래 판매 내역이 없습니다.
+    </span>
+  </div>
+
+  <!-- 수평선 -->
+  <hr id="gray-500" style="width: 738px; margin-top: 32px;" />
+
+  <!-- 중고거래 구매 내역 -->
+  <div style="max-width: 738px; margin: 0 auto;">
+    <span style="font-family: LINESeed-BD; font-size: 30px; display: block;">
+      중고거래 구매 내역
+    </span>
+    <br />
+    <span style="font-family: LINESeed-RG; font-size: 20px; color: #6c757d; display: block; text-align: center;">
+      중고거래 구매 내역이 없습니다.
+    </span>
+  </div>
+
+
+  <!-- 수평선 -->
+  <hr id="gray-500" style="width: 738px; margin-top: 32px;" />
+
+  <!-- 에코 마켓 구매 내역 -->
+  <div style="max-width: 738px; margin: 0 auto;">
+    <div style="display: flex; align-items: center">
+      <span style="font-family: LINESeed-BD; font-size: 30px; display: block;">
+        에코 마켓 구매 내역
+      </span>
+
+      <!-- 전체 보기 -->
+      <a href="#" style="color: #6c757d; font-family: LINESeed-RG; font-size: 15px; margin-left: auto">
+        <img src="/assets/icons/plus-square.svg" style="height: 20px; width: auto;" />
+        <span style="margin-left: 3px;">전체 보기</span>
+      </a>
+    </div>
+    <br />
+    <!-- 내역 있을 경우 나타나는 카드 -->
+    <div class="card mb-3" style="width: 738px; height: 191px">
+      <div class="row g-0" style="height: 100%">
+        <div class="col-md-4" style="height: 100%">
+          <img src="/assets/images/eco-market-product.svg" class="img-fluid rounded-start" alt="프로필" style="height: 100%;  width: auto; object-fit: cover" />
+        </div>
+        <div class="col-md-8" style="left: 0">
+          <div class="card-body">
+            <h5 class="card-title">구름 모양 코스터</h5>
+            <p class="card-text">
+              <small class="text-body-secondary">
+                만수마켓 배송
+                30,000원 1개
+                두꺼운 코스터
+              </small>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 수평선 -->
+  <hr id="gray-500" style="width: 738px; margin-top: 32px;" />
+
+  <!-- 리본 리메이크 구매 내역 -->
+  <div style="max-width: 738px; margin: 0 auto;">
+    <span style="font-family: LINESeed-BD; font-size: 30px; display: block;">
+      리본 리메이크 구매 내역
+    </span>
+    <br />
+    <span style="font-family: LINESeed-RG; font-size: 20px; color: #6c757d; display: block; text-align: center;">
+      리본 리메이크 구매 내역이 없습니다.
+    </span>
+  </div>
+
+
+  <!-- 수평선 -->
+  <hr id="gray-500" style="width: 738px; margin-top: 32px;" />
+
+  <!-- 작성한 후기 -->
+  <div style="max-width: 738px; margin: 0 auto;">
+    <span style="font-family: LINESeed-BD; font-size: 30px; display: block;">
+      작성한 후기
+    </span>
+    <br />
+    <span style="font-family: LINESeed-RG; font-size: 20px; color: #6c757d; display: block; text-align: center;">
+      작성한 후기가 없습니다.
+    </span>
+  </div>
+</div>
+
+<%- include("../views/components/modal", {modalTitle: '등급 🏆',
+modalBody: `
+  <div style="font-family: LINESeed-RG">
+    <span style="font-family: LINESeed-BD">새싹 리본 🌱</span> : 거래를 시작하지 않은 회원<br />
+    <span style="font-family: LINESeed-BD">잎새 리본 🌿</span> : 거래를 시작한 회원<br />
+    <span style="font-family: LINESeed-BD">씨앗 리본 ☘️</span> : 중고마켓에서 활발히 거래하는 회원<br />
+    <span style="font-family: LINESeed-BD">푸른 리본 🍀</span> : 에코마켓에서 활발히 거래하는 회원<br />
+    <span style="font-family: LINESeed-BD">활짝 리본 🪴</span> : 리본 리메이크 서비스를 자주 이용하는 회원<br />
+    <span style="font-family: LINESeed-BD">리본 서포터 🎀</span> : 높은 리사이클링 구매와 중고거래로 환경을 생각하는 회원<br />
+  </div>
+  `, modalCloseBtn: '닫기', modalCheckBtn: '', modalCheck: 'grade'})%>
+
+<script src="/js/mypageHandler.js"></script>

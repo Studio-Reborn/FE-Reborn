@@ -1,0 +1,39 @@
+<!-- 
+File Name : modal
+Description : 모달 컴포넌트
+Author : 이유민
+
+History
+Date        Author      Status      Description
+2024.11.05  이유민      Created     
+2024.11.05  이유민      Modified    모달 컴포넌트 추가
+2024.11.07  이유민      Modified    body 수정
+2024.11.08  이유민      Modified    토스트 메시지 분리
+2024.11.19  이유민      Modified    배경색 명시
+-->
+<div class="modal fade" id="modalContainer" tabindex="-1" aria-labelledby="modalContainerLabel" aria-hidden="true" data-modal-check="<%= modalCheck %>">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 623px; width: 100%">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modalTitle" style="font-family: LINESeed-BD; font-size: 16px">
+          <%= modalTitle %>
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <%- modalBody %>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="font-family: LINESeed-BD; font-size: 16px; padding: 8px 15px;">
+          <%= modalCloseBtn %>
+        </button>
+        <button type="button" class="global-btn" id="modalSubmitBtn" style="font-family: LINESeed-BD; font-size: 16px; background-color: #479F76">
+          <%= modalCheckBtn %>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/modalHandler.js"></script>

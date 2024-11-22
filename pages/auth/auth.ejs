@@ -1,0 +1,90 @@
+<!-- 
+File Name : auth
+Description : 회원가입 화면
+Author : 이유민
+
+History
+Date        Author      Status      Description
+2024.11.05  이유민      Created     
+2024.11.05  이유민      Modified    회원가입 추가
+2024.11.07  이유민      Modified    전화번호 입력 추가
+2024.11.07  이유민      Modified    API 연동
+-->
+<div style="
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+  ">
+  <!-- 로고 -->
+  <div style="display: flex; justify-content: center">
+    <a href="/">
+      <img src="/assets/images/Reborn_logo2.svg" style="width: 472px; height: auto" alt="Reborn" />
+    </a>
+  </div>
+
+  <div style="
+      border: 1px solid #adb5bd;
+      padding-top: 25px;
+      padding-bottom: 25px;
+      width: 430px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border-radius: 20px;
+      font-family: LINESeed-RG;
+    ">
+    <!-- 닉네임 입력 -->
+    <div class="form-floating mb-3" style="width: 373px">
+      <input type="text" class="form-control" id="nickname" placeholder="닉네임">
+      <label for="floatingInput">닉네임</label>
+    </div>
+
+    <!-- 전화번호 입력 -->
+    <div class="form-floating mb-3" style="width: 373px">
+      <input type="phone" class="form-control" id="phone" placeholder="전화번호">
+      <label for="floatingInput">전화번호</label>
+    </div>
+
+    <!-- 이메일 입력 -->
+    <div class="form-floating mb-3" style="width: 373px">
+      <input type="email" class="form-control" id="email" placeholder="이메일">
+      <label for="floatingInput">이메일</label>
+    </div>
+
+    <!-- 비밀번호 입력 -->
+    <div class="form-floating mb-3" style="width: 373px">
+      <input type="password" class="form-control" id="password" placeholder="비밀번호">
+      <label for="floatingInput">비밀번호</label>
+    </div>
+
+    <!-- 비밀번호 확인 입력 -->
+    <div class="form-floating mb-3" style="width: 373px">
+      <input type="password" class="form-control" id="passwordCheck" placeholder="비밀번호 확인">
+      <label for="floatingInput">비밀번호 확인</label>
+    </div>
+
+    <!-- 경고문구 -->
+    <p style="color: #e35d6a; font-family: LINESeed-BD; font-size: 14px; block: none" id="warningText">
+    </p>
+
+    <!-- 회원가입 버튼 -->
+    <div>
+      <button type="button" class="global-btn" style="width: 373px" id="signUpBtn">
+        회원가입
+      </button>
+    </div>
+  </div>
+
+  <!-- 칸 아래 -->
+  <div class="login-texts" style="display: flex; padding-top: 18px">
+    <div>
+      <a href="/login">로그인 화면으로 돌아가기</a>
+    </div>
+  </div>
+</div>
+
+<script src="/js/auth/authHandler.js"></script>
