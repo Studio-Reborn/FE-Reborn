@@ -15,6 +15,7 @@ Date        Author      Status      Description
 2024.11.19  이유민      Modified    제품명 최대 12글자 표시
 2024.11.20  이유민      Modified    제품 이미지 업로드 API 연동
 2024.11.20  이유민      Modified    제품 이미지 조회 API 연동
+2024.11.22  이유민      Modified    카드 정렬 추가
 */
 window.addEventListener("load", () => {
   preLoved();
@@ -69,6 +70,13 @@ async function preLoved() {
         </div>
       </a>
       `;
+
+      if (products.data.length % 3 !== 0 && i === products.data.length - 1) {
+        contentHTML += `<div class="card" style="width: 18rem; visibility: hidden;"></div>`;
+
+        if (products.data.length % 3 === 1)
+          contentHTML += `<div class="card" style="width: 18rem; visibility: hidden;"></div>`;
+      }
 
       if (i % 3 === 2 || i === products.data.length - 1)
         contentHTML += `</div>`;
