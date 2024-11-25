@@ -10,6 +10,7 @@ Date        Author      Status      Description
 2024.11.21  이유민      Modified    API 연동
 2024.11.21  이유민      Modified    모달 추가
 2024.11.21  이유민      Modified    이미지 모달창 추가
+2024.11.25  이유민      Modified    하단바 가격 연동
 -->
 <!-- 상품 이미지 -->
 <div style="display: flex; align-items: center; justify-content: center; padding-bottom: 21px">
@@ -51,17 +52,17 @@ Date        Author      Status      Description
   </div>
 
   <!-- 하단바 -->
-  <nav class="navbar navbar-light bg-light" style="position: fixed; bottom: 0; width: 100%; display: flex; font-family: LINESeed-RG; left: 0">
+  <nav class="navbar navbar-light bg-light" style="position: fixed; bottom: 0; width: 100%; display: flex; font-family: LINESeed-RG; left: 0; z-index: 99">
     <!-- 총 금액-->
-    <div style="padding-left: 130px; font-family: LINESeed-BD; font-size: 20px;">총 금액 30,000원</div>
+    <div id="totalAmount" style="padding-left: 130px; font-family: LINESeed-BD; font-size: 20px;"></div>
 
-    <!-- 옵션 선택 -->
+    <!-- 옵션 선택 
     <div style="position: absolute; left: 50%; transform: translateX(-50%); z-index: 1;">
       <select class="form-select" id="form-select" aria-label="Default select example" style="width: 507px;">
         <option selected value="option">옵션 선택하기</option>
         <option value="최신순">최신순</option>
       </select>
-    </div>
+    </div> -->
 
     <!-- 수량 선택 및 결제 버튼 컨테이너 -->
     <div style="display: flex; align-items: center; padding-right: 130px; gap: 30px;">

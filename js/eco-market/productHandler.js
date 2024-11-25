@@ -9,6 +9,7 @@ Date        Author      Status      Description
 2024.11.21  이유민      Modified    에코마켓 전체 API 연동
 2024.11.22  이유민      Modified    모달 추가
 2024.11.22  이유민      Modified    이미지 모달창 추가
+2024.11.25  이유민      Modified    하단바 가격 연동
 */
 
 window.addEventListener("load", () => {
@@ -26,6 +27,9 @@ const productData = {
   detail: "",
   imageId: 0,
 };
+
+// 구매 수량
+let totalCnt = 1;
 
 // 상품 이미지 관련
 let imageList = [];
@@ -93,18 +97,30 @@ async function readProductInfo(market_id, id) {
     productData.detail = info.data.detail;
     productData.imageId = info.data.product_image_id;
 
+    // 하단바 가격
+    document.getElementById("totalAmount").innerHTML = `총 금액 ${Number(
+      info.data.price * totalCnt
+    ).toLocaleString()}원`;
+
     return;
   } catch (err) {
     console.error(err);
   }
 }
 
+// 하단바
 function decreaseQuantity() {
   const quantityInput = document.getElementById("quantityInput");
   let quantity = parseInt(quantityInput.value, 10);
   if (quantity > 1) {
     quantity--;
     quantityInput.value = quantity;
+
+    // 하단바 가격
+    totalCnt--;
+    document.getElementById("totalAmount").innerHTML = `총 금액 ${Number(
+      productData.price * totalCnt
+    ).toLocaleString()}원`;
   }
 }
 
@@ -113,6 +129,12 @@ function increaseQuantity() {
   let quantity = parseInt(quantityInput.value, 10);
   quantity++;
   quantityInput.value = quantity;
+
+  // 하단바 가격
+  totalCnt++;
+  document.getElementById("totalAmount").innerHTML = `총 금액 ${Number(
+    productData.price * totalCnt
+  ).toLocaleString()}원`;
 }
 
 // 모달 함수
