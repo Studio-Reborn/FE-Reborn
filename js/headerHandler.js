@@ -11,6 +11,7 @@ Date        Author      Status      Description
 2024.11.13  이유민      Modified    토큰 검증 추가
 2024.11.13  이유민      Modified    프로필 이미지 API 연동
 2024.11.18  이유민      Modified    API 경로 수정
+2024.11.23  이유민      Modified    드롭다운 UI 수정
 */
 // 토큰 있을 경우 로드될 때마다 토큰 검증
 window.addEventListener("load", () => {
@@ -60,7 +61,7 @@ async function loginCheckInHeader() {
         <img src="${window.API_SERVER_URL}/${profileImageUrl}" style="width: 45px; height: 45px; border-radius: 50%; margin-left: 10px;" />
       </div>
 
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="margin-top: 25px; margin-left: 50px">
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="margin-top: 25px; margin-right: 50px">
         <li><a class="dropdown-item" href="#" onclick="logout()">로그아웃</a></li>
         <li><a class="dropdown-item" href="/chatting">내 채팅</a></li>
         <li><a class="dropdown-item" href="/mypage">마이페이지</a></li>
