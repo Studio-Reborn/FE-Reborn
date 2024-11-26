@@ -11,6 +11,7 @@ Date        Author      Status      Description
 2024.11.21  이유민      Modified    모달 추가
 2024.11.21  이유민      Modified    이미지 모달창 추가
 2024.11.25  이유민      Modified    하단바 가격 연동
+2024.11.25  이유민      Modified    결제버튼 수정
 -->
 <!-- 상품 이미지 -->
 <div style="display: flex; align-items: center; justify-content: center; padding-bottom: 21px">
@@ -40,7 +41,7 @@ Date        Author      Status      Description
       <div style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG">
         관심 17
       </div>
-      <div id="principalCheck" style="margin-left: auto; gap: 10px; display: flex">
+      <div id="principalCheck" style="margin-left: auto; gap: 10px; display: none">
         <div id="updateText" style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG; cursor: pointer" data-bs-toggle="modal" data-bs-target="#modalContainer" onclick="setModalContent('updateMarketProduct')">
           수정
         </div>
@@ -74,9 +75,7 @@ Date        Author      Status      Description
       </div>
 
       <!-- 결제 버튼 -->
-      <a href="/payments">
-        <button type="button" class="global-btn" style="width: 77px;">결제</button>
-      </a>
+      <button type="button" id="orderBtn" class="global-btn" style="width: 77px;">결제</button>
     </div>
   </nav>
 

@@ -11,6 +11,7 @@ Date        Author      Status      Description
 2024.11.19  이유민      Modified    상품 삭제 API 연동
 2024.11.20  이유민      Modified    상품 이미지 수정 API 연동
 2024.11.21  이유민      Modified    이미지 모달창 추가
+2024.11.26  이유민      Modified    API 경로 수정
 */
 // 제품 데이터 객체로 사용하기 위함
 const productData = {
@@ -54,7 +55,7 @@ async function readProductData(id) {
   try {
     // 제품 정보 가져오기
     const product = await axios.get(
-      `${window.API_SERVER_URL}/product/details/${id}`
+      `${window.API_SERVER_URL}/product/pre-loved/info/${id}`
     );
 
     productName.innerHTML = product.data.name;
@@ -145,6 +146,23 @@ function setModalContent(type) {
           <textarea class="form-control" id="productDetailNew" placeholder="제품 설명" style="height: 150px"></textarea>
           <label for="productDetailNew">제품 설명</label>
         </div>
+
+        <!-- 판매 상태 -->
+        <div class="form-check-group d-flex align-items-center mb-3" style="gap: 20px; width: 586px">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="productStatus" id="statusOnSale" value="판매중" checked>
+            <label class="form-check-label" for="statusOnSale">
+              판매중
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="productStatus" id="statusSoldOut" value="판매완료">
+            <label class="form-check-label" for="statusSoldOut">
+              판매완료
+            </label>
+          </div>
+        </div>
+
       `;
     document.getElementById("productDetailNew").innerHTML =
       productData.detail.replace(/<br>/g, "\n");

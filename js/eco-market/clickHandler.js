@@ -8,6 +8,7 @@ Date        Author      Status      Description
 2024.11.21  이유민      Created     
 2024.11.21  이유민      Modified    에코마켓 전체 API 연동
 2024.11.22  이유민      Modified    모달 추가
+2024.11.26  이유민      Modified    API 경로 수정
 */
 window.addEventListener("load", () => {
   const id = window.location.pathname.split("/").pop();
@@ -64,7 +65,7 @@ async function readMarketProducts(id) {
   try {
     // 마켓의 판매 제품
     const products = await axios.get(
-      `${window.API_SERVER_URL}/product/category?theme=market&user_id=${id}`
+      `${window.API_SERVER_URL}/product/eco-market/market/${id}`
     );
 
     for (let i = 0; i < products.data.length; i++) {
@@ -149,6 +150,12 @@ function setModalContent(type) {
         <div class="form-floating mb-3" style="width: 586px">
           <textarea class="form-control" id="marketProductDetail" placeholder="제품 설명" style="height: 150px"></textarea>
           <label for="marketProductDetail">제품 설명</label>
+        </div>
+
+        <!-- 제품 수량 -->
+        <div class="form-floating mb-3" style="width: 586px">
+          <input type="number" class="form-control" id="marketProductQuantity" placeholder="제품 수량">
+          <label for="marketProductQuantity">제품 수량</label>
         </div>
         `;
     modalSubmitBtn.innerHTML = "등록";
