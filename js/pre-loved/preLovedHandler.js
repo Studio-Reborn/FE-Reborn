@@ -16,6 +16,7 @@ Date        Author      Status      Description
 2024.11.20  이유민      Modified    제품 이미지 업로드 API 연동
 2024.11.20  이유민      Modified    제품 이미지 조회 API 연동
 2024.11.22  이유민      Modified    카드 정렬 추가
+2024.11.26  이유민      Modified    API 경로 수정
 */
 window.addEventListener("load", () => {
   preLoved();
@@ -31,7 +32,7 @@ async function preLoved() {
 
   try {
     const products = await axios.get(
-      `${window.API_SERVER_URL}/product?theme=user`
+      `${window.API_SERVER_URL}/product/pre-loved`
     );
 
     for (let i = 0; i < products.data.length; i++) {

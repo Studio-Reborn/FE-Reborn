@@ -10,6 +10,9 @@ Date        Author      Status      Description
 2024.11.22  이유민      Modified    모달 추가
 2024.11.22  이유민      Modified    이미지 모달창 추가
 2024.11.25  이유민      Modified    하단바 가격 연동
+2024.11.25  이유민      Modified    세션에 제품 정보 저장 추가
+2024.11.26  이유민      Modified    본인 확인 추가
+2024.11.26  이유민      Modified    API 경로 수정
 */
 
 window.addEventListener("load", () => {
@@ -26,6 +29,8 @@ const productData = {
   price: 0,
   detail: "",
   imageId: 0,
+  id: 0,
+  quantity: 0,
 };
 
 // 구매 수량
@@ -72,7 +77,7 @@ async function readProductInfo(market_id, id) {
 
     // 상품 정보
     const info = await axios.get(
-      `${window.API_SERVER_URL}/product/details/${id}`
+      `${window.API_SERVER_URL}/product/eco-market/info/${id}`
     );
 
     document.getElementById("marketProductName").innerHTML = info.data.name;
@@ -96,11 +101,28 @@ async function readProductInfo(market_id, id) {
     productData.price = info.data.price;
     productData.detail = info.data.detail;
     productData.imageId = info.data.product_image_id;
+    productData.id = info.data.id;
+    productData.quantity = info.data.quantity;
 
     // 하단바 가격
     document.getElementById("totalAmount").innerHTML = `총 금액 ${Number(
       info.data.price * totalCnt
     ).toLocaleString()}원`;
+
+    // 로그인 상태일 때, 제품 판매자와 본인 확인하기
+    if (localStorage.getItem("access_token")) {
+      // 본인 정보 가져오기
+      const check = await axios.get(`${window.API_SERVER_URL}/users`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+
+      // 판매자 본인일 때
+      if (market.data.user_id === check.data.id) {
+        document.getElementById("principalCheck").style.display = "flex";
+      }
+    }
 
     return;
   } catch (err) {
@@ -137,6 +159,23 @@ function increaseQuantity() {
   ).toLocaleString()}원`;
 }
 
+document.getElementById("orderBtn").addEventListener("click", async () => {
+  try {
+    await axios.post(`/api/save-session-data`, {
+      dataType: "productData",
+      data: {
+        product_id: productData.id,
+        product_cnt: totalCnt,
+        product_price: productData.price,
+      },
+    });
+
+    window.location.href = "/payments";
+  } catch (err) {
+    console.error(err);
+  }
+});
+
 // 모달 함수
 function setModalContent(type) {
   if (!localStorage.getItem("access_token")) {
@@ -151,7 +190,7 @@ function setModalContent(type) {
   const modalSubmitBtn = document.getElementById("modalSubmitBtn");
 
   if (type === "updateMarketProduct") {
-    modalTitle.textContent = "마켓 정보 수정하기";
+    modalTitle.textContent = "마켓 물건 정보 수정하기";
     modalBody.innerHTML = `
         <!-- 파일 선택-->
         <div class="input-group mb-3" style="width: 586px">
@@ -176,6 +215,12 @@ function setModalContent(type) {
         <div class="form-floating mb-3" style="width: 586px">
           <textarea class="form-control" id="marketProductDetailNew" placeholder="제품 설명" style="height: 150px">${productData.detail}</textarea>
           <label for="marketProductDetailNew">제품 설명</label>
+        </div>
+
+        <!-- 제품 수량 -->
+        <div class="form-floating mb-3" style="width: 586px">
+          <input type="number" class="form-control" id="marketProductQuantityNew" placeholder="제품 수량" value="${productData.quantity}">
+          <label for="marketProductQuantityNew">제품 수량</label>
         </div>
           `;
     document.getElementById("marketProductDetailNew").innerHTML =
