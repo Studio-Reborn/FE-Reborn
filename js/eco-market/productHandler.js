@@ -222,6 +222,35 @@ function setModalContent(type) {
           <input type="number" class="form-control" id="marketProductQuantityNew" placeholder="제품 수량" value="${productData.quantity}">
           <label for="marketProductQuantityNew">제품 수량</label>
         </div>
+
+        <!-- 판매 상태 -->
+        <label for="productStatusGroup" class="form-label" style="font-family: LINESeed-RG">판매 상태 선택</label>
+        <div id="productStatusGroup" class="form-check-group d-flex align-items-center mb-3" style="gap: 20px; width: 586px; font-family: LINESeed-RG">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="productStatus" id="statusOnSale" value="판매중" checked>
+            <label class="form-check-label" for="statusOnSale">
+              판매중
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="productStatus" id="statusOut" value="품절">
+            <label class="form-check-label" for="statusOut">
+              품절
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="productStatus" id="statusStop" value="판매중단">
+            <label class="form-check-label" for="statusStop">
+              판매중단
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="productStatus" id="statusHidden" value="숨김">
+            <label class="form-check-label" for="statusHidden">
+              숨김
+            </label>
+          </div>
+        </div>
           `;
     document.getElementById("marketProductDetailNew").innerHTML =
       productData.detail.replace(/<br>/g, "\n");
