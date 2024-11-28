@@ -8,6 +8,7 @@ Date        Author      Status      Description
 2024.11.25  이유민      Created     
 2024.11.25  이유민      Modified    결제 API 연동
 2024.11.26  이유민      Modified    API 경로 수정
+2024.11.28  이유민      Modified    리본 리메이크 결제 API 연동
 */
 // 토큰 없을 경우 접근 금지
 window.addEventListener("load", () => {
@@ -37,9 +38,14 @@ async function readProductInfo() {
     );
 
     // 제품 정보
-    const info = await axios.get(
-      `${window.API_SERVER_URL}/product/eco-market/info/${session.data.product_id}`
-    );
+    const info =
+      session.data.category === "reborn"
+        ? await axios.get(
+            `${window.API_SERVER_URL}/remake/product/${session.data.product_id}`
+          )
+        : await axios.get(
+            `${window.API_SERVER_URL}/product/eco-market/info/${session.data.product_id}`
+          );
 
     document.getElementById("productTitle").innerHTML = `${info.data.name}`;
     document.getElementById("productPrice").innerHTML = `${Number(
@@ -51,6 +57,12 @@ async function readProductInfo() {
     document.getElementById("paymentsTotalPrice").innerHTML = `${(
       Number(info.data.price) * session.data.product_cnt
     ).toLocaleString()}`;
+    document.getElementById(
+      "productMarket"
+    ).innerHTML = `${info.data.market_name}`;
+    document.getElementById(
+      "productImage"
+    ).src = `${window.API_SERVER_URL}/${info.data.product_image_url[0]}`;
 
     amount.value = Number(info.data.price) * session.data.product_cnt;
 
@@ -93,9 +105,14 @@ async function requestPayment() {
     );
 
     // 가격 맞는지 확인
-    const product = await axios.get(
-      `${window.API_SERVER_URL}/product/eco-market/info/${session.data.product_id}`
-    );
+    const product =
+      session.data.category === "reborn"
+        ? await axios.get(
+            `${window.API_SERVER_URL}/remake/product/${session.data.product_id}`
+          )
+        : await axios.get(
+            `${window.API_SERVER_URL}/product/eco-market/info/${session.data.product_id}`
+          );
 
     if (
       Number(product.data.price) * Number(session.data.product_cnt) !==
