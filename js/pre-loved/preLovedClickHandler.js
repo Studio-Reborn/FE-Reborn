@@ -147,12 +147,19 @@ function setModalContent(type) {
           <label for="productDetailNew">제품 설명</label>
         </div>
 
-        <!-- 판매 상태 -->
-        <div class="form-check-group d-flex align-items-center mb-3" style="gap: 20px; width: 586px">
+        <!-- 거래 상태 -->
+        <label for="productStatusGroup" class="form-label" style="font-family: LINESeed-RG">거래 상태 선택</label>
+        <div id="productStatusGroup" class="form-check-group d-flex align-items-center mb-3" style="gap: 20px; width: 586px; font-family: LINESeed-RG">
           <div class="form-check">
             <input class="form-check-input" type="radio" name="productStatus" id="statusOnSale" value="판매중" checked>
             <label class="form-check-label" for="statusOnSale">
               판매중
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="productStatus" id="statusReser" value="예약중">
+            <label class="form-check-label" for="statusReser">
+              예약중
             </label>
           </div>
           <div class="form-check">
@@ -161,8 +168,13 @@ function setModalContent(type) {
               판매완료
             </label>
           </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="productStatus" id="statusHidden" value="숨김">
+            <label class="form-check-label" for="statusHidden">
+              숨김
+            </label>
+          </div>
         </div>
-
       `;
     document.getElementById("productDetailNew").innerHTML =
       productData.detail.replace(/<br>/g, "\n");

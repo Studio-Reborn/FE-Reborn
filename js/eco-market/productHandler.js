@@ -13,6 +13,7 @@ Date        Author      Status      Description
 2024.11.25  이유민      Modified    세션에 제품 정보 저장 추가
 2024.11.26  이유민      Modified    본인 확인 추가
 2024.11.26  이유민      Modified    API 경로 수정
+2024.11.28  이유민      Modified    코드 리팩토링
 */
 
 window.addEventListener("load", () => {
@@ -86,12 +87,7 @@ async function readProductInfo(market_id, id) {
     ).toLocaleString()}원`;
     document.getElementById("marketProductDetail").innerHTML = info.data.detail;
 
-    // 상품 이미지
-    const productImage = await axios.get(
-      `${window.API_SERVER_URL}/product-image/${info.data.product_image_id}`
-    );
-
-    imageList = productImage.data.url;
+    imageList = info.data.product_image_url;
     document.getElementById(
       "marketProductImages"
     ).src = `${window.API_SERVER_URL}/${imageList[0]}`;
@@ -221,6 +217,35 @@ function setModalContent(type) {
         <div class="form-floating mb-3" style="width: 586px">
           <input type="number" class="form-control" id="marketProductQuantityNew" placeholder="제품 수량" value="${productData.quantity}">
           <label for="marketProductQuantityNew">제품 수량</label>
+        </div>
+
+        <!-- 판매 상태 -->
+        <label for="productStatusGroup" class="form-label" style="font-family: LINESeed-RG">판매 상태 선택</label>
+        <div id="productStatusGroup" class="form-check-group d-flex align-items-center mb-3" style="gap: 20px; width: 586px; font-family: LINESeed-RG">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="productStatus" id="statusOnSale" value="판매중" checked>
+            <label class="form-check-label" for="statusOnSale">
+              판매중
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="productStatus" id="statusOut" value="품절">
+            <label class="form-check-label" for="statusOut">
+              품절
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="productStatus" id="statusStop" value="판매중단">
+            <label class="form-check-label" for="statusStop">
+              판매중단
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="productStatus" id="statusHidden" value="숨김">
+            <label class="form-check-label" for="statusHidden">
+              숨김
+            </label>
+          </div>
         </div>
           `;
     document.getElementById("marketProductDetailNew").innerHTML =

@@ -12,6 +12,7 @@ Date        Author      Status      Description
 2024.11.13  이유민      Modified    프로필 이미지 API 연동
 2024.11.18  이유민      Modified    API 경로 수정
 2024.11.23  이유민      Modified    드롭다운 UI 수정
+2024.11.28  이유민      Modified    토큰 만료 후 이동 경로 수정
 */
 // 토큰 있을 경우 로드될 때마다 토큰 검증
 window.addEventListener("load", () => {
@@ -80,7 +81,7 @@ async function loginCheckInHeader() {
 // 로그아웃
 function logout() {
   localStorage.clear();
-  location.href = "/";
+  location.href = "/login";
 }
 
 // 토큰 검증

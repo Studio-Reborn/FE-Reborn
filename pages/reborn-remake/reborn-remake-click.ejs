@@ -9,6 +9,7 @@ Date        Author      Status      Description
 2024.11.19  이유민      Modified    리메이크 제품 상품 조회 추가
 2024.11.22  이유민      Modified    상품 이미지 API 연동
 2024.11.22  이유민      Modified    이미지 모달 추가
+2024.11.28  이유민      Modified    결제바 추가
 -->
 <!-- 상품 이미지 -->
 <div style="display: flex; align-items: center; justify-content: center; padding-bottom: 21px">
@@ -44,6 +45,25 @@ Date        Author      Status      Description
       </div>
     </div>
   </div>
+
+  <!-- 결제 하단바 -->
+  <nav class="navbar navbar-light bg-light" style="position: fixed; bottom: 0; width: 100%; display: flex; font-family: LINESeed-RG; left: 0; z-index: 99">
+    <!-- 총 금액-->
+    <div id="totalAmount" style="padding-left: 130px; font-family: LINESeed-BD; font-size: 20px;"></div>
+
+    <!-- 수량 선택 및 결제 버튼 컨테이너 -->
+    <div style="display: flex; align-items: center; padding-right: 130px; gap: 30px;">
+      <!-- 수량 선택 컴포넌트 -->
+      <div class="input-group" style="width: 120px;">
+        <button class="btn btn-outline-secondary" type="button" onclick="decreaseQuantity()">-</button>
+        <input type="text" class="form-control text-center" id="quantityInput" value="1" readonly />
+        <button class="btn btn-outline-secondary" type="button" onclick="increaseQuantity()">+</button>
+      </div>
+
+      <!-- 결제 버튼 -->
+      <button type="button" id="orderBtn" class="global-btn" style="width: 77px;">결제</button>
+    </div>
+  </nav>
 </div>
 
 <!-- 이미지 모달 -->
