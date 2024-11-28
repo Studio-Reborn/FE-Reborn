@@ -13,6 +13,7 @@ Date        Author      Status      Description
 2024.11.25  이유민      Modified    세션에 제품 정보 저장 추가
 2024.11.26  이유민      Modified    본인 확인 추가
 2024.11.26  이유민      Modified    API 경로 수정
+2024.11.28  이유민      Modified    코드 리팩토링
 */
 
 window.addEventListener("load", () => {
@@ -86,12 +87,7 @@ async function readProductInfo(market_id, id) {
     ).toLocaleString()}원`;
     document.getElementById("marketProductDetail").innerHTML = info.data.detail;
 
-    // 상품 이미지
-    const productImage = await axios.get(
-      `${window.API_SERVER_URL}/product-image/${info.data.product_image_id}`
-    );
-
-    imageList = productImage.data.url;
+    imageList = info.data.product_image_url;
     document.getElementById(
       "marketProductImages"
     ).src = `${window.API_SERVER_URL}/${imageList[0]}`;
