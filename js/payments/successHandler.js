@@ -47,24 +47,24 @@ async function confirm() {
     }
 
     // 결제
-    // await axios.post(
-    //   `${window.API_SERVER_URL}/billing`,
-    //   {
-    //     orderId,
-    //     amount,
-    //     paymentKey,
-    //     postcode: session.data.postcode,
-    //     address: session.data.address,
-    //     detail_address: session.data.detail_address,
-    //     extra_address: session.data.extra_address,
-    //     order_items,
-    //   },
-    //   {
-    //     headers: {
-    //       Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-    //     },
-    //   }
-    // );
+    await axios.post(
+      `${window.API_SERVER_URL}/billing`,
+      {
+        orderId,
+        amount,
+        paymentKey,
+        postcode: session.data.postcode,
+        address: session.data.address,
+        detail_address: session.data.detail_address,
+        extra_address: session.data.extra_address,
+        order_items,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      }
+    );
 
     // 화면 표시
     document.getElementById(
