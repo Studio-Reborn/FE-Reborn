@@ -22,6 +22,7 @@ Date        Author      Status      Description
 2024.11.22  이유민      Modified    에코마켓 API 연동
 2024.11.22  이유민      Modified    리본 리메이크 제품 이미지 업로드 API 연동
 2024.11.26  이유민      Modified    API 경로 수정
+2024.12.02  이유민      Modified    라디오버튼 status 추가
 */
 document
   .getElementById("modalSubmitBtn")
@@ -102,6 +103,9 @@ document
               .getElementById("preLovedProductImagesIdNew")
               .getAttribute("data-value-new")
           );
+          const status = document.querySelector(
+            'input[name="productStatus"]:checked'
+          ).value;
 
           const response = await axios.patch(
             `${window.API_SERVER_URL}/product/pre-loved/${id}`,
@@ -110,6 +114,7 @@ document
               name,
               price,
               detail,
+              status,
             },
             {
               headers: {
@@ -428,6 +433,9 @@ document
         const quantity = document.getElementById(
           "marketProductQuantityNew"
         ).value;
+        const status = document.querySelector(
+          'input[name="productStatus"]:checked'
+        ).value;
 
         await axios.patch(
           `${window.API_SERVER_URL}/product/eco-market/${id}`,
@@ -437,6 +445,7 @@ document
             price,
             detail,
             quantity,
+            status,
           },
           {
             headers: {
