@@ -92,6 +92,11 @@ app.get("/mypage/update", (req, res) => {
     currentPage: "mypage",
   });
 });
+app.get("/mypage/history/:name", (req, res) => {
+  res.render("../pages/mypage/mypage-history", {
+    currentPage: "mypage",
+  });
+});
 app.get("/chatting", (req, res) => {
   res.render("../pages/chatting/chatting", {
     currentPage: "chatting",
