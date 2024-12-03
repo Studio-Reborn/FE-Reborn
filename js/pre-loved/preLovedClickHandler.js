@@ -12,6 +12,7 @@ Date        Author      Status      Description
 2024.11.20  이유민      Modified    상품 이미지 수정 API 연동
 2024.11.21  이유민      Modified    이미지 모달창 추가
 2024.11.26  이유민      Modified    API 경로 수정
+2024.12.02  이유민      Modified    라디오버튼 status 연동
 */
 // 제품 데이터 객체로 사용하기 위함
 const productData = {
@@ -19,6 +20,7 @@ const productData = {
   price: 0,
   detail: "",
   imageId: 0,
+  status: "",
 };
 
 window.addEventListener("load", () => {
@@ -67,6 +69,7 @@ async function readProductData(id) {
     productData.price = product.data.price;
     productData.detail = product.data.detail;
     productData.imageId = product.data.product_image_id;
+    productData.status = product.data.status;
 
     // 제품 판매자 정보 가져오기
     const user = await axios.get(
@@ -151,7 +154,7 @@ function setModalContent(type) {
         <label for="productStatusGroup" class="form-label" style="font-family: LINESeed-RG">거래 상태 선택</label>
         <div id="productStatusGroup" class="form-check-group d-flex align-items-center mb-3" style="gap: 20px; width: 586px; font-family: LINESeed-RG">
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="productStatus" id="statusOnSale" value="판매중" checked>
+            <input class="form-check-input" type="radio" name="productStatus" id="statusOnSale" value="판매중">
             <label class="form-check-label" for="statusOnSale">
               판매중
             </label>
@@ -181,6 +184,11 @@ function setModalContent(type) {
     modalSubmitBtn.innerHTML = "수정";
     modalSubmitBtn.style.backgroundColor = "#479F76";
     modalContainer.setAttribute("data-modal-check", "updatePreLoved");
+
+    // 라디오버튼 checked 관련
+    document.querySelector(
+      `input[name="productStatus"][value="${productData.status}"]`
+    ).checked = true;
 
     // 물건 이미지 업로드 관련
     document

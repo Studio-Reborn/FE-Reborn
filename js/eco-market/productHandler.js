@@ -14,6 +14,7 @@ Date        Author      Status      Description
 2024.11.26  이유민      Modified    본인 확인 추가
 2024.11.26  이유민      Modified    API 경로 수정
 2024.11.28  이유민      Modified    코드 리팩토링
+2024.12.02  이유민      Modified    라디오버튼 status 연동
 */
 
 window.addEventListener("load", () => {
@@ -32,6 +33,7 @@ const productData = {
   imageId: 0,
   id: 0,
   quantity: 0,
+  status: "",
 };
 
 // 구매 수량
@@ -99,6 +101,7 @@ async function readProductInfo(market_id, id) {
     productData.imageId = info.data.product_image_id;
     productData.id = info.data.id;
     productData.quantity = info.data.quantity;
+    productData.status = info.data.status;
 
     // 하단바 가격
     document.getElementById("totalAmount").innerHTML = `총 금액 ${Number(
@@ -223,7 +226,7 @@ function setModalContent(type) {
         <label for="productStatusGroup" class="form-label" style="font-family: LINESeed-RG">판매 상태 선택</label>
         <div id="productStatusGroup" class="form-check-group d-flex align-items-center mb-3" style="gap: 20px; width: 586px; font-family: LINESeed-RG">
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="productStatus" id="statusOnSale" value="판매중" checked>
+            <input class="form-check-input" type="radio" name="productStatus" id="statusOnSale" value="판매중">
             <label class="form-check-label" for="statusOnSale">
               판매중
             </label>
@@ -253,6 +256,11 @@ function setModalContent(type) {
     modalSubmitBtn.innerHTML = "수정";
     modalSubmitBtn.style.backgroundColor = "#479F76";
     modalContainer.setAttribute("data-modal-check", "updateMarketProduct");
+
+    // 라디오버튼 checked 관련
+    document.querySelector(
+      `input[name="productStatus"][value="${productData.status}"]`
+    ).checked = true;
 
     // 물건 이미지 업로드 관련
     document
