@@ -10,6 +10,7 @@ Date        Author      Status      Description
 2024.11.08  이유민      Modified    API 경로 수정
 2024.11.13  이유민      Modified    로그인 확인 추가
 2024.11.18  이유민      Modified    API 경로 수정
+2024.12.04  이유민      Modified    전화번호 칸 수정
 */
 // 이미 로그인 된 경우 회원가입 페이지 접근 불가능
 window.addEventListener("load", () => {
@@ -60,3 +61,17 @@ document
       warningText.style.display = "block";
     }
   });
+
+function formatPhoneNumber(input) {
+  // 숫자만 추출
+  const numbers = input.value.replace(/\D/g, "");
+
+  // 형식 지정
+  const formatted = numbers.replace(
+    /(\d{3})(\d{3,4})?(\d{4})?/,
+    (match, p1, p2, p3) => [p1, p2, p3].filter(Boolean).join("-")
+  );
+
+  // 포맷된 값 적용
+  input.value = formatted;
+}

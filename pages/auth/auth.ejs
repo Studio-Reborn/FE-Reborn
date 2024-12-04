@@ -9,6 +9,7 @@ Date        Author      Status      Description
 2024.11.05  이유민      Modified    회원가입 추가
 2024.11.07  이유민      Modified    전화번호 입력 추가
 2024.11.07  이유민      Modified    API 연동
+2024.12.04  이유민      Modified    전화번호 칸 수정
 -->
 <div style="
     display: flex;
@@ -40,31 +41,31 @@ Date        Author      Status      Description
     <!-- 닉네임 입력 -->
     <div class="form-floating mb-3" style="width: 373px">
       <input type="text" class="form-control" id="nickname" placeholder="닉네임">
-      <label for="floatingInput">닉네임</label>
+      <label for="nickname">닉네임</label>
     </div>
 
     <!-- 전화번호 입력 -->
     <div class="form-floating mb-3" style="width: 373px">
-      <input type="phone" class="form-control" id="phone" placeholder="전화번호">
-      <label for="floatingInput">전화번호</label>
+      <input type="tel" class="form-control" id="phone" placeholder="전화번호" oninput="formatPhoneNumber(this)">
+      <label for="phone">전화번호</label>
     </div>
 
     <!-- 이메일 입력 -->
     <div class="form-floating mb-3" style="width: 373px">
       <input type="email" class="form-control" id="email" placeholder="이메일">
-      <label for="floatingInput">이메일</label>
+      <label for="email">이메일</label>
     </div>
 
     <!-- 비밀번호 입력 -->
     <div class="form-floating mb-3" style="width: 373px">
       <input type="password" class="form-control" id="password" placeholder="비밀번호">
-      <label for="floatingInput">비밀번호</label>
+      <label for="password">비밀번호</label>
     </div>
 
     <!-- 비밀번호 확인 입력 -->
     <div class="form-floating mb-3" style="width: 373px">
       <input type="password" class="form-control" id="passwordCheck" placeholder="비밀번호 확인">
-      <label for="floatingInput">비밀번호 확인</label>
+      <label for="passwordCheck">비밀번호 확인</label>
     </div>
 
     <!-- 경고문구 -->
