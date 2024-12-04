@@ -97,6 +97,16 @@ app.get("/mypage/history/:name", (req, res) => {
     currentPage: "mypage",
   });
 });
+app.get("/admin", (req, res) => {
+  res.render("../pages/admin/admin", {
+    currentPage: "admin",
+  });
+});
+app.get("/admin/:name", (req, res) => {
+  res.render("../pages/admin/adminManage", {
+    currentPage: "admin",
+  });
+});
 app.get("/chatting", (req, res) => {
   res.render("../pages/chatting/chatting", {
     currentPage: "chatting",
