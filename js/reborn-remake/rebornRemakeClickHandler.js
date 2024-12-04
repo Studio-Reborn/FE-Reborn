@@ -9,6 +9,7 @@ Date        Author      Status      Description
 2024.11.19  이유민      Modified    리본 리메이크 API 연동
 2024.11.22  이유민      Modified    상품 이미지 API 연동
 2024.11.28  이유민      Modified    결제 API 연동
+2024.12.04  이유민      Modified    API 경로 수정
 */
 const productData = {
   name: "",
@@ -76,14 +77,13 @@ async function readProductData(id) {
 
     // 관리자인지 확인
     if (localStorage.getItem("access_token")) {
-      const response = await axios.get(`${window.API_SERVER_URL}/users`, {
+      const response = await axios.get(`${window.API_SERVER_URL}/users/my`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
 
-      // 관리자일 때만 제품 생성 버튼 생김
-      if (response.data.id === 1)
+      if (response.data.role === "admin")
         document.getElementById("remakePrincipalCheck").style.display = "flex";
     }
 

@@ -1,0 +1,95 @@
+<!-- 
+File Name : admin
+Description : 관리자 페이지
+Author : 이유민
+
+History
+Date        Author      Status      Description
+2024.12.03  이유민      Created     
+2024.12.03  이유민      Modified    관리자 페이지 추가
+2024.12.04  이유민      Modified    관리자 페이지 API 연동
+-->
+<div style="max-width: 738px; margin: 0 auto; padding-top: 36px">
+  <!-- 제목 -->
+  <span style="font-family: LINESeed-BD; font-size: 45px;">
+    관리자 페이지
+  </span>
+
+  <!-- 수평선 -->
+  <hr id="gray-500" style="width: 738px; padding-top: 16px;" />
+
+  <!-- 신청온 에코마켓 -->
+  <div style="max-width: 738px; margin: 0 auto;">
+    <div style="display: flex; align-items: center">
+      <span style="font-family: LINESeed-BD; font-size: 30px; display: block;">
+        에코 마켓 신청 내역
+      </span>
+      <!-- 전체 보기 -->
+      <a href="/admin/create-eco-market" style="color: #6c757d; font-family: LINESeed-RG; font-size: 15px; margin-left: auto; display: flex" id="purchasePreLovedAll">
+        <img src="/assets/icons/plus-square.svg" style="height: 20px; width: auto;" />
+        <span style="margin-left: 3px;">전체 보기</span>
+      </a>
+    </div>
+    <br />
+    <span id="createEcoMarket" style="font-family: LINESeed-RG; font-size: 20px; color: #6c757d; display: block; text-align: center;">
+      총 <span id="createEcoMarketNum" style="color: #E35D6A"></span>건의 에코마켓 오픈 신청 내역이 있습니다.
+    </span>
+  </div>
+
+  <!-- 수평선 -->
+  <hr id="gray-500" style="width: 738px; margin-top: 32px;" />
+
+  <!-- 삭제 신청온 에코마켓 -->
+  <div style="max-width: 738px; margin: 0 auto;">
+    <div style="display: flex; align-items: center">
+      <span style="font-family: LINESeed-BD; font-size: 30px; display: block;">
+        에코 마켓 삭제 내역
+      </span>
+      <!-- 전체 보기 -->
+      <a href="/admin/delete-eco-market" style="color: #6c757d; font-family: LINESeed-RG; font-size: 15px; margin-left: auto; display: flex" id="purchasePreLovedAll">
+        <img src="/assets/icons/plus-square.svg" style="height: 20px; width: auto;" />
+        <span style="margin-left: 3px;">전체 보기</span>
+      </a>
+    </div>
+    <br />
+    <span id="deleteEcoMarket" style="font-family: LINESeed-RG; font-size: 20px; color: #6c757d; display: block; text-align: center;">
+      총 <span id="deleteEcoMarketNum" style="color: #E35D6A"></span>건의 에코마켓 삭제 신청 내역이 있습니다.
+    </span>
+  </div>
+
+  <!-- 수평선 -->
+  <hr id="gray-500" style="width: 738px; margin-top: 32px;" />
+
+  <!-- 요청온 리본 리메이크 제품 -->
+  <div style="max-width: 738px; margin: 0 auto;">
+    <div style="display: flex; align-items: center">
+      <span style="font-family: LINESeed-BD; font-size: 30px; display: block;">
+        리본 리메이크 제품 요청 내역
+      </span>
+      <!-- 전체 보기 -->
+      <a href="/admin/request-reborn-remake" style="color: #6c757d; font-family: LINESeed-RG; font-size: 15px; margin-left: auto; display: flex" id="purchasePreLovedAll">
+        <img src="/assets/icons/plus-square.svg" style="height: 20px; width: auto;" />
+        <span style="margin-left: 3px;">전체 보기</span>
+      </a>
+    </div>
+    <br />
+    <span id="requestRemake" style="font-family: LINESeed-RG; font-size: 20px; color: #6c757d; display: block; text-align: center;">
+      총 <span id="requestRemakeNum" style="color: #E35D6A"></span>건의 리본 리메이크 제품 요청이 있습니다.
+    </span>
+  </div>
+
+  <!-- 수평선 -->
+  <hr id="gray-500" style="width: 738px; padding-top: 16px;" />
+
+  <!-- 관리자 추가 및 삭제 -->
+  <div style="max-width: 738px; margin: 0 auto;">
+    <span style="font-family: LINESeed-BD; font-size: 30px; display: block;">
+      관리자 추가/삭제
+    </span>
+    <a href="/admin/manage-admin" style="color: #6c757d; font-family: LINESeed-RG; font-size: 20px; color: #E35D6A; display: block; text-align: center;" id="purchasePreLovedAll">
+      관리자 변경 페이지로 이동하기
+    </a>
+  </div>
+</div>
+
+<script src="/js/admin/indexHandler.js"></script>

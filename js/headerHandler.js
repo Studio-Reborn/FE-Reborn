@@ -14,12 +14,12 @@ Date        Author      Status      Description
 2024.11.23  이유민      Modified    드롭다운 UI 수정
 2024.11.28  이유민      Modified    토큰 만료 후 이동 경로 수정
 2024.12.03  이유민      Modified    로그아웃 코드 추가
+2024.12.04  이유민      Modified    관리자 확인 추가
+2024.12.04  이유민      Modified    API 경로 수정
 */
 // 토큰 있을 경우 로드될 때마다 토큰 검증
 window.addEventListener("load", () => {
   loginCheckInHeader();
-
-  if (localStorage.getItem("access_token")) verifyToken();
 });
 
 // 드롭다운
@@ -38,7 +38,7 @@ async function loginCheckInHeader() {
     let nickname = "";
     let profileImageUrl = "";
     try {
-      const response = await axios.get(`${window.API_SERVER_URL}/users`, {
+      const response = await axios.get(`${window.API_SERVER_URL}/users/my`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
@@ -64,10 +64,10 @@ async function loginCheckInHeader() {
         </div>
 
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="margin-top: 25px; margin-right: 50px">
-          <li><a class="dropdown-item" href="" onclick="logout()">로그아웃</a></li>
+          <li><a class="dropdown-item" href="/login" onclick="logout()">로그아웃</a></li>
           <li><a class="dropdown-item" href="/chatting">내 채팅</a></li>
           <li><a class="dropdown-item" href="/mypage">마이페이지</a></li>
-          <li><a class="dropdown-item" href="/admin">관리자</a></li>
+          <li id="adminDropDown" style="display: none"><a class="dropdown-item" href="/admin">관리자</a></li>
         </ul>
       </div>
     `;
@@ -79,6 +79,8 @@ async function loginCheckInHeader() {
       </a>
     </div>`;
   }
+
+  if (localStorage.getItem("access_token")) verifyToken();
 }
 
 // 로그아웃
@@ -90,11 +92,14 @@ function logout() {
 // 토큰 검증
 async function verifyToken() {
   try {
-    await axios.get(`${window.API_SERVER_URL}/auth/verify`, {
+    const user = await axios.get(`${window.API_SERVER_URL}/auth/verify`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },
     });
+
+    if (user.data.role === "admin")
+      document.getElementById("adminDropDown").style.display = "block";
   } catch (err) {
     localStorage.setItem("redirect_url", location.href);
     alert("만료된 세션입니다. 다시 로그인해 주세요.");

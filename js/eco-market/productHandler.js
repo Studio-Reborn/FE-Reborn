@@ -15,6 +15,7 @@ Date        Author      Status      Description
 2024.11.26  이유민      Modified    API 경로 수정
 2024.11.28  이유민      Modified    코드 리팩토링
 2024.12.02  이유민      Modified    라디오버튼 status 연동
+2024.12.04  이유민      Modified    API 경로 수정
 */
 
 window.addEventListener("load", () => {
@@ -111,7 +112,7 @@ async function readProductInfo(market_id, id) {
     // 로그인 상태일 때, 제품 판매자와 본인 확인하기
     if (localStorage.getItem("access_token")) {
       // 본인 정보 가져오기
-      const check = await axios.get(`${window.API_SERVER_URL}/users`, {
+      const check = await axios.get(`${window.API_SERVER_URL}/users/my`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
