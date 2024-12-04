@@ -12,6 +12,8 @@ Date        Author      Status      Description
 2024.11.13  이유민      Modified    사용자 정보 가져오기 추가
 2024.11.27  이유민      Modified    스크립트 경로 수정
 2024.11.27  이유민      Modified    에코마켓 구매내역 API 연동
+2024.12.03  이유민      Modified    리본 리메이크 구매내역 API 연동
+2024.12.03  이유민      Modified    중고거래 판매내역 API 연동
 -->
 <div style="max-width: 738px; margin: 0 auto; padding-top: 36px">
   <!-- 제목 -->
@@ -52,11 +54,19 @@ Date        Author      Status      Description
 
   <!-- 중고거래 판매 내역 -->
   <div style="max-width: 738px; margin: 0 auto;">
-    <span style="font-family: LINESeed-BD; font-size: 30px; display: block;">
-      중고거래 판매 내역
-    </span>
+    <div style="display: flex; align-items: center">
+      <span style="font-family: LINESeed-BD; font-size: 30px; display: block;">
+        중고거래 판매 내역
+      </span>
+      <!-- 전체 보기 -->
+      <a href="/mypage/history/sell-pre-loved" style="color: #6c757d; font-family: LINESeed-RG; font-size: 15px; margin-left: auto; display: flex" id="purchasePreLovedAll">
+        <img src="/assets/icons/plus-square.svg" style="height: 20px; width: auto;" />
+        <span style="margin-left: 3px;">전체 보기</span>
+      </a>
+    </div>
     <br />
-    <span style="font-family: LINESeed-RG; font-size: 20px; color: #6c757d; display: block; text-align: center;">
+    <div id="purchasePreLovedContainer"></div>
+    <span id="nullPreLovedPurchase" style="font-family: LINESeed-RG; font-size: 20px; color: #6c757d; display: none; text-align: center;">
       중고거래 판매 내역이 없습니다.
     </span>
   </div>
@@ -87,7 +97,7 @@ Date        Author      Status      Description
       </span>
 
       <!-- 전체 보기 -->
-      <a href="#" style="color: #6c757d; font-family: LINESeed-RG; font-size: 15px; margin-left: auto; display: none" id="purchaseEcoMarketAll">
+      <a href="/mypage/history/purchase-eco-market" style="color: #6c757d; font-family: LINESeed-RG; font-size: 15px; margin-left: auto; display: flex" id="purchaseEcoMarketAll">
         <img src="/assets/icons/plus-square.svg" style="height: 20px; width: auto;" />
         <span style="margin-left: 3px;">전체 보기</span>
       </a>
@@ -95,6 +105,9 @@ Date        Author      Status      Description
     <br />
     <!-- 내역 카드 부분 -->
     <div id="purchaseEcoMarketContainer"></div>
+    <span id="nullEcoMarketPurchase" style="font-family: LINESeed-RG; font-size: 20px; color: #6c757d; display: none; text-align: center;">
+      에코마켓 구매 내역이 없습니다.
+    </span>
   </div>
 
 
@@ -103,11 +116,21 @@ Date        Author      Status      Description
 
   <!-- 리본 리메이크 구매 내역 -->
   <div style="max-width: 738px; margin: 0 auto;">
-    <span style="font-family: LINESeed-BD; font-size: 30px; display: block;">
-      리본 리메이크 구매 내역
-    </span>
+    <div style="display: flex; align-items: center">
+      <span style="font-family: LINESeed-BD; font-size: 30px; display: block;">
+        리본 리메이크 구매 내역
+      </span>
+
+      <!-- 전체 보기 -->
+      <a href="/mypage/history/purchase-reborn-remake" style="color: #6c757d; font-family: LINESeed-RG; font-size: 15px; margin-left: auto; display: flex" id="purchaseRebornAll">
+        <img src="/assets/icons/plus-square.svg" style="height: 20px; width: auto;" />
+        <span style="margin-left: 3px;">전체 보기</span>
+      </a>
+    </div>
     <br />
-    <span style="font-family: LINESeed-RG; font-size: 20px; color: #6c757d; display: block; text-align: center;">
+    <!-- 내역 카드 부분 -->
+    <div id="purchaseRebornContainer"></div>
+    <span id="nullRebornRemakePurchase" style="font-family: LINESeed-RG; font-size: 20px; color: #6c757d; display: none; text-align: center;">
       리본 리메이크 구매 내역이 없습니다.
     </span>
   </div>
