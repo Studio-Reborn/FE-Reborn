@@ -10,6 +10,7 @@ Date        Author      Status      Description
 2024.11.13  이유민      Modified    닉네임 변경 API 연동
 2024.11.13  이유민      Modified    비밀번호 변경 API 연동
 2024.11.18  이유민      Modified    API 경로 수정
+2024.12.04  이유민      Modified    API 경로 수정
 */
 // 토큰 없을 경우 마이페이지 접근 금지
 window.addEventListener("load", () => {
@@ -75,7 +76,7 @@ async function getUserInfo() {
   const userProfileImg = document.getElementById("userProfileImg");
 
   try {
-    const response = await axios.get(`${window.API_SERVER_URL}/users`, {
+    const response = await axios.get(`${window.API_SERVER_URL}/users/my`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },

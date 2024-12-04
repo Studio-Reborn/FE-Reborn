@@ -13,6 +13,7 @@ Date        Author      Status      Description
 2024.11.21  이유민      Modified    이미지 모달창 추가
 2024.11.26  이유민      Modified    API 경로 수정
 2024.12.02  이유민      Modified    라디오버튼 status 연동
+2024.12.04  이유민      Modified    API 경로 수정
 */
 // 제품 데이터 객체로 사용하기 위함
 const productData = {
@@ -73,7 +74,7 @@ async function readProductData(id) {
 
     // 제품 판매자 정보 가져오기
     const user = await axios.get(
-      `${window.API_SERVER_URL}/users/${product.data.user_id}`
+      `${window.API_SERVER_URL}/users/info/${product.data.user_id}`
     );
     const profile = await axios.get(
       `${window.API_SERVER_URL}/profile/${user.data.profile_image_id}`
@@ -91,7 +92,7 @@ async function readProductData(id) {
 
     // 로그인 상태일 때, 제품 판매자와 본인 확인하기
     if (localStorage.getItem("access_token")) {
-      const check = await axios.get(`${window.API_SERVER_URL}/users`, {
+      const check = await axios.get(`${window.API_SERVER_URL}/users/my`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },

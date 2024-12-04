@@ -14,6 +14,7 @@ Date        Author      Status      Description
 2024.11.27  이유민      Modified    에코마켓 구매내역 API 연동
 2024.12.03  이유민      Modified    리본 리메이크 구매내역 API 연동
 2024.12.03  이유민      Modified    중고거래 판매내역 API 연동
+2024.12.04  이유민      Modified    API 경로 수정
 */
 // 토큰 없을 경우 마이페이지 접근 금지
 window.addEventListener("load", () => {
@@ -64,7 +65,7 @@ async function getUserInfo() {
   let purchaseRebornHTML = "";
 
   try {
-    const user = await axios.get(`${window.API_SERVER_URL}/users`, {
+    const user = await axios.get(`${window.API_SERVER_URL}/users/my`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },

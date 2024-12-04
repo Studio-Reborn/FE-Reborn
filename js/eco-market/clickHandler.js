@@ -9,6 +9,7 @@ Date        Author      Status      Description
 2024.11.21  이유민      Modified    에코마켓 전체 API 연동
 2024.11.22  이유민      Modified    모달 추가
 2024.11.26  이유민      Modified    API 경로 수정
+2024.12.04  이유민      Modified    API 경로 수정
 */
 window.addEventListener("load", () => {
   const id = window.location.pathname.split("/").pop();
@@ -43,7 +44,7 @@ async function readMarketInfo(id) {
 
     // 로그인 상태일 때, 마켓주인과 본인 확인하기
     if (localStorage.getItem("access_token")) {
-      const check = await axios.get(`${window.API_SERVER_URL}/users`, {
+      const check = await axios.get(`${window.API_SERVER_URL}/users/my`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
