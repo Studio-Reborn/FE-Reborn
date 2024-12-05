@@ -107,14 +107,14 @@ app.get("/admin/:name", (req, res) => {
     currentPage: "admin",
   });
 });
-app.get("/chatting", (req, res) => {
-  res.render("../pages/chatting/chatting", {
-    currentPage: "chatting",
+app.get("/chat", (req, res) => {
+  res.render("../pages/chat/chat", {
+    currentPage: "chat",
   });
 });
-app.get("/chatting/detail", (req, res) => {
-  res.render("../pages/chatting/chatting-detail", {
-    currentPage: "chatting",
+app.get("/chat/:id", (req, res) => {
+  res.render("../pages/chat/chat-detail", {
+    currentPage: "chat",
   });
 });
 app.get("/404", (req, res) => {

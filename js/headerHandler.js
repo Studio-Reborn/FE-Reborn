@@ -16,6 +16,7 @@ Date        Author      Status      Description
 2024.12.03  이유민      Modified    로그아웃 코드 추가
 2024.12.04  이유민      Modified    관리자 확인 추가
 2024.12.04  이유민      Modified    API 경로 수정
+2024.12.05  이유민      Modified    채팅 폴더명 변경
 */
 // 토큰 있을 경우 로드될 때마다 토큰 검증
 window.addEventListener("load", () => {
@@ -65,7 +66,7 @@ async function loginCheckInHeader() {
 
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="margin-top: 25px; margin-right: 50px">
           <li><a class="dropdown-item" href="/login" onclick="logout()">로그아웃</a></li>
-          <li><a class="dropdown-item" href="/chatting">내 채팅</a></li>
+          <li><a class="dropdown-item" href="/chat">내 채팅</a></li>
           <li><a class="dropdown-item" href="/mypage">마이페이지</a></li>
           <li id="adminDropDown" style="display: none"><a class="dropdown-item" href="/admin">관리자</a></li>
         </ul>
