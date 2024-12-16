@@ -14,7 +14,16 @@ Date        Author      Status      Description
 2024.11.26  이유민      Modified    API 경로 수정
 2024.12.02  이유민      Modified    라디오버튼 status 연동
 2024.12.04  이유민      Modified    API 경로 수정
+2024.12.10  이유민      Modified    제품 상태 표시 추가
 */
+const productName = document.getElementById("productName");
+const productPrice = document.getElementById("productPrice");
+const productDetail = document.getElementById("productDetail");
+const userName = document.getElementById("sellUserName");
+const userProfile = document.getElementById("sellUserProfile");
+const productStatus = document.getElementById("productStatus");
+const productStatusOverlay = document.getElementById("productStatusOverlay");
+
 // 제품 데이터 객체로 사용하기 위함
 const productData = {
   name: "",
@@ -22,6 +31,7 @@ const productData = {
   detail: "",
   imageId: 0,
   status: "",
+  seller_id: 0,
 };
 
 window.addEventListener("load", () => {
@@ -50,11 +60,6 @@ caretRightBtn.addEventListener("click", () => {
 
 // 정보 읽기
 async function readProductData(id) {
-  const productName = document.getElementById("productName");
-  const productPrice = document.getElementById("productPrice");
-  const productDetail = document.getElementById("productDetail");
-  const userName = document.getElementById("sellUserName");
-  const userProfile = document.getElementById("sellUserProfile");
   try {
     // 제품 정보 가져오기
     const product = await axios.get(
@@ -64,6 +69,11 @@ async function readProductData(id) {
     productName.innerHTML = product.data.name;
     productPrice.innerHTML = `${Number(product.data.price).toLocaleString()}원`;
     productDetail.innerHTML = product.data.detail;
+
+    if (product.data.status !== "판매중") {
+      productStatusOverlay.style.display = "block";
+      productStatus.innerHTML = product.data.status;
+    }
 
     // 객체에 값 넣기
     productData.name = product.data.name;
@@ -82,6 +92,7 @@ async function readProductData(id) {
 
     userName.innerHTML = user.data.nickname;
     userProfile.src = `${window.API_SERVER_URL}/${profile.data.url}`;
+    productData.seller_id = user.data.id;
 
     // 상품 이미지
     const productImages = await axios.get(
@@ -100,9 +111,12 @@ async function readProductData(id) {
 
       // 판매자 본인일 때
       if (product.data.user_id === check.data.id) {
-        // console.log("본인!");
         document.getElementById("principalCheck").style.display = "flex";
+      } else {
+        document.getElementById("chatBar").style.display = "flex";
       }
+    } else {
+      document.getElementById("chatBar").style.display = "flex";
     }
 
     return;
@@ -161,9 +175,9 @@ function setModalContent(type) {
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="productStatus" id="statusReser" value="예약중">
+            <input class="form-check-input" type="radio" name="productStatus" id="statusReser" value="거래중">
             <label class="form-check-label" for="statusReser">
-              예약중
+              거래중
             </label>
           </div>
           <div class="form-check">
@@ -240,6 +254,28 @@ function setModalContent(type) {
     modalSubmitBtn.innerHTML = "삭제";
     modalSubmitBtn.style.backgroundColor = "#E35D6A";
     modalContainer.setAttribute("data-modal-check", "deletePreLoved");
+  }
+}
+
+// 채팅방 생성
+async function createChat() {
+  try {
+    const chat = await axios.post(
+      `${window.API_SERVER_URL}/chat`,
+      {
+        product_id: window.location.pathname.split("/").pop(),
+        seller_id: productData.seller_id,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      }
+    );
+
+    location.href = `/chat/${chat.data.id}`;
+  } catch (err) {
+    console.error(err);
   }
 }
 

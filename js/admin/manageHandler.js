@@ -122,6 +122,7 @@ async function adminManage(path) {
     `;
     }
   } else if (path === "delete-eco-market") {
+    // 에코마켓 삭제
     for (let i = 0; i < response.data.length; i++) {
       cardDataHTML += `
             <div class="card mb-3" style="width: 738px; height: 191px; cursor: default">
@@ -183,6 +184,7 @@ async function adminManage(path) {
         `;
     }
   } else if (path === "request-reborn-remake") {
+    // 리본 리메이크 제품 요청
     cardDataHTML += `
         <div style="max-height: 400px; overflow-y: auto; border: 1px solid #ccc;">
         <table class="table">
@@ -222,6 +224,7 @@ async function adminManage(path) {
       }
     }
   } else if (path === "manage-admin") {
+    // 관리자 변경
     cardDataHTML += `
         <!-- 검색 및 정렬 -->
         <div style="

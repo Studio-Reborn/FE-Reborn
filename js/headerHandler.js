@@ -16,10 +16,33 @@ Date        Author      Status      Description
 2024.12.03  이유민      Modified    로그아웃 코드 추가
 2024.12.04  이유민      Modified    관리자 확인 추가
 2024.12.04  이유민      Modified    API 경로 수정
+2024.12.05  이유민      Modified    채팅 폴더명 변경
+2024.12.10  이유민      Modified    새 채팅 표시 추가
 */
+const currentChatId = window.location.pathname.split("/").pop();
+const newChats = JSON.parse(localStorage.getItem("newChats")) || [];
+
 // 토큰 있을 경우 로드될 때마다 토큰 검증
 window.addEventListener("load", () => {
   loginCheckInHeader();
+
+  const check = newChats.indexOf(currentChatId);
+  if (check >= 0) {
+    newChats.splice(check, 1);
+    localStorage.setItem("newChats", JSON.stringify(newChats));
+  }
+});
+
+const socket = io(`${window.API_SERVER_URL}`);
+socket.on("new_chat_message", (data) => {
+  if (data.chat_id !== currentChatId) {
+    document.getElementById("newChatIndicator").style.display = "inline-block";
+
+    if (!newChats.includes(data.chat_id)) {
+      newChats.push(data.chat_id);
+      localStorage.setItem("newChats", JSON.stringify(newChats));
+    }
+  }
 });
 
 // 드롭다운
@@ -60,17 +83,39 @@ async function loginCheckInHeader() {
       <div class="dropdown">
         <div style="margin-right: 100px; display: flex; align-items: center; cursor: pointer" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
           <p style="font-family: LINESeed-BD; font-size: 19px; margin: 0; line-height: 45px;">${nickname}</p>
-          <img src="${window.API_SERVER_URL}/${profileImageUrl}" style="width: 45px; height: 45px; border-radius: 50%; margin-left: 10px;" />
+          <div style="position: relative; display: inline-block;">
+            <img
+              src="${window.API_SERVER_URL}/${profileImageUrl}"
+              style="width: 45px; height: 45px; border-radius: 50%; margin-left: 10px;"
+            />
+            <span
+              id="newChatIndicator"
+              style="display: none; position: absolute; top: -5px; right: -5px; width: 12px; height: 12px; background-color: #FFCD39; border-radius: 50%;"
+            ></span>
+          </div>
         </div>
 
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="margin-top: 25px; margin-right: 50px">
           <li><a class="dropdown-item" href="/login" onclick="logout()">로그아웃</a></li>
-          <li><a class="dropdown-item" href="/chatting">내 채팅</a></li>
+          <li><a class="dropdown-item" href="/chat">
+            <div style="position: relative; display: inline-block;">내 채팅
+              <span
+                id="newChatDropdown"
+                style="display: none; position: absolute; top: 0px; right: -7px; width: 7px; height: 7px; background-color: #FFCD39; border-radius: 50%;">
+              </span>
+            </div>
+          </a></li>
           <li><a class="dropdown-item" href="/mypage">마이페이지</a></li>
           <li id="adminDropDown" style="display: none"><a class="dropdown-item" href="/admin">관리자</a></li>
         </ul>
       </div>
     `;
+
+    if (newChats.length > 0) {
+      document.getElementById("newChatIndicator").style.display =
+        "inline-block";
+      document.getElementById("newChatDropdown").style.display = "inline-block";
+    }
   } else {
     document.getElementById("loginCheck").innerHTML = `
      <div style="margin-right: 100px">

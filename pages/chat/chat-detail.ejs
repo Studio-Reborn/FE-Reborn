@@ -1,0 +1,59 @@
+<!-- 
+File Name : chat-detail
+Description : 채팅 상세 페이지
+Author : 이유민
+
+History
+Date        Author      Status      Description
+2024.11.06  이유민      Created     
+2024.11.06  이유민      Modified    채팅 상세 페이지 추가
+2024.12.05  이유민      Modified    채팅 폴더명 변경
+2024.12.05  이유민      Modified    채팅 API 연동
+-->
+<div style="max-width: 738px; margin: 0 auto; padding-top: 36px">
+  <!-- 제목 -->
+  <span style="font-family: LINESeed-BD; font-size: 45px; display: block; margin: 0 auto; text-align: center">
+    <span id="chatOther" style="color: #479f76"></span> 님과의 채팅
+  </span>
+
+  <!-- 수평선 -->
+  <hr id="gray-500" style="width: 738px; padding-top: 16px;" />
+
+  <!-- 채팅 화면 -->
+  <div style="background-color: rgba(240, 248, 245, 0.5); width: 100%; height: 600px; border-radius: 12px">
+    <!-- 채팅 제목 -->
+    <div id="chatProduct" style="display: flex; cursor: pointer">
+      <div id="gray-600" style="font-family: LINESeed-RG; font-size: 16px; padding-top: 20px; padding-left: 20px">
+        <span id="chatTitleProductName"></span><br />
+        <span id="chatTitleProductPrice"></span>원
+      </div>
+
+      <!-- 버튼 -->
+      <div style="margin-left: auto; padding-top: 20px; padding-right: 20px; display: flex">
+        <button id="leftTransBtn" type="button" class="global-btn" style="font-size: 16px; display: none; margin-right: 15px">
+        </button>
+        <button id="rightTransBtn" type="button" class="global-btn" style="font-size: 16px; display: none">
+        </button>
+      </div>
+    </div>
+
+    <!-- 수평선 -->
+    <hr id="gray-500" style="width: 738px; padding-top: 20px;" />
+
+    <!-- 채팅 메시지 -->
+    <div id="totalChatContainer" style="overflow-y: auto; max-height: 450px;">
+      <div id="chatPreviousContainer"></div>
+      <div id="chatContainer"></div>
+    </div>
+  </div>
+
+  <!-- 채팅 입력칸 -->
+  <div class="input-group mb-3" style="width: 100%; height: 70px; padding-top: 5px; font-family: LINESeed-RG;">
+    <textarea id="messageInput" class="form-control" placeholder="채팅을 입력해주세요." rows="1" style="resize: none; font-size: 15px; outline: none; box-shadow: none; border-color: #dee2e6"></textarea>
+    <button class="global-btn " id="sendMessageBtn" type="button" style="width: 100px; height: 100%; font-size: 15px" onclick="sendMessage()">
+      전송
+    </button>
+  </div>
+</div>
+
+<script src="/js/chat/detailHandler.js"></script>

@@ -15,6 +15,7 @@ Date        Author      Status      Description
 2024.12.03  이유민      Modified    리본 리메이크 구매내역 API 연동
 2024.12.03  이유민      Modified    중고거래 판매내역 API 연동
 2024.12.04  이유민      Modified    API 경로 수정
+2024.12.10  이유민      Modified    중고거래 판매 제품 상태 표시 추가
 */
 // 토큰 없을 경우 마이페이지 접근 금지
 window.addEventListener("load", () => {
@@ -103,9 +104,19 @@ async function getUserInfo() {
         <div class="card mb-3" style="width: 738px; height: 191px">
           <div class="row g-0" style="height: 100%">
             <div class="col-md-4" style="height: 100%">
-              <img src="${window.API_SERVER_URL}/${
-        preLovedSell.data[i].product_image[0]
-      }" class="img-fluid rounded-start" alt="상품이미지" style="height: 100%;  width: auto; object-fit: cover" />
+              <img src="${window.API_SERVER_URL}/${preLovedSell.data[i].product_image[0]}" class="img-fluid rounded-start" alt="상품이미지" style="height: 100%;  width: auto; object-fit: cover" />`;
+
+      if (preLovedSell.data[i].product_status !== "판매중") {
+        purchasePreLovedHTML += `<!-- 반투명 오버레이 -->
+              <div style="position: absolute; top: 0; left: 0; width: 190px; height: 100%; 
+                    background-color: rgba(255, 255, 255, 0.5);">
+                <span style="font-family: LINESeed-BD; font-size: 20px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #E35D6A">
+                  ${preLovedSell.data[i].product_status}
+                </span>
+              </div>`;
+      }
+
+      purchasePreLovedHTML += `
             </div>
             <div class="col-md-8" style="left: 0">
               <div class="card-body">
@@ -181,55 +192,55 @@ async function getUserInfo() {
     purchaseEcoMarketContainer.innerHTML = purchaseEcoMarketHTML;
 
     // 리본 리메이크 구매 내역
-    const rebornPurchase = await axios.get(
-      `${window.API_SERVER_URL}/billing/purchase/reborn-remake`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      }
-    );
+    // const rebornPurchase = await axios.get(
+    //   `${window.API_SERVER_URL}/billing/purchase/reborn-remake`,
+    //   {
+    //     headers: {
+    //       Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    //     },
+    //   }
+    // );
 
-    if (rebornPurchase.data.length === 0) {
-      document.getElementById("nullEcoMarketPurchase").style.display = "block";
-      document.getElementById("purchaseRebornAll").style.display = "none"; // 전체보기 비활성화
-    }
+    // if (rebornPurchase.data.length === 0) {
+    //   document.getElementById("nullEcoMarketPurchase").style.display = "block";
+    //   document.getElementById("purchaseRebornAll").style.display = "none"; // 전체보기 비활성화
+    // }
 
-    for (let i = 0; i < rebornPurchase.data.length; i++) {
-      if (i > 1) break; // 최대 2개 출력
+    // for (let i = 0; i < rebornPurchase.data.length; i++) {
+    //   if (i > 1) break; // 최대 2개 출력
 
-      purchaseRebornHTML += `
-      <a href="/reborn-remake/${rebornPurchase.data[i].product_id}">
-        <div class="card mb-3" style="width: 738px; height: 191px">
-          <div class="row g-0" style="height: 100%">
-            <div class="col-md-4" style="height: 100%">
-              <img src="${window.API_SERVER_URL}/${
-        rebornPurchase.data[i].product_image[0]
-      }" class="img-fluid rounded-start" alt="상품이미지" style="height: 100%;  width: auto; object-fit: cover" />
-            </div>
-            <div class="col-md-8" style="left: 0">
-              <div class="card-body">
-                <h5 class="card-title">${
-                  rebornPurchase.data[i].product_name
-                }</h5>
-                <p class="card-text">
-                  <small class="text-body-secondary">
-                    리본(Reborn) 배송 <br />
-                    ${Number(
-                      rebornPurchase.data[i].product_price
-                    ).toLocaleString()}원 ${
-        rebornPurchase.data[i].product_quantity
-      }개
-                  </small>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </a>
-    `;
-    }
-    purchaseRebornContainer.innerHTML += purchaseRebornHTML;
+    //   purchaseRebornHTML += `
+    //   <a href="/reborn-remake/${rebornPurchase.data[i].product_id}">
+    //     <div class="card mb-3" style="width: 738px; height: 191px">
+    //       <div class="row g-0" style="height: 100%">
+    //         <div class="col-md-4" style="height: 100%">
+    //           <img src="${window.API_SERVER_URL}/${
+    //     rebornPurchase.data[i].product_image[0]
+    //   }" class="img-fluid rounded-start" alt="상품이미지" style="height: 100%;  width: auto; object-fit: cover" />
+    //         </div>
+    //         <div class="col-md-8" style="left: 0">
+    //           <div class="card-body">
+    //             <h5 class="card-title">${
+    //               rebornPurchase.data[i].product_name
+    //             }</h5>
+    //             <p class="card-text">
+    //               <small class="text-body-secondary">
+    //                 리본(Reborn) 배송 <br />
+    //                 ${Number(
+    //                   rebornPurchase.data[i].product_price
+    //                 ).toLocaleString()}원 ${
+    //     rebornPurchase.data[i].product_quantity
+    //   }개
+    //               </small>
+    //             </p>
+    //           </div>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   </a>
+    // `;
+    // }
+    // purchaseRebornContainer.innerHTML += purchaseRebornHTML;
 
     return;
   } catch (err) {
