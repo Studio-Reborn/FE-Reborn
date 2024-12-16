@@ -17,6 +17,7 @@ Date        Author      Status      Description
 2024.11.20  이유민      Modified    제품 이미지 조회 API 연동
 2024.11.22  이유민      Modified    카드 정렬 추가
 2024.11.26  이유민      Modified    API 경로 수정
+2024.12.10  이유민      Modified    제품 상태 표시 추가
 */
 window.addEventListener("load", () => {
   preLoved();
@@ -56,8 +57,18 @@ async function preLoved() {
             class="card-img-top"
             alt="..."
             style="height: 214px; object-fit: cover"
-          />
-          <div class="card-body">
+          />`;
+
+      if (products.data[i].status !== "판매중")
+        contentHTML += `<!-- 반투명 오버레이 -->
+          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 214px; 
+              background-color: rgba(255, 255, 255, 0.5);">
+            <span style="font-family: LINESeed-BD; font-size: 30px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #E35D6A">
+            ${products.data[i].status}
+            </span>
+          </div>`;
+
+      contentHTML += `<div class="card-body">
           <!-- 판매명이 13글자 이상이면 12글자까지 잘라서 화면에 표시 -->
             <h5 class="card-title">${
               products.data[i].name.length > 12

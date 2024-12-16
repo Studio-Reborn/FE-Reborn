@@ -7,6 +7,7 @@ History
 Date        Author      Status      Description
 2024.12.03  이유민      Created     
 2024.12.03  이유민      Modified    마이페이지 전체 내역 페이지 추가
+2024.12.10  이유민      Modified    중고거래 판매 제품 상태 표시 추가
 */
 window.addEventListener("load", () => {
   const pathSegments = window.location.pathname.split("/");
@@ -74,8 +75,6 @@ async function mypageHistory(name) {
       explain[2] = orderTime[0] + " " + orderTime[1] + " 결제";
     }
 
-    console.log(cardData.data[i]);
-
     cardDataHTML += `
     <a href="${pointerUrl}/${
       cardData.data[i].market_id ? `${cardData.data[i].market_id}/` : ""
@@ -85,8 +84,22 @@ async function mypageHistory(name) {
                 <div class="col-md-4" style="height: 100%">
                     <img src="${window.API_SERVER_URL}/${
       cardData.data[i].product_image[0]
-    }" class="img-fluid rounded-start" alt="프로필" style="height: 100%;  width: auto; object-fit: cover" />
-                </div>
+    }" class="img-fluid rounded-start" alt="제품 이미지" style="height: 100%;  width: auto; object-fit: cover" />`;
+
+    if (
+      name == "sell-pre-loved" &&
+      cardData.data[i].product_status !== "판매중"
+    ) {
+      cardDataHTML += `<!-- 반투명 오버레이 -->
+              <div style="position: absolute; top: 0; left: 0; width: 190px; height: 100%; 
+                    background-color: rgba(255, 255, 255, 0.5);">
+                <span style="font-family: LINESeed-BD; font-size: 20px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #E35D6A">
+                  ${cardData.data[i].product_status}
+                </span>
+              </div>`;
+    }
+
+    cardDataHTML += `</div>
                 <div class="col-md-8" style="left: 0">
                     <div class="card-body">
                     <h5 class="card-title">${cardData.data[i].product_name}</h5>
