@@ -15,6 +15,8 @@ Date        Author      Status      Description
 2024.12.02  이유민      Modified    라디오버튼 status 연동
 2024.12.04  이유민      Modified    API 경로 수정
 2024.12.10  이유민      Modified    제품 상태 표시 추가
+2024.12.16  이유민      Modified    좋아요 연동
+2024.12.16  이유민      Modified    좋아요 수 연동
 */
 const productName = document.getElementById("productName");
 const productPrice = document.getElementById("productPrice");
@@ -23,6 +25,8 @@ const userName = document.getElementById("sellUserName");
 const userProfile = document.getElementById("sellUserProfile");
 const productStatus = document.getElementById("productStatus");
 const productStatusOverlay = document.getElementById("productStatusOverlay");
+const likeImg = document.getElementById("likeImg");
+const likesNumber = document.getElementById("likesNumber");
 
 // 제품 데이터 객체로 사용하기 위함
 const productData = {
@@ -38,6 +42,7 @@ window.addEventListener("load", () => {
   const id = window.location.pathname.split("/").pop();
 
   readProductData(id);
+  productLike(id);
 });
 
 // 상품 이미지 관련
@@ -122,6 +127,54 @@ async function readProductData(id) {
     return;
   } catch (err) {
     console.log(err);
+  }
+}
+
+async function productLike(id) {
+  try {
+    // 좋아요 버튼 관련
+    const likes = await axios.get(
+      `${window.API_SERVER_URL}/like/product/user/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      }
+    );
+
+    if (!likes.data) {
+      likeImg.src = `${window.location.origin}/assets/icons/heart.svg`;
+    } else {
+      likeImg.src = `${window.location.origin}/assets/icons/heart-fill.svg`;
+    }
+
+    likeImg.addEventListener("click", async () => {
+      await axios.post(
+        `${window.API_SERVER_URL}/like/product`,
+        { product_id: id },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+
+      location.reload(true);
+    });
+
+    // 좋아요 수 관련
+    const likesAll = await axios.get(
+      `${window.API_SERVER_URL}/like/product/all/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      }
+    );
+
+    likesNumber.innerHTML = `${likesAll.data.length}`;
+  } catch (err) {
+    console.error(err);
   }
 }
 
