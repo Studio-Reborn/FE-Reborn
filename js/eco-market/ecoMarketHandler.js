@@ -7,6 +7,7 @@ History
 Date        Author      Status      Description
 2024.11.21  이유민      Created     
 2024.11.21  이유민      Modified    에코마켓 전체 API 연동
+2024.12.17  이유민      Modified    코드 리팩토링
 */
 window.addEventListener("load", () => {
   // 토큰 없을 경우 버튼 없음
@@ -23,14 +24,9 @@ async function readMarketAll() {
   try {
     // 마켓 정보
     const markets = await axios.get(`${window.API_SERVER_URL}/market`);
+    console.log(markets.data);
 
     for (let i = 0; i < markets.data.length; i++) {
-      // 마켓 프로필
-      const profile = await axios.get(
-        `${window.API_SERVER_URL}/profile/${markets.data[i].profile_image_id}`
-      );
-
-      // 기타 정보
       if (i % 2 === 0)
         contentHTML += '<div class="card-contents" style="gap: 66px">';
 
@@ -39,15 +35,21 @@ async function readMarketAll() {
           <div class="card mb-3" style="width: 562px; overflow: hidden; display: flex; flex-direction: column;">
             <div class="row g-0">
               <div class="col-md-4">
-                <img src="${window.API_SERVER_URL}/${profile.data.url}" class="img-fluid rounded-start" alt="마켓커버" style="width: 200px; height: 200px; object-fit: cover;" />
+                <img src="${window.API_SERVER_URL}/${
+        markets.data[i].profile_image_url
+      }" class="img-fluid rounded-start" alt="마켓커버" style="width: 200px; height: 200px; object-fit: cover;" />
               </div>
               <div class="col-md-8 d-flex flex-column">
                 <div class="card-body" style="flex-grow: 1;">
                   <h5 class="card-title">${markets.data[i].market_name}</h5>
-                  <p class="card-text text-truncate text-wrap">${markets.data[i].market_detail}</p>
+                  <p class="card-text text-truncate text-wrap">${
+                    markets.data[i].market_detail
+                  }</p>
                 </div>
                 <p class="card-text" style="text-align: right; margin: 0; padding: 10px;">
-                  <small class="text-body-secondary">후기 2,829 단골 1,203</small>
+                  <small class="text-body-secondary">후기 2,829 좋아요 ${Number(
+                    markets.data[i].market_likes
+                  ).toLocaleString()}</small>
                 </p>
               </div>
             </div>
