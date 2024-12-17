@@ -23,6 +23,7 @@ Date        Author      Status      Description
 2024.11.22  이유민      Modified    리본 리메이크 제품 이미지 업로드 API 연동
 2024.11.26  이유민      Modified    API 경로 수정
 2024.12.02  이유민      Modified    라디오버튼 status 추가
+2024.12.17  이유민      Modified    제품 id 타입 수정
 */
 document
   .getElementById("modalSubmitBtn")
@@ -459,9 +460,10 @@ document
 
         return;
       } else if (modalCheck === "deleteMarketProduct") {
+        // CASE: eco-market 물건 삭제
         const pathSegments = window.location.pathname.split("/");
         const market_id = parseInt(pathSegments[2], 10);
-        const id = parseInt(pathSegments[3], 10);
+        const id = pathSegments[3];
 
         await axios.delete(
           `${window.API_SERVER_URL}/product/eco-market/${id}`,
