@@ -13,6 +13,7 @@ Date        Author      Status      Description
 2024.11.25  이유민      Modified    하단바 가격 연동
 2024.11.25  이유민      Modified    결제버튼 수정
 2024.11.27  이유민      Modified    UI 수정
+2024.12.17  이유민      Modified    좋아요 API 연동
 -->
 <!-- 상품 이미지 -->
 <div style="display: flex; align-items: center; justify-content: center; padding-bottom: 21px">
@@ -23,12 +24,13 @@ Date        Author      Status      Description
 
 <!-- 프로필 및 설명 -->
 <div style="max-width: 738px; margin: 0 auto;">
-  <a id="ecoMarketLink" href="" style="cursor: pointer">
-    <div style="display: flex; align-items: center; margin-bottom: 9px">
+  <div style="display: flex; align-items: center; margin-bottom: 9px">
+    <div id="ecoMarketLink" href="" style="display: flex; align-items: center; cursor: pointer">
       <img id="marketProfile" src="" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; margin-right: 10px;">
       <p id="marketName" style="font-family: LINESeed-BD; font-size: 20px; margin: 0; color: black;"></p>
     </div>
-  </a>
+    <img id="likeImg" src="/assets/icons/heart.svg" style="width: 20px; height: 20px; cursor: pointer; margin-left: auto" />
+  </div>
 
   <hr id="gray-500" style="width: 738px; margin: 0; padding-bottom: 16px" />
 
@@ -40,7 +42,7 @@ Date        Author      Status      Description
     <!-- 관심, 수정, 삭제-->
     <div style="display: flex">
       <div style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG">
-        관심 17
+        좋아요 <span id="likesNumber"></span>
       </div>
       <div id="principalCheck" style="margin-left: auto; gap: 10px; display: none">
         <div id="updateText" style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG; cursor: pointer" data-bs-toggle="modal" data-bs-target="#modalContainer" onclick="setModalContent('updateMarketProduct')">

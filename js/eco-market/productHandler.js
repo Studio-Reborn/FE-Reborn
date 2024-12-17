@@ -16,14 +16,19 @@ Date        Author      Status      Description
 2024.11.28  이유민      Modified    코드 리팩토링
 2024.12.02  이유민      Modified    라디오버튼 status 연동
 2024.12.04  이유민      Modified    API 경로 수정
+2024.12.17  이유민      Modified    제품 id 타입 수정
+2024.12.17  이유민      Modified    좋아요 API 연동
 */
+const likeImg = document.getElementById("likeImg");
+const likesNumber = document.getElementById("likesNumber");
 
 window.addEventListener("load", () => {
   const pathSegments = window.location.pathname.split("/");
   const market_id = parseInt(pathSegments[2], 10);
-  const id = parseInt(pathSegments[3], 10);
+  const id = pathSegments[3];
 
   readProductInfo(market_id, id);
+  productLike(id);
 });
 
 // 제품 데이터 객체로 사용하기 위함
@@ -60,29 +65,19 @@ caretRightBtn.addEventListener("click", () => {
 
 async function readProductInfo(market_id, id) {
   try {
-    // 마켓 정보
-    const market = await axios.get(
-      `${window.API_SERVER_URL}/market/${market_id}`
-    );
-
-    document.getElementById("marketName").innerHTML = market.data.market_name;
-    document.getElementById(
-      "ecoMarketLink"
-    ).href = `/eco-market/${market.data.id}`;
-
-    // 마켓 프로필
-    const profile = await axios.get(
-      `${window.API_SERVER_URL}/profile/${market.data.profile_image_id}`
-    );
-
-    document.getElementById(
-      "marketProfile"
-    ).src = `${window.API_SERVER_URL}/${profile.data.url}`;
-
     // 상품 정보
     const info = await axios.get(
       `${window.API_SERVER_URL}/product/eco-market/info/${id}`
     );
+
+    document.getElementById("marketName").innerHTML = info.data.market_name;
+    document.getElementById(
+      "ecoMarketLink"
+    ).href = `/eco-market/${info.data.market_id}`;
+
+    document.getElementById(
+      "marketProfile"
+    ).src = `${window.API_SERVER_URL}/${info.data.market_profile_url}`;
 
     document.getElementById("marketProductName").innerHTML = info.data.name;
     document.getElementById("marketProductPrice").innerHTML = `${Number(
@@ -119,12 +114,57 @@ async function readProductInfo(market_id, id) {
       });
 
       // 판매자 본인일 때
-      if (market.data.user_id === check.data.id) {
+      if (info.data.market_user_id === check.data.id) {
         document.getElementById("principalCheck").style.display = "flex";
       }
     }
 
     return;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function productLike(id) {
+  try {
+    if (localStorage.getItem("access_token")) {
+      // 좋아요 버튼 관련
+      const likes = await axios.get(
+        `${window.API_SERVER_URL}/like/product/user/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+
+      if (!likes.data) {
+        likeImg.src = `${window.location.origin}/assets/icons/heart.svg`;
+      } else {
+        likeImg.src = `${window.location.origin}/assets/icons/heart-fill.svg`;
+      }
+
+      likeImg.addEventListener("click", async () => {
+        await axios.post(
+          `${window.API_SERVER_URL}/like/product`,
+          { product_id: id },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
+
+        location.reload(true);
+      });
+    }
+
+    // 좋아요 수 관련
+    const likesAll = await axios.get(
+      `${window.API_SERVER_URL}/like/product/all/${id}`
+    );
+
+    likesNumber.innerHTML = `${Number(likesAll.data.length).toLocaleString()}`;
   } catch (err) {
     console.error(err);
   }

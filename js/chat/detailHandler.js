@@ -7,6 +7,7 @@ History
 Date        Author      Status      Description
 2024.12.05  이유민      Created     
 2024.12.05  이유민      Modified    채팅 API 연동
+2024.12.17  이유민      Modified    판매자 확인 추가
 */
 const chat_id = window.location.pathname.split("/").pop();
 let message = "";
@@ -102,7 +103,7 @@ async function loadPreviousMessages(chat_id) {
     );
 
     // 초기 렌더링
-    renderButtons(response);
+    renderButtons(response, user);
 
     // 판매 제품 정보
     chatTitleProductName.innerHTML = response.data.chat.product_name;
@@ -155,10 +156,13 @@ async function loadPreviousMessages(chat_id) {
 }
 
 // 거래 관련 버튼
-function renderButtons(response) {
+function renderButtons(response, user) {
   // 모든 버튼 초기화
   leftTransBtn.style.display = "none";
   rightTransBtn.style.display = "none";
+
+  // 판매자 아닐 경우 버튼 없음
+  if (response.data.chat.seller_id !== user.data.user_id) return;
 
   if (response.data.chat.product_status === "판매중") {
     rightTransBtn.style.display = "flex";
@@ -180,7 +184,7 @@ function renderButtons(response) {
 
       // 상태 업데이트
       response.data.chat.product_status = "거래중";
-      renderButtons(response);
+      renderButtons(response, user);
 
       // 메시지 전송
       socket.emit("message", {
@@ -207,7 +211,7 @@ function renderButtons(response) {
 
       // 상태 업데이트
       response.data.chat.product_status = "판매중";
-      renderButtons(response);
+      renderButtons(response, user);
 
       // 메시지 전송
       socket.emit("message", {
@@ -234,7 +238,7 @@ function renderButtons(response) {
 
       // 상태 업데이트
       response.data.chat.product_status = "판매완료";
-      renderButtons(response);
+      renderButtons(response, user);
 
       // 메시지 전송
       socket.emit("message", {
