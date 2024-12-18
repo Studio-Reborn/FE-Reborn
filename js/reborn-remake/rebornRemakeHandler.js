@@ -29,8 +29,6 @@ async function rebornRemake() {
   try {
     const products = await axios.get(`${window.API_SERVER_URL}/remake/product`);
 
-    console.log(products.data);
-
     for (let i = 0; i < products.data.length; i++) {
       // html
       if (i % 3 === 0) {

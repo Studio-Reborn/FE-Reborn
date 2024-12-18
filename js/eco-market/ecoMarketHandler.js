@@ -24,7 +24,6 @@ async function readMarketAll() {
   try {
     // 마켓 정보
     const markets = await axios.get(`${window.API_SERVER_URL}/market`);
-    console.log(markets.data);
 
     for (let i = 0; i < markets.data.length; i++) {
       if (i % 2 === 0)
