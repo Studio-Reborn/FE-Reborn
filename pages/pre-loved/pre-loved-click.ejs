@@ -13,19 +13,39 @@ Date        Author      Status      Description
 2024.11.19  이유민      Modified    수정 삭제 모달 추가
 2024.11.20  이유민      Modified    상품 이미지 조회 API 연동
 2024.11.22  이유민      Modified    이미지 모달창 추가
+2024.11.27  이유민      Modified    UI 수정
+2024.12.10  이유민      Modified    제품 상태 표시 추가
+2024.12.16  이유민      Modified    좋아요 연동
+2024.12.16  이유민      Modified    좋아요 수 연동
+2024.12.17  이유민      Modified    코드 리팩토링
 -->
 <!-- 상품 이미지 -->
 <div style="display: flex; align-items: center; justify-content: center; padding-bottom: 21px">
   <img id="caretLeftBtn" src="/assets/icons/caret-right.svg" style="margin-right: 7px; transform: rotate(180deg); cursor: pointer">
-  <img id="mainPreLovedProductImage" src="" alt="상품 이미지" style="width: 500px; height: 500px; object-fit: cover; border-radius: 20px; margin-top: 37px;" onclick="openModal(this.src)">
+
+  <div style="position: relative; width: 500px; height: 500px; cursor: pointer; margin-top: 37px;">
+    <!-- 상품 이미지 -->
+    <img id="mainPreLovedProductImage" src="" alt="상품 이미지" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;" onclick="openModal(this.src)">
+
+    <!-- 반투명 오버레이 -->
+    <div id="productStatusOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+              background-color: rgba(255, 255, 255, 0.5); border-radius: 20px; pointer-events: none; display: none">
+      <span id="productStatus" style="font-family: LINESeed-BD; font-size: 30px; position: absolute; top: 50%; left: 50%; 
+                 transform: translate(-50%, -50%); color: #E35D6A;">
+      </span>
+    </div>
+  </div>
+
+
   <img id="caretRightBtn" src="/assets/icons/caret-right.svg" style="margin-left: 7px; cursor: pointer">
 </div>
 
 <!-- 프로필 및 설명 -->
 <div style="max-width: 738px; margin: 0 auto;">
   <div style="display: flex; align-items: center; margin-bottom: 9px">
-    <img id="sellUserProfile" src="/assets/images/eco-market-example.svg" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; margin-right: 10px;">
+    <img id="sellUserProfile" src="" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; margin-right: 10px;">
     <p id="sellUserName" style="font-family: LINESeed-BD; font-size: 20px; margin: 0;"></p>
+    <img id="likeImg" src="/assets/icons/heart.svg" style="width: 20px; height: 20px; cursor: pointer; margin-left: auto" />
   </div>
 
   <hr id="gray-500" style="width: 738px; margin: 0; padding-bottom: 16px" />
@@ -41,7 +61,7 @@ Date        Author      Status      Description
     <!-- 관심, 수정, 삭제-->
     <div style="display: flex">
       <div id="heartText" style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG">
-        관심 17
+        좋아요 <span id="likesNumber"></span>
       </div>
       <div id="principalCheck" style="margin-left: auto; display: none; gap: 10px;">
         <div id="updateText" style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG; cursor: pointer" data-bs-toggle="modal" data-bs-target="#modalContainer" onclick="setModalContent('update')">
@@ -53,6 +73,13 @@ Date        Author      Status      Description
       </div>
     </div>
   </div>
+
+  <!-- 하단바 -->
+  <nav id="chatBar" class="navbar navbar-light bg-light" style="position: fixed; bottom: 0; width: 100%; display: none; font-family: LINESeed-RG; left: 0; z-index: 99; justify-content: flex-end; padding-right: 130px;">
+    <!-- 채팅 버튼 -->
+    <button type="button" id="createChatBtn" class="global-btn" style="width: 77px;" onclick="createChat()">채팅</button>
+  </nav>
+
 </div>
 
 <!-- 이미지 모달 -->

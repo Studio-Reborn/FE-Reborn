@@ -21,6 +21,9 @@ Date        Author      Status      Description
 2024.11.21  이유민      Modified    에코마켓 물품 추가 API 연동
 2024.11.22  이유민      Modified    에코마켓 API 연동
 2024.11.22  이유민      Modified    리본 리메이크 제품 이미지 업로드 API 연동
+2024.11.26  이유민      Modified    API 경로 수정
+2024.12.02  이유민      Modified    라디오버튼 status 추가
+2024.12.17  이유민      Modified    제품 id 타입 수정
 */
 document
   .getElementById("modalSubmitBtn")
@@ -49,8 +52,8 @@ document
         );
 
         await axios.post(
-          `${window.API_SERVER_URL}/product`,
-          { product_image_id, name, price, detail, theme: "user" },
+          `${window.API_SERVER_URL}/product/pre-loved`,
+          { product_image_id, name, price, detail },
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("access_token")}`,
@@ -101,15 +104,18 @@ document
               .getElementById("preLovedProductImagesIdNew")
               .getAttribute("data-value-new")
           );
+          const status = document.querySelector(
+            'input[name="productStatus"]:checked'
+          ).value;
 
           const response = await axios.patch(
-            `${window.API_SERVER_URL}/product/${id}`,
+            `${window.API_SERVER_URL}/product/pre-loved/${id}`,
             {
               product_image_id,
               name,
               price,
               detail,
-              theme: "user",
+              status,
             },
             {
               headers: {
@@ -123,7 +129,7 @@ document
         } else {
           // 물건 삭제 시
           const response = await axios.delete(
-            `${window.API_SERVER_URL}/product/${id}`,
+            `${window.API_SERVER_URL}/product/pre-loved/${id}`,
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("access_token")}`,
@@ -340,6 +346,7 @@ document
 
         return;
       } else if (modalCheck === "deleteRequestEcoMarket") {
+        // CASE: eco-market 마켓 삭제 요청
         const id = window.location.pathname.split("/").pop();
 
         await axios.patch(
@@ -358,32 +365,32 @@ document
         return;
       } else if (modalCheck === "createMarketProduct") {
         // CASE: eco-market 물건 등록
+        const market_id = window.location.pathname.split("/").pop();
         const name = document.getElementById("marketProductName").value;
         const price = document.getElementById("marketProductPrice").value;
         const detail = document
           .getElementById("marketProductDetail")
           .value.replace(/\n/g, "<br>");
-        const market_id = window.location.pathname.split("/").pop();
         const product_image_id = Number(
           document
             .getElementById("marketProductImagesId")
             .getAttribute("data-value")
         );
+        const quantity = document.getElementById("marketProductQuantity").value;
 
-        if (!name || !price || !detail) {
+        if (!name || !price || !detail || !quantity) {
           alert("입력하지 않은 값이 있습니다.");
           return;
         }
 
         await axios.post(
-          `${window.API_SERVER_URL}/product`,
+          `${window.API_SERVER_URL}/product/eco-market/${market_id}`,
           {
             product_image_id,
             name,
             price,
             detail,
-            theme: "market",
-            market_id,
+            quantity,
           },
           {
             headers: {
@@ -405,12 +412,14 @@ document
         document
           .getElementById("marketProductImagesId")
           .setAttribute("data-value", "0");
+        document.getElementById("marketProductQuantity").value = "";
 
         alert("물품이 성공적으로 등록되었습니다.");
         location.reload(true);
 
         return;
       } else if (modalCheck === "updateMarketProduct") {
+        // CASE: eco-market 물건 수정
         const id = window.location.pathname.split("/").pop();
         const name = document.getElementById("marketProductNameNew").value;
         const price = document.getElementById("marketProductPriceNew").value;
@@ -422,14 +431,22 @@ document
             .getElementById("marketProductImagesIdNew")
             .getAttribute("data-value")
         );
+        const quantity = document.getElementById(
+          "marketProductQuantityNew"
+        ).value;
+        const status = document.querySelector(
+          'input[name="productStatus"]:checked'
+        ).value;
 
         await axios.patch(
-          `${window.API_SERVER_URL}/product/${id}`,
+          `${window.API_SERVER_URL}/product/eco-market/${id}`,
           {
             product_image_id,
             name,
             price,
             detail,
+            quantity,
+            status,
           },
           {
             headers: {
@@ -443,15 +460,19 @@ document
 
         return;
       } else if (modalCheck === "deleteMarketProduct") {
+        // CASE: eco-market 물건 삭제
         const pathSegments = window.location.pathname.split("/");
         const market_id = parseInt(pathSegments[2], 10);
-        const id = parseInt(pathSegments[3], 10);
+        const id = pathSegments[3];
 
-        await axios.delete(`${window.API_SERVER_URL}/product/${id}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
-        });
+        await axios.delete(
+          `${window.API_SERVER_URL}/product/eco-market/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
 
         alert("마켓 물품이 성공적으로 삭제되었습니다.");
         location.href = `/eco-market/${market_id}`;

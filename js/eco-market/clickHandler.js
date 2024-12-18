@@ -8,12 +8,19 @@ Date        Author      Status      Description
 2024.11.21  이유민      Created     
 2024.11.21  이유민      Modified    에코마켓 전체 API 연동
 2024.11.22  이유민      Modified    모달 추가
+2024.11.26  이유민      Modified    API 경로 수정
+2024.12.04  이유민      Modified    API 경로 수정
+2024.12.17  이유민      Modified    좋아요 API 연동
 */
+const marketLikeNum = document.getElementById("marketLikeNum");
+const likeImg = document.getElementById("likeImg");
+
 window.addEventListener("load", () => {
   const id = window.location.pathname.split("/").pop();
 
   readMarketInfo(id);
   readMarketProducts(id);
+  marketLike(id);
 });
 
 let profileImageId = 0;
@@ -42,7 +49,7 @@ async function readMarketInfo(id) {
 
     // 로그인 상태일 때, 마켓주인과 본인 확인하기
     if (localStorage.getItem("access_token")) {
-      const check = await axios.get(`${window.API_SERVER_URL}/users`, {
+      const check = await axios.get(`${window.API_SERVER_URL}/users/my`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
@@ -64,7 +71,7 @@ async function readMarketProducts(id) {
   try {
     // 마켓의 판매 제품
     const products = await axios.get(
-      `${window.API_SERVER_URL}/product/category?theme=market&user_id=${id}`
+      `${window.API_SERVER_URL}/product/eco-market/market/${id}`
     );
 
     for (let i = 0; i < products.data.length; i++) {
@@ -104,6 +111,53 @@ async function readMarketProducts(id) {
     }
 
     container.innerHTML = containerHTML;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function marketLike(id) {
+  try {
+    if (localStorage.getItem("access_token")) {
+      // 좋아요 버튼 관련
+      const likes = await axios.get(
+        `${window.API_SERVER_URL}/like/market/user/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+
+      if (!likes.data) {
+        likeImg.src = `${window.location.origin}/assets/icons/heart.svg`;
+      } else {
+        likeImg.src = `${window.location.origin}/assets/icons/heart-fill.svg`;
+      }
+
+      likeImg.addEventListener("click", async () => {
+        await axios.post(
+          `${window.API_SERVER_URL}/like/market`,
+          { market_id: id },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
+
+        location.reload(true);
+      });
+    }
+
+    // 좋아요 수 관련
+    const likesAll = await axios.get(
+      `${window.API_SERVER_URL}/like/market/all/${id}`
+    );
+
+    marketLikeNum.innerHTML = `${Number(
+      likesAll.data.length
+    ).toLocaleString()}`;
   } catch (err) {
     console.error(err);
   }
@@ -149,6 +203,12 @@ function setModalContent(type) {
         <div class="form-floating mb-3" style="width: 586px">
           <textarea class="form-control" id="marketProductDetail" placeholder="제품 설명" style="height: 150px"></textarea>
           <label for="marketProductDetail">제품 설명</label>
+        </div>
+
+        <!-- 제품 수량 -->
+        <div class="form-floating mb-3" style="width: 586px">
+          <input type="number" class="form-control" id="marketProductQuantity" placeholder="제품 수량">
+          <label for="marketProductQuantity">제품 수량</label>
         </div>
         `;
     modalSubmitBtn.innerHTML = "등록";

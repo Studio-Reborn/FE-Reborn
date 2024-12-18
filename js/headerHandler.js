@@ -11,12 +11,38 @@ Date        Author      Status      Description
 2024.11.13  이유민      Modified    토큰 검증 추가
 2024.11.13  이유민      Modified    프로필 이미지 API 연동
 2024.11.18  이유민      Modified    API 경로 수정
+2024.11.23  이유민      Modified    드롭다운 UI 수정
+2024.11.28  이유민      Modified    토큰 만료 후 이동 경로 수정
+2024.12.03  이유민      Modified    로그아웃 코드 추가
+2024.12.04  이유민      Modified    관리자 확인 추가
+2024.12.04  이유민      Modified    API 경로 수정
+2024.12.05  이유민      Modified    채팅 폴더명 변경
+2024.12.10  이유민      Modified    새 채팅 표시 추가
 */
+const currentChatId = window.location.pathname.split("/").pop();
+const newChats = JSON.parse(localStorage.getItem("newChats")) || [];
+
 // 토큰 있을 경우 로드될 때마다 토큰 검증
 window.addEventListener("load", () => {
   loginCheckInHeader();
 
-  if (localStorage.getItem("access_token")) verifyToken();
+  const check = newChats.indexOf(currentChatId);
+  if (check >= 0) {
+    newChats.splice(check, 1);
+    localStorage.setItem("newChats", JSON.stringify(newChats));
+  }
+});
+
+const socket = io(`${window.API_SERVER_URL}`);
+socket.on("new_chat_message", (data) => {
+  if (data.chat_id !== currentChatId) {
+    document.getElementById("newChatIndicator").style.display = "inline-block";
+
+    if (!newChats.includes(data.chat_id)) {
+      newChats.push(data.chat_id);
+      localStorage.setItem("newChats", JSON.stringify(newChats));
+    }
+  }
 });
 
 // 드롭다운
@@ -35,7 +61,7 @@ async function loginCheckInHeader() {
     let nickname = "";
     let profileImageUrl = "";
     try {
-      const response = await axios.get(`${window.API_SERVER_URL}/users`, {
+      const response = await axios.get(`${window.API_SERVER_URL}/users/my`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
@@ -54,18 +80,42 @@ async function loginCheckInHeader() {
     }
 
     document.getElementById("loginCheck").innerHTML = `
-    <div class="dropdown">
-      <div style="margin-right: 100px; display: flex; align-items: center; cursor: pointer" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-        <p style="font-family: LINESeed-BD; font-size: 19px; margin: 0; line-height: 45px;">${nickname}</p>
-        <img src="${window.API_SERVER_URL}/${profileImageUrl}" style="width: 45px; height: 45px; border-radius: 50%; margin-left: 10px;" />
-      </div>
+      <div class="dropdown">
+        <div style="margin-right: 100px; display: flex; align-items: center; cursor: pointer" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+          <p style="font-family: LINESeed-BD; font-size: 19px; margin: 0; line-height: 45px;">${nickname}</p>
+          <div style="position: relative; display: inline-block;">
+            <img
+              src="${window.API_SERVER_URL}/${profileImageUrl}"
+              style="width: 45px; height: 45px; border-radius: 50%; margin-left: 10px;"
+            />
+            <span
+              id="newChatIndicator"
+              style="display: none; position: absolute; top: -5px; right: -5px; width: 12px; height: 12px; background-color: #FFCD39; border-radius: 50%;"
+            ></span>
+          </div>
+        </div>
 
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="margin-top: 25px; margin-left: 50px">
-        <li><a class="dropdown-item" href="#" onclick="logout()">로그아웃</a></li>
-        <li><a class="dropdown-item" href="/chatting">내 채팅</a></li>
-        <li><a class="dropdown-item" href="/mypage">마이페이지</a></li>
-      </ul>
-    </div>`;
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="margin-top: 25px; margin-right: 50px">
+          <li><a class="dropdown-item" href="/login" onclick="logout()">로그아웃</a></li>
+          <li><a class="dropdown-item" href="/chat">
+            <div style="position: relative; display: inline-block;">내 채팅
+              <span
+                id="newChatDropdown"
+                style="display: none; position: absolute; top: 0px; right: -7px; width: 7px; height: 7px; background-color: #FFCD39; border-radius: 50%;">
+              </span>
+            </div>
+          </a></li>
+          <li><a class="dropdown-item" href="/mypage">마이페이지</a></li>
+          <li id="adminDropDown" style="display: none"><a class="dropdown-item" href="/admin">관리자</a></li>
+        </ul>
+      </div>
+    `;
+
+    if (newChats.length > 0) {
+      document.getElementById("newChatIndicator").style.display =
+        "inline-block";
+      document.getElementById("newChatDropdown").style.display = "inline-block";
+    }
   } else {
     document.getElementById("loginCheck").innerHTML = `
      <div style="margin-right: 100px">
@@ -74,23 +124,29 @@ async function loginCheckInHeader() {
       </a>
     </div>`;
   }
+
+  if (localStorage.getItem("access_token")) verifyToken();
 }
 
 // 로그아웃
 function logout() {
-  localStorage.clear();
-  location.href = "/";
+  localStorage.removeItem("access_token");
+  location.href = "/login";
 }
 
 // 토큰 검증
 async function verifyToken() {
   try {
-    const response = await axios.get(`${window.API_SERVER_URL}/auth/verify`, {
+    const user = await axios.get(`${window.API_SERVER_URL}/auth/verify`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },
     });
+
+    if (user.data.role === "admin")
+      document.getElementById("adminDropDown").style.display = "block";
   } catch (err) {
+    localStorage.setItem("redirect_url", location.href);
     alert("만료된 세션입니다. 다시 로그인해 주세요.");
     logout();
   }

@@ -1,0 +1,48 @@
+<!-- 
+File Name : payments-fail
+Description : 결제 실패 페이지
+Author : 이유민
+
+History
+Date        Author      Status      Description
+2024.11.26  이유민      Created     
+2024.11.26  이유민      Modified    결제 실패 페이지 추가
+-->
+<div style="max-width: 738px; margin: 0 auto; padding-top: 100px; padding-bottom: 90px">
+  <!-- 결제 실패 -->
+  <span style="font-family: LINESeed-BD; font-size: 45px; display: block; margin: 0 auto; text-align: center; color: red;">
+    결제를 실패했습니다. 😥
+  </span>
+
+  <!-- 수평선 -->
+  <hr id="gray-500" style="width: 738px; padding-top: 16px;" />
+
+  <!-- 안내 메시지 -->
+  <div style="text-align: center; margin-top: 20px; margin-bottom: 20px; font-family: LINESeed-RG; font-size: 18px; color: #555;">
+    결제 과정에서 문제가 발생했습니다. 아래 버튼을 눌러 다시 시도하거나<br />
+    주문 내역에서 확인해주세요.
+  </div>
+
+  <!-- 버튼 -->
+  <div style="display: flex; justify-content: space-between;">
+    <a href="/payments" style="display: inline-block; width: 47%;">
+      <button type="button" class="global-btn" style="font-size: 20px; width: 100%; background-color: #E35D6A; color: white;" onmouseover="this.style.backgroundColor='#DC3545'" onmouseout="this.style.backgroundColor='#E35D6A'">
+        결제 다시 시도하기
+      </button>
+    </a>
+    <a href="/mypage" style="display: inline-block; width: 47%; margin-left: auto;">
+      <button type="button" class="global-btn" style="font-size: 20px; width: 100%;">
+        마이페이지로 이동
+      </button>
+    </a>
+  </div>
+
+  <!-- 수평선 -->
+  <hr id="gray-500" style="width: 738px; margin-top: 32px;" />
+
+  <!-- 고객센터 안내 -->
+  <div style="text-align: center; margin-top: 20px; font-family: LINESeed-RG; font-size: 18px; color: #555;">
+    문제가 계속될 경우 고객센터에 문의하세요.<br />
+    <strong>고객센터: 1544-0000</strong>
+  </div>
+</div>

@@ -10,22 +10,30 @@ Date        Author      Status      Description
 2024.11.21  이유민      Modified    API 연동
 2024.11.21  이유민      Modified    모달 추가
 2024.11.21  이유민      Modified    이미지 모달창 추가
+2024.11.25  이유민      Modified    하단바 가격 연동
+2024.11.25  이유민      Modified    결제버튼 수정
+2024.11.27  이유민      Modified    UI 수정
+2024.12.17  이유민      Modified    좋아요 API 연동
+2024.12.18  이유민      Modified    오류 수정
 -->
 <!-- 상품 이미지 -->
 <div style="display: flex; align-items: center; justify-content: center; padding-bottom: 21px">
   <img id="caretLeftBtn" src="/assets/icons/caret-right.svg" style="margin-right: 7px; transform: rotate(180deg); cursor: pointer;">
-  <img id="marketProductImages" src="" alt="상품 이미지" style="width: 500px; height: 500px; object-fit: cover; border-radius: 20px; margin-top: 37px;" onclick="openModal(this.src)">
+  <img id="marketProductImages" src="" alt="상품 이미지" style="width: 500px; height: 500px; object-fit: cover; border-radius: 20px; margin-top: 37px; cursor: pointer" onclick="openModal(this.src)">
   <img id="caretRightBtn" src="/assets/icons/caret-right.svg" style="margin-left: 7px; cursor: pointer;">
 </div>
 
 <!-- 프로필 및 설명 -->
 <div style="max-width: 738px; margin: 0 auto;">
-  <a id="ecoMarketLink" href="" style="cursor: pointer">
-    <div style="display: flex; align-items: center; margin-bottom: 9px">
-      <img id="marketProfile" src="" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; margin-right: 10px;">
-      <p id="marketName" style="font-family: LINESeed-BD; font-size: 20px; margin: 0; color: black;"></p>
-    </div>
-  </a>
+  <div style="display: flex; align-items: center; margin-bottom: 9px">
+    <a id="ecoMarketLink" href="">
+      <div style="display: flex; align-items: center; cursor: pointer">
+        <img id="marketProfile" src="" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; margin-right: 10px;">
+        <p id="marketName" style="font-family: LINESeed-BD; font-size: 20px; margin: 0; color: black;"></p>
+      </div>
+    </a>
+    <img id="likeImg" src="/assets/icons/heart.svg" style="width: 20px; height: 20px; cursor: pointer; margin-left: auto" />
+  </div>
 
   <hr id="gray-500" style="width: 738px; margin: 0; padding-bottom: 16px" />
 
@@ -37,9 +45,9 @@ Date        Author      Status      Description
     <!-- 관심, 수정, 삭제-->
     <div style="display: flex">
       <div style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG">
-        관심 17
+        좋아요 <span id="likesNumber"></span>
       </div>
-      <div id="principalCheck" style="margin-left: auto; gap: 10px; display: flex">
+      <div id="principalCheck" style="margin-left: auto; gap: 10px; display: none">
         <div id="updateText" style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG; cursor: pointer" data-bs-toggle="modal" data-bs-target="#modalContainer" onclick="setModalContent('updateMarketProduct')">
           수정
         </div>
@@ -51,17 +59,17 @@ Date        Author      Status      Description
   </div>
 
   <!-- 하단바 -->
-  <nav class="navbar navbar-light bg-light" style="position: fixed; bottom: 0; width: 100%; display: flex; font-family: LINESeed-RG; left: 0">
+  <nav class="navbar navbar-light bg-light" style="position: fixed; bottom: 0; width: 100%; display: flex; font-family: LINESeed-RG; left: 0; z-index: 99">
     <!-- 총 금액-->
-    <div style="padding-left: 130px; font-family: LINESeed-BD; font-size: 20px;">총 금액 30,000원</div>
+    <div id="totalAmount" style="padding-left: 130px; font-family: LINESeed-BD; font-size: 20px;"></div>
 
-    <!-- 옵션 선택 -->
+    <!-- 옵션 선택 
     <div style="position: absolute; left: 50%; transform: translateX(-50%); z-index: 1;">
       <select class="form-select" id="form-select" aria-label="Default select example" style="width: 507px;">
         <option selected value="option">옵션 선택하기</option>
         <option value="최신순">최신순</option>
       </select>
-    </div>
+    </div> -->
 
     <!-- 수량 선택 및 결제 버튼 컨테이너 -->
     <div style="display: flex; align-items: center; padding-right: 130px; gap: 30px;">
@@ -73,9 +81,7 @@ Date        Author      Status      Description
       </div>
 
       <!-- 결제 버튼 -->
-      <a href="/payments">
-        <button type="button" class="global-btn" style="width: 77px;">결제</button>
-      </a>
+      <button type="button" id="orderBtn" class="global-btn" style="width: 77px;">결제</button>
     </div>
   </nav>
 

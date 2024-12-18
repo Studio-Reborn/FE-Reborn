@@ -8,6 +8,9 @@ Date        Author      Status      Description
 2024.11.19  이유민      Created     
 2024.11.19  이유민      Modified    리본 리메이크 API 연동
 2024.11.22  이유민      Modified    상품 이미지 API 연동
+2024.11.28  이유민      Modified    결제 API 연동
+2024.12.04  이유민      Modified    API 경로 수정
+2024.12.18  이유민      Modified    좋아요 API 연동
 */
 const productData = {
   name: "",
@@ -15,12 +18,14 @@ const productData = {
   detail: "",
   matter: "",
   imageId: 0,
+  id: 0,
 };
 
 window.addEventListener("load", () => {
   const id = window.location.pathname.split("/").pop();
 
   readProductData(id);
+  productLike(id);
 });
 
 // 상품 이미지 관련
@@ -52,12 +57,7 @@ async function readProductData(id) {
       `${window.API_SERVER_URL}/remake/product/${id}`
     );
 
-    // 상품 이미지 불러오기
-    const images = await axios.get(
-      `${window.API_SERVER_URL}/product-image/${product.data.product_image_id}`
-    );
-
-    imageList = images.data.url;
+    imageList = product.data.product_image_url;
     mainImage.src = `${window.API_SERVER_URL}/${imageList[0]}`;
 
     productName.innerHTML = product.data.name;
@@ -69,18 +69,23 @@ async function readProductData(id) {
     productData.price = product.data.price;
     productData.detail = product.data.detail;
     productData.matter = product.data.matter;
-    productData.imageId = images.data.id;
+    productData.id = product.data.id;
+    productData.imageId = product.data.product_image_id;
+
+    // 결제바 관련
+    document.getElementById("totalAmount").innerHTML = `총 금액 ${Number(
+      product.data.price * totalCnt
+    ).toLocaleString()}원`;
 
     // 관리자인지 확인
     if (localStorage.getItem("access_token")) {
-      const response = await axios.get(`${window.API_SERVER_URL}/users`, {
+      const response = await axios.get(`${window.API_SERVER_URL}/users/my`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
 
-      // 관리자일 때만 제품 생성 버튼 생김
-      if (response.data.id === 1)
+      if (response.data.role === "admin")
         document.getElementById("remakePrincipalCheck").style.display = "flex";
     }
 
@@ -90,6 +95,102 @@ async function readProductData(id) {
   }
 }
 
+// 좋아요 관련
+async function productLike(id) {
+  try {
+    if (localStorage.getItem("access_token")) {
+      // 좋아요 버튼 관련
+      const likes = await axios.get(
+        `${window.API_SERVER_URL}/like/product/user/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+
+      if (!likes.data) {
+        likeImg.src = `${window.location.origin}/assets/icons/heart.svg`;
+      } else {
+        likeImg.src = `${window.location.origin}/assets/icons/heart-fill.svg`;
+      }
+
+      likeImg.addEventListener("click", async () => {
+        await axios.post(
+          `${window.API_SERVER_URL}/like/product`,
+          { product_id: id },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
+
+        location.reload(true);
+      });
+    }
+
+    // 좋아요 수 관련
+    const likesAll = await axios.get(
+      `${window.API_SERVER_URL}/like/product/all/${id}`
+    );
+
+    likesNumber.innerHTML = `${Number(likesAll.data.length).toLocaleString()}`;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// 결제 하단바 관련
+let totalCnt = 1; // 구매 수량
+
+function decreaseQuantity() {
+  const quantityInput = document.getElementById("quantityInput");
+  let quantity = parseInt(quantityInput.value, 10);
+  if (quantity > 1) {
+    quantity--;
+    quantityInput.value = quantity;
+
+    // 하단바 가격
+    totalCnt--;
+    document.getElementById("totalAmount").innerHTML = `총 금액 ${Number(
+      productData.price * totalCnt
+    ).toLocaleString()}원`;
+  }
+}
+
+function increaseQuantity() {
+  const quantityInput = document.getElementById("quantityInput");
+  let quantity = parseInt(quantityInput.value, 10);
+  quantity++;
+  quantityInput.value = quantity;
+
+  // 하단바 가격
+  totalCnt++;
+  document.getElementById("totalAmount").innerHTML = `총 금액 ${Number(
+    productData.price * totalCnt
+  ).toLocaleString()}원`;
+}
+
+document.getElementById("orderBtn").addEventListener("click", async () => {
+  try {
+    await axios.post(`/api/save-session-data`, {
+      dataType: "productData",
+      data: {
+        product_id: productData.id,
+        product_cnt: totalCnt,
+        product_price: productData.price,
+        category: "reborn",
+      },
+    });
+
+    window.location.href = "/payments";
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// 모달
 function setModalContent(type) {
   if (!localStorage.getItem("access_token")) {
     alert("로그인 후 이용 가능합니다.");

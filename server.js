@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const expressLayouts = require("express-ejs-layouts");
+const session = require("express-session");
 require("dotenv").config();
 
 const app = express();
@@ -13,6 +14,16 @@ app.set("views", ["./views", "./pages"]);
 app.use("/css", express.static(path.join(__dirname, "css")));
 app.use("/assets", express.static(path.join(__dirname, "assets")));
 app.use("/js", express.static(path.join(__dirname, "js")));
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET_KEY,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }, // HTTPS를 사용할 경우 true로 설정
+  })
+);
+app.use(express.json());
 
 app.get("/", (req, res) => {
   res.render("index", { title: "홈", currentPage: "home" });
@@ -66,6 +77,11 @@ app.get("/payments/success", (req, res) => {
     currentPage: "payments",
   });
 });
+app.get("/payments/fail", (req, res) => {
+  res.render("../pages/payments/payments-fail", {
+    currentPage: "payments",
+  });
+});
 app.get("/mypage", (req, res) => {
   res.render("../pages/mypage/mypage", {
     currentPage: "mypage",
@@ -76,14 +92,29 @@ app.get("/mypage/update", (req, res) => {
     currentPage: "mypage",
   });
 });
-app.get("/chatting", (req, res) => {
-  res.render("../pages/chatting/chatting", {
-    currentPage: "chatting",
+app.get("/mypage/history/:name", (req, res) => {
+  res.render("../pages/mypage/mypage-history", {
+    currentPage: "mypage",
   });
 });
-app.get("/chatting/detail", (req, res) => {
-  res.render("../pages/chatting/chatting-detail", {
-    currentPage: "chatting",
+app.get("/admin", (req, res) => {
+  res.render("../pages/admin/admin", {
+    currentPage: "admin",
+  });
+});
+app.get("/admin/:name", (req, res) => {
+  res.render("../pages/admin/adminManage", {
+    currentPage: "admin",
+  });
+});
+app.get("/chat", (req, res) => {
+  res.render("../pages/chat/chat", {
+    currentPage: "chat",
+  });
+});
+app.get("/chat/:id", (req, res) => {
+  res.render("../pages/chat/chat-detail", {
+    currentPage: "chat",
   });
 });
 app.get("/404", (req, res) => {
@@ -98,8 +129,34 @@ app.get("/config.js", (req, res) => {
   res.send(
     `window.API_SERVER_URL = "${
       process.env.API_SERVER_URL || "http://localhost:4000"
-    }";`
+    }";
+    window.TOSS_CLIENT_KEY = "${process.env.TOSS_CLIENT_KEY}";`
   );
+});
+
+// 세션 관련
+app.post("/api/save-session-data", (req, res) => {
+  const { dataType, data } = req.body;
+
+  // 동적으로 세션에 저장
+  req.session[dataType] = data;
+
+  res.sendStatus(200); // 성공 응답
+});
+app.get("/api/get-session-data", (req, res) => {
+  const { dataType } = req.query;
+
+  if (!req.session[dataType]) {
+    return res.status(404).send(`${dataType} not found in session`);
+  }
+
+  res.json(req.session[dataType]);
+});
+
+app.use((req, res, next) => {
+  res.status(404).render("../pages/notFound", {
+    currentPage: "404",
+  });
 });
 
 app.listen(process.env.PORT, () => {

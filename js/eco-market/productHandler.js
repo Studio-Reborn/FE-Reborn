@@ -9,14 +9,26 @@ Date        Author      Status      Description
 2024.11.21  이유민      Modified    에코마켓 전체 API 연동
 2024.11.22  이유민      Modified    모달 추가
 2024.11.22  이유민      Modified    이미지 모달창 추가
+2024.11.25  이유민      Modified    하단바 가격 연동
+2024.11.25  이유민      Modified    세션에 제품 정보 저장 추가
+2024.11.26  이유민      Modified    본인 확인 추가
+2024.11.26  이유민      Modified    API 경로 수정
+2024.11.28  이유민      Modified    코드 리팩토링
+2024.12.02  이유민      Modified    라디오버튼 status 연동
+2024.12.04  이유민      Modified    API 경로 수정
+2024.12.17  이유민      Modified    제품 id 타입 수정
+2024.12.17  이유민      Modified    좋아요 API 연동
 */
+const likeImg = document.getElementById("likeImg");
+const likesNumber = document.getElementById("likesNumber");
 
 window.addEventListener("load", () => {
   const pathSegments = window.location.pathname.split("/");
   const market_id = parseInt(pathSegments[2], 10);
-  const id = parseInt(pathSegments[3], 10);
+  const id = pathSegments[3];
 
   readProductInfo(market_id, id);
+  productLike(id);
 });
 
 // 제품 데이터 객체로 사용하기 위함
@@ -25,7 +37,13 @@ const productData = {
   price: 0,
   detail: "",
   imageId: 0,
+  id: 0,
+  quantity: 0,
+  status: "",
 };
+
+// 구매 수량
+let totalCnt = 1;
 
 // 상품 이미지 관련
 let imageList = [];
@@ -47,29 +65,19 @@ caretRightBtn.addEventListener("click", () => {
 
 async function readProductInfo(market_id, id) {
   try {
-    // 마켓 정보
-    const market = await axios.get(
-      `${window.API_SERVER_URL}/market/${market_id}`
+    // 상품 정보
+    const info = await axios.get(
+      `${window.API_SERVER_URL}/product/eco-market/info/${id}`
     );
 
-    document.getElementById("marketName").innerHTML = market.data.market_name;
+    document.getElementById("marketName").innerHTML = info.data.market_name;
     document.getElementById(
       "ecoMarketLink"
-    ).href = `/eco-market/${market.data.id}`;
-
-    // 마켓 프로필
-    const profile = await axios.get(
-      `${window.API_SERVER_URL}/profile/${market.data.profile_image_id}`
-    );
+    ).href = `/eco-market/${info.data.market_id}`;
 
     document.getElementById(
       "marketProfile"
-    ).src = `${window.API_SERVER_URL}/${profile.data.url}`;
-
-    // 상품 정보
-    const info = await axios.get(
-      `${window.API_SERVER_URL}/product/details/${id}`
-    );
+    ).src = `${window.API_SERVER_URL}/${info.data.market_profile_url}`;
 
     document.getElementById("marketProductName").innerHTML = info.data.name;
     document.getElementById("marketProductPrice").innerHTML = `${Number(
@@ -77,12 +85,7 @@ async function readProductInfo(market_id, id) {
     ).toLocaleString()}원`;
     document.getElementById("marketProductDetail").innerHTML = info.data.detail;
 
-    // 상품 이미지
-    const productImage = await axios.get(
-      `${window.API_SERVER_URL}/product-image/${info.data.product_image_id}`
-    );
-
-    imageList = productImage.data.url;
+    imageList = info.data.product_image_url;
     document.getElementById(
       "marketProductImages"
     ).src = `${window.API_SERVER_URL}/${imageList[0]}`;
@@ -92,6 +95,29 @@ async function readProductInfo(market_id, id) {
     productData.price = info.data.price;
     productData.detail = info.data.detail;
     productData.imageId = info.data.product_image_id;
+    productData.id = info.data.id;
+    productData.quantity = info.data.quantity;
+    productData.status = info.data.status;
+
+    // 하단바 가격
+    document.getElementById("totalAmount").innerHTML = `총 금액 ${Number(
+      info.data.price * totalCnt
+    ).toLocaleString()}원`;
+
+    // 로그인 상태일 때, 제품 판매자와 본인 확인하기
+    if (localStorage.getItem("access_token")) {
+      // 본인 정보 가져오기
+      const check = await axios.get(`${window.API_SERVER_URL}/users/my`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+
+      // 판매자 본인일 때
+      if (info.data.market_user_id === check.data.id) {
+        document.getElementById("principalCheck").style.display = "flex";
+      }
+    }
 
     return;
   } catch (err) {
@@ -99,12 +125,64 @@ async function readProductInfo(market_id, id) {
   }
 }
 
+async function productLike(id) {
+  try {
+    if (localStorage.getItem("access_token")) {
+      // 좋아요 버튼 관련
+      const likes = await axios.get(
+        `${window.API_SERVER_URL}/like/product/user/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+
+      if (!likes.data) {
+        likeImg.src = `${window.location.origin}/assets/icons/heart.svg`;
+      } else {
+        likeImg.src = `${window.location.origin}/assets/icons/heart-fill.svg`;
+      }
+
+      likeImg.addEventListener("click", async () => {
+        await axios.post(
+          `${window.API_SERVER_URL}/like/product`,
+          { product_id: id },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
+
+        location.reload(true);
+      });
+    }
+
+    // 좋아요 수 관련
+    const likesAll = await axios.get(
+      `${window.API_SERVER_URL}/like/product/all/${id}`
+    );
+
+    likesNumber.innerHTML = `${Number(likesAll.data.length).toLocaleString()}`;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// 하단바
 function decreaseQuantity() {
   const quantityInput = document.getElementById("quantityInput");
   let quantity = parseInt(quantityInput.value, 10);
   if (quantity > 1) {
     quantity--;
     quantityInput.value = quantity;
+
+    // 하단바 가격
+    totalCnt--;
+    document.getElementById("totalAmount").innerHTML = `총 금액 ${Number(
+      productData.price * totalCnt
+    ).toLocaleString()}원`;
   }
 }
 
@@ -113,7 +191,30 @@ function increaseQuantity() {
   let quantity = parseInt(quantityInput.value, 10);
   quantity++;
   quantityInput.value = quantity;
+
+  // 하단바 가격
+  totalCnt++;
+  document.getElementById("totalAmount").innerHTML = `총 금액 ${Number(
+    productData.price * totalCnt
+  ).toLocaleString()}원`;
 }
+
+document.getElementById("orderBtn").addEventListener("click", async () => {
+  try {
+    await axios.post(`/api/save-session-data`, {
+      dataType: "productData",
+      data: {
+        product_id: productData.id,
+        product_cnt: totalCnt,
+        product_price: productData.price,
+      },
+    });
+
+    window.location.href = "/payments";
+  } catch (err) {
+    console.error(err);
+  }
+});
 
 // 모달 함수
 function setModalContent(type) {
@@ -129,7 +230,7 @@ function setModalContent(type) {
   const modalSubmitBtn = document.getElementById("modalSubmitBtn");
 
   if (type === "updateMarketProduct") {
-    modalTitle.textContent = "마켓 정보 수정하기";
+    modalTitle.textContent = "마켓 물건 정보 수정하기";
     modalBody.innerHTML = `
         <!-- 파일 선택-->
         <div class="input-group mb-3" style="width: 586px">
@@ -155,12 +256,52 @@ function setModalContent(type) {
           <textarea class="form-control" id="marketProductDetailNew" placeholder="제품 설명" style="height: 150px">${productData.detail}</textarea>
           <label for="marketProductDetailNew">제품 설명</label>
         </div>
+
+        <!-- 제품 수량 -->
+        <div class="form-floating mb-3" style="width: 586px">
+          <input type="number" class="form-control" id="marketProductQuantityNew" placeholder="제품 수량" value="${productData.quantity}">
+          <label for="marketProductQuantityNew">제품 수량</label>
+        </div>
+
+        <!-- 판매 상태 -->
+        <label for="productStatusGroup" class="form-label" style="font-family: LINESeed-RG">판매 상태 선택</label>
+        <div id="productStatusGroup" class="form-check-group d-flex align-items-center mb-3" style="gap: 20px; width: 586px; font-family: LINESeed-RG">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="productStatus" id="statusOnSale" value="판매중">
+            <label class="form-check-label" for="statusOnSale">
+              판매중
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="productStatus" id="statusOut" value="품절">
+            <label class="form-check-label" for="statusOut">
+              품절
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="productStatus" id="statusStop" value="판매중단">
+            <label class="form-check-label" for="statusStop">
+              판매중단
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="productStatus" id="statusHidden" value="숨김">
+            <label class="form-check-label" for="statusHidden">
+              숨김
+            </label>
+          </div>
+        </div>
           `;
     document.getElementById("marketProductDetailNew").innerHTML =
       productData.detail.replace(/<br>/g, "\n");
     modalSubmitBtn.innerHTML = "수정";
     modalSubmitBtn.style.backgroundColor = "#479F76";
     modalContainer.setAttribute("data-modal-check", "updateMarketProduct");
+
+    // 라디오버튼 checked 관련
+    document.querySelector(
+      `input[name="productStatus"][value="${productData.status}"]`
+    ).checked = true;
 
     // 물건 이미지 업로드 관련
     document

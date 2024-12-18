@@ -15,6 +15,8 @@ Date        Author      Status      Description
 2024.11.22  이유민      Modified    카드 정렬 추가
 2024.11.22  이유민      Modified    상품 이미지 업로드 API 연동
 2024.11.22  이유민      Modified    상품 요청 모달 디자인 변경
+2024.12.04  이유민      Modified    API 경로 수정
+2024.12.17  이유민      Modified    코드 리팩토링
 */
 window.addEventListener("load", () => {
   rebornRemake();
@@ -28,11 +30,6 @@ async function rebornRemake() {
     const products = await axios.get(`${window.API_SERVER_URL}/remake/product`);
 
     for (let i = 0; i < products.data.length; i++) {
-      // 상품 이미지 불러오기
-      const images = await axios.get(
-        `${window.API_SERVER_URL}/product-image/${products.data[i].product_image_id}`
-      );
-
       // html
       if (i % 3 === 0) {
         contentHTML += `<div class="card-contents"`;
@@ -46,7 +43,7 @@ async function rebornRemake() {
         <a href="/reborn-remake/${products.data[i].id}">
           <div class="card" style="width: 18rem">
               <img src="${window.API_SERVER_URL}/${
-        images.data.url[0]
+        products.data[i].product_image_url[0]
       }" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
               <div class="card-body">
                   <h5 class="card-title">${
@@ -78,14 +75,14 @@ async function rebornRemake() {
 
     // 관리자인지 확인
     if (localStorage.getItem("access_token")) {
-      const response = await axios.get(`${window.API_SERVER_URL}/users`, {
+      const response = await axios.get(`${window.API_SERVER_URL}/users/my`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
 
       // 관리자일 때만 제품 생성 버튼 생김
-      if (response.data.id === 1)
+      if (response.data.role === "admin")
         document.getElementById("remakeProductCreateBtn").style.display = "";
     }
   } catch (err) {
