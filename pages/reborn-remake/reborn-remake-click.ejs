@@ -10,6 +10,8 @@ Date        Author      Status      Description
 2024.11.22  이유민      Modified    상품 이미지 API 연동
 2024.11.22  이유민      Modified    이미지 모달 추가
 2024.11.28  이유민      Modified    결제바 추가
+2024.12.18  이유민      Modified    프로필 추가
+2024.12.18  이유민      Modified    좋아요 API 연동
 -->
 <!-- 상품 이미지 -->
 <div style="display: flex; align-items: center; justify-content: center; padding-bottom: 21px">
@@ -20,6 +22,14 @@ Date        Author      Status      Description
 
 <!-- 프로필 및 설명 -->
 <div style="max-width: 738px; margin: 0 auto;">
+  <div style="display: flex; align-items: center; margin-bottom: 9px">
+    <div style="display: flex; align-items: center;">
+      <img src="/assets/images/Reborn_logo1.svg" alt="리본로고" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; margin-right: 10px;">
+      <p style="font-family: LINESeed-BD; font-size: 20px; margin: 0; color: black;">Reborn</p>
+    </div>
+    <img id="likeImg" src="/assets/icons/heart.svg" style="width: 20px; height: 20px; cursor: pointer; margin-left: auto" />
+  </div>
+
   <hr id="gray-500" style="width: 738px; margin: 0; padding-bottom: 16px" />
 
   <div>
@@ -33,7 +43,7 @@ Date        Author      Status      Description
     <!-- 관심, 수정, 삭제-->
     <div style="display: flex">
       <div id="heartText" style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG">
-        관심 17
+        좋아요 <span id="likesNumber"></span>
       </div>
       <div id="remakePrincipalCheck" style="margin-left: auto; display: none; gap: 10px;">
         <div id="updateRemakeProduct" style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG; cursor: pointer" data-bs-toggle="modal" data-bs-target="#modalContainer" onclick="setModalContent('updateRemakeProduct')">

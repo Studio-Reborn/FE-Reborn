@@ -10,6 +10,7 @@ Date        Author      Status      Description
 2024.11.22  이유민      Modified    상품 이미지 API 연동
 2024.11.28  이유민      Modified    결제 API 연동
 2024.12.04  이유민      Modified    API 경로 수정
+2024.12.18  이유민      Modified    좋아요 API 연동
 */
 const productData = {
   name: "",
@@ -24,6 +25,7 @@ window.addEventListener("load", () => {
   const id = window.location.pathname.split("/").pop();
 
   readProductData(id);
+  productLike(id);
 });
 
 // 상품 이미지 관련
@@ -90,6 +92,52 @@ async function readProductData(id) {
     return;
   } catch (err) {
     console.log(err);
+  }
+}
+
+// 좋아요 관련
+async function productLike(id) {
+  try {
+    if (localStorage.getItem("access_token")) {
+      // 좋아요 버튼 관련
+      const likes = await axios.get(
+        `${window.API_SERVER_URL}/like/product/user/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+
+      if (!likes.data) {
+        likeImg.src = `${window.location.origin}/assets/icons/heart.svg`;
+      } else {
+        likeImg.src = `${window.location.origin}/assets/icons/heart-fill.svg`;
+      }
+
+      likeImg.addEventListener("click", async () => {
+        await axios.post(
+          `${window.API_SERVER_URL}/like/product`,
+          { product_id: id },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
+
+        location.reload(true);
+      });
+    }
+
+    // 좋아요 수 관련
+    const likesAll = await axios.get(
+      `${window.API_SERVER_URL}/like/product/all/${id}`
+    );
+
+    likesNumber.innerHTML = `${Number(likesAll.data.length).toLocaleString()}`;
+  } catch (err) {
+    console.error(err);
   }
 }
 
