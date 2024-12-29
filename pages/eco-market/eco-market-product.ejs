@@ -15,6 +15,7 @@ Date        Author      Status      Description
 2024.11.27  이유민      Modified    UI 수정
 2024.12.17  이유민      Modified    좋아요 API 연동
 2024.12.18  이유민      Modified    오류 수정
+2024.12.19  이유민      Modified    후기 UI 추가
 -->
 <!-- 상품 이미지 -->
 <div style="display: flex; align-items: center; justify-content: center; padding-bottom: 21px">
@@ -38,14 +39,14 @@ Date        Author      Status      Description
   <hr id="gray-500" style="width: 738px; margin: 0; padding-bottom: 16px" />
 
   <!-- 상품 설명 -->
-  <div>
+  <div style="margin-bottom: 9px">
     <div id="marketProductName" style="padding-bottom: 9px; font-size: 20px; font-family: LINESeed-BD"></div>
     <div id="marketProductPrice" style="padding-bottom: 9px; font-size: 15px; font-family: LINESeed-BD"></div>
     <div id="marketProductDetail" style="padding-bottom: 9px; font-size: 15px; font-family: LINESeed-RG"></div>
     <!-- 관심, 수정, 삭제-->
     <div style="display: flex">
       <div style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG">
-        좋아요 <span id="likesNumber"></span>
+        좋아요 <span id="likesNumber"></span> 후기 <span id="reviewsNumber"></span>
       </div>
       <div id="principalCheck" style="margin-left: auto; gap: 10px; display: none">
         <div id="updateText" style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG; cursor: pointer" data-bs-toggle="modal" data-bs-target="#modalContainer" onclick="setModalContent('updateMarketProduct')">
@@ -56,6 +57,17 @@ Date        Author      Status      Description
         </div>
       </div>
     </div>
+  </div>
+
+  <hr id="gray-500" style="width: 738px; margin: 0; padding-bottom: 16px" />
+
+  <!-- 후기 -->
+  <div style="margin-top: 30px; max-width: 738px; margin: 0 auto;">
+    <h3 style="font-family: LINESeed-BD; font-size: 20px;">후기</h3>
+    <div id="reviewContainer" style="margin-top: 15px;"></div>
+    <span id="nullReview" style="font-family: LINESeed-RG; font-size: 20px; color: #6c757d; display: none; text-align: center;">
+      후기가 없습니다.
+    </span>
   </div>
 </div>
 
