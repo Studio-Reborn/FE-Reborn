@@ -7,6 +7,7 @@ History
 Date        Author      Status      Description
 2024.12.03  이유민      Created     
 2024.12.03  이유민      Modified    마이페이지 전체 내역 페이지 추가
+2024.12.29  이유민      Modified    모달 추가
 -->
 <div style="max-width: 738px; margin: 0 auto; padding-top: 36px">
   <!-- 제목 -->
@@ -19,5 +20,14 @@ Date        Author      Status      Description
   <!-- 카드 데이터 -->
   <div id="cardDataContainer"></div>
 </div>
+
+<!-- 모달 -->
+<%- include("../views/components/modal", {
+  modalTitle: '',
+  modalBody: '',
+  modalCloseBtn: '취소',
+  modalCheckBtn: '',
+  modalCheck: ''
+}) %>
 
 <script src="/js/mypage/historyHandler.js"></script>
