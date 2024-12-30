@@ -20,6 +20,7 @@ Date        Author      Status      Description
 2024.12.28  이유민      Modified    후기 API 연동
 2024.12.30  이유민      Modified    디버깅 코드 제거
 2024.12.30  이유민      Modified    중고거래 구매내역 API 연동
+2024.12.30  이유민      Modified    리본 리메이크 구매내역 API 연동
 */
 const userNickname = document.getElementById("userNickname");
 const userProfileImage = document.getElementById("userProfileImage");
@@ -448,52 +449,53 @@ async function buyEcoMarket() {
 
 // 리본 리메이크 구매 내역
 async function buyRebornRemake() {
-  // const rebornPurchase = await axios.get(
-  //   `${window.API_SERVER_URL}/billing/purchase/reborn-remake`,
-  //   {
-  //     headers: {
-  //       Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-  //     },
-  //   }
-  // );
-  // if (rebornPurchase.data.length === 0) {
-  //   document.getElementById("nullEcoMarketPurchase").style.display = "block";
-  //   document.getElementById("purchaseRebornAll").style.display = "none"; // 전체보기 비활성화
-  // }
-  // for (let i = 0; i < rebornPurchase.data.length; i++) {
-  //   if (i > 1) break; // 최대 2개 출력
-  //   purchaseRebornHTML += `
-  //   <a href="/reborn-remake/${rebornPurchase.data[i].product_id}">
-  //     <div class="card mb-3" style="width: 738px; height: 191px">
-  //       <div class="row g-0" style="height: 100%">
-  //         <div class="col-md-4" style="height: 100%">
-  //           <img src="${window.API_SERVER_URL}/${
-  //     rebornPurchase.data[i].product_image[0]
-  //   }" class="img-fluid rounded-start" alt="상품이미지" style="height: 100%;  width: auto; object-fit: cover" />
-  //         </div>
-  //         <div class="col-md-8" style="left: 0">
-  //           <div class="card-body">
-  //             <h5 class="card-title">${
-  //               rebornPurchase.data[i].product_name
-  //             }</h5>
-  //             <p class="card-text">
-  //               <small class="text-body-secondary">
-  //                 리본(Reborn) 배송 <br />
-  //                 ${Number(
-  //                   rebornPurchase.data[i].product_price
-  //                 ).toLocaleString()}원 ${
-  //     rebornPurchase.data[i].product_quantity
-  //   }개
-  //               </small>
-  //             </p>
-  //           </div>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   </a>
-  // `;
-  // }
-  // purchaseRebornContainer.innerHTML += purchaseRebornHTML;
+  const rebornPurchase = await axios.get(
+    `${window.API_SERVER_URL}/billing/purchase/reborn-remake`,
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    }
+  );
+
+  if (rebornPurchase.data.length === 0) {
+    document.getElementById("nullEcoMarketPurchase").style.display = "block";
+    document.getElementById("purchaseRebornAll").style.display = "none"; // 전체보기 비활성화
+  }
+
+  for (let i = 0; i < rebornPurchase.data.length; i++) {
+    if (i > 1) break; // 최대 2개 출력
+
+    purchaseRebornHTML += `
+    <a href="/reborn-remake/${rebornPurchase.data[i].product_id}">
+      <div class="card mb-3" style="width: 738px; height: 191px">
+        <div class="row g-0" style="height: 100%">
+          <div class="col-md-4" style="height: 100%">
+            <img src="${window.API_SERVER_URL}/${
+      rebornPurchase.data[i].product_image[0]
+    }" class="img-fluid rounded-start" alt="상품이미지" style="height: 100%;  width: auto; object-fit: cover" />
+          </div>
+          <div class="col-md-8" style="left: 0">
+            <div class="card-body">
+              <h5 class="card-title">${rebornPurchase.data[i].product_name}</h5>
+              <p class="card-text">
+                <small class="text-body-secondary">
+                  리본(Reborn) 배송 <br />
+                  ${Number(
+                    rebornPurchase.data[i].product_price
+                  ).toLocaleString()}원 ${
+      rebornPurchase.data[i].product_quantity
+    }개
+                </small>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+  `;
+  }
+  purchaseRebornContainer.innerHTML += purchaseRebornHTML;
 }
 
 async function writeReview() {
