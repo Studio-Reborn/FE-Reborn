@@ -13,6 +13,7 @@ Date        Author      Status      Description
 2024.12.29  이유민      Modified    후기 작성하기 버튼 추가
 2024.12.30  이유민      Modified    디버깅 코드 제거
 2024.12.30  이유민      Modified    중고거래 구매 내역 추가
+2024.12.30  이유민      Modified    결제 날짜 표시 오류 수정
 */
 window.addEventListener("load", () => {
   const pathSegments = window.location.pathname.split("/");
@@ -116,10 +117,9 @@ async function mypageHistory(name) {
 
       // 세 번째 줄
       if (name === "purchase-eco-market" || name === "purchase-reborn-remake") {
-        const orderTime = cardData.data[i].order_created_at
-          .substr(0, 16)
-          .split("T");
-        explain[2] = orderTime[0] + " " + orderTime[1] + " 결제";
+        explain[2] = `${new Date(
+          cardData.data[i].order_created_at
+        ).toLocaleString()} 결제`;
 
         if (name === "purchase-eco-market")
           explain[2] +=
