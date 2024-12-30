@@ -18,6 +18,8 @@ Date        Author      Status      Description
 2024.12.10  이유민      Modified    중고거래 판매 제품 상태 표시 추가
 2024.12.18  이유민      Modified    관심 상품 및 관심 마켓 추가
 2024.12.28  이유민      Modified    후기 API 연동
+2024.12.30  이유민      Modified    디버깅 코드 제거
+2024.12.30  이유민      Modified    중고거래 구매내역 API 연동
 */
 const userNickname = document.getElementById("userNickname");
 const userProfileImage = document.getElementById("userProfileImage");
@@ -89,6 +91,7 @@ async function getUserInfo() {
     userProfileImage.src = `${window.API_SERVER_URL}/${profile.data.url}`;
 
     sellPreLoved(); // 중고거래 판매 내역
+    buyPreLoved(); // 중고거래 구매 내역
     buyEcoMarket(); // 에코마켓 구매 내역
     buyRebornRemake(); // 리본 리메이크 구매 내역
     likeProduct(); // 관심 상품
@@ -312,6 +315,61 @@ async function sellPreLoved() {
   `;
   }
   purchasePreLovedContainer.innerHTML = purchasePreLovedHTML;
+}
+
+async function buyPreLoved() {
+  const response = await axios.get(
+    `${window.API_SERVER_URL}/product/pre-loved/buy`,
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    }
+  );
+
+  if (response.data.length === 0) {
+    document.getElementById("nullPreLovedBuy").style.display = "block";
+    document.getElementById("buyPreLovedAll").style.display = "none"; // 전체보기 비활성화
+  }
+
+  const container = document.getElementById("buyPreLovedContainer");
+  let containerHTML = "";
+
+  for (let i = 0; i < response.data.length; i++) {
+    if (i > 1) break; // 최대 2개 출력
+
+    containerHTML += `
+    <a href="/pre-loved/${response.data[i].product_id}">
+      <div class="card mb-3" style="width: 738px; height: 191px">
+        <div class="row g-0" style="height: 100%">
+          <div class="col-md-4" style="height: 100%">
+            <img src="${window.API_SERVER_URL}/${
+      response.data[i].product_image[0]
+    }" class="img-fluid rounded-start" alt="상품이미지" style="height: 100%;  width: auto; object-fit: cover" />
+          </div>
+          <div class="col-md-8" style="left: 0">
+            <div class="card-body">
+              <h5 class="card-title">${
+                response.data[i].product_name.length > 12
+                  ? response.data[i].product_name.slice(0, 12) + "..."
+                  : response.data[i].product_name
+              }
+              </h5>
+              <p class="card-text">
+                <small class="text-body-secondary">
+                  ${response.data[i].seller_nickname} 님 판매 <br />
+                  ${Number(response.data[i].product_price).toLocaleString()}원
+                </small>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+  `;
+  }
+
+  container.innerHTML = containerHTML;
 }
 
 // 에코마켓 구매 내역

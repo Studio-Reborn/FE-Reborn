@@ -18,6 +18,7 @@ Date        Author      Status      Description
 2024.11.22  이유민      Modified    카드 정렬 추가
 2024.11.26  이유민      Modified    API 경로 수정
 2024.12.10  이유민      Modified    제품 상태 표시 추가
+2024.12.30  이유민      Modified    예외 처리 코드 수정
 */
 window.addEventListener("load", () => {
   preLoved();
@@ -96,7 +97,7 @@ async function preLoved() {
 
     container.innerHTML = contentHTML;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 }
 

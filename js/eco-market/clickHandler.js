@@ -11,6 +11,7 @@ Date        Author      Status      Description
 2024.11.26  이유민      Modified    API 경로 수정
 2024.12.04  이유민      Modified    API 경로 수정
 2024.12.17  이유민      Modified    좋아요 API 연동
+2024.12.30  이유민      Modified    예외 처리 코드 수정
 */
 const marketLikeNum = document.getElementById("marketLikeNum");
 const likeImg = document.getElementById("likeImg");
@@ -344,6 +345,6 @@ async function uploadProfileImage() {
       return;
     }
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 }

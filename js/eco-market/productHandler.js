@@ -20,6 +20,7 @@ Date        Author      Status      Description
 2024.12.17  이유민      Modified    좋아요 API 연동
 2024.12.19  이유민      Modified    후기 API 연동
 2024.12.28  이유민      Modified    후기 수정 및 삭제 API 연동
+2024.12.30  이유민      Modified    디버깅 코드 제거
 */
 const likeImg = document.getElementById("likeImg");
 const likesNumber = document.getElementById("likesNumber");
@@ -253,7 +254,6 @@ async function productReview(id) {
 `;
       }
     }
-    console.log(reviews.data);
 
     reviewContainer.innerHTML = reviewHTML;
     reviewsNumber.innerHTML = Number(reviews.data.length).toLocaleString();

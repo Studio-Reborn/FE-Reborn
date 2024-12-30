@@ -11,6 +11,7 @@ Date        Author      Status      Description
 2024.11.13  이유민      Modified    비밀번호 변경 API 연동
 2024.11.18  이유민      Modified    API 경로 수정
 2024.12.04  이유민      Modified    API 경로 수정
+2024.12.30  이유민      Modified    예외 처리 코드 수정
 */
 // 토큰 없을 경우 마이페이지 접근 금지
 window.addEventListener("load", () => {
@@ -37,7 +38,7 @@ document
       alert("회원 정보가 수정되었습니다.");
       location.href = "/mypage";
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   });
 
@@ -66,7 +67,7 @@ async function uploadFile() {
       location.href = "/mypage/update";
     }
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 }
 
@@ -91,7 +92,7 @@ async function getUserInfo() {
     userNickname.placeholder = response.data.nickname;
     userProfileImg.src = `${window.API_SERVER_URL}/${profile.data.url}`;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 }
 
@@ -108,7 +109,7 @@ async function updateNickname(nickname) {
       }
     );
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 }
 

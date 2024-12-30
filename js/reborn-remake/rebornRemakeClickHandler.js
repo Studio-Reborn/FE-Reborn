@@ -11,6 +11,7 @@ Date        Author      Status      Description
 2024.11.28  이유민      Modified    결제 API 연동
 2024.12.04  이유민      Modified    API 경로 수정
 2024.12.18  이유민      Modified    좋아요 API 연동
+2024.12.30  이유민      Modified    예외 처리 코드 수정
 */
 const productData = {
   name: "",
@@ -91,7 +92,7 @@ async function readProductData(id) {
 
     return;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 }
 

@@ -18,6 +18,7 @@ Date        Author      Status      Description
 2024.12.16  이유민      Modified    좋아요 연동
 2024.12.16  이유민      Modified    좋아요 수 연동
 2024.12.17  이유민      Modified    코드 리팩토링
+2024.12.30  이유민      Modified    예외 처리 코드 수정
 */
 const productName = document.getElementById("productName");
 const productPrice = document.getElementById("productPrice");
@@ -127,7 +128,7 @@ async function readProductData(id) {
 
     return;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 }
 
