@@ -8,6 +8,7 @@ Date        Author      Status      Description
 2024.11.21  이유민      Created     
 2024.11.21  이유민      Modified    에코마켓 전체 API 연동
 2024.12.17  이유민      Modified    코드 리팩토링
+2024.12.30  이유민      Modified    디버깅 코드 제거
 */
 window.addEventListener("load", () => {
   // 토큰 없을 경우 버튼 없음
@@ -62,8 +63,6 @@ async function readMarketAll() {
       if (i % 2 === 1 || i === markets.data.length - 1) contentHTML += "</div>";
     }
 
-    // console.log(contentHTML);
-
     container.innerHTML = contentHTML;
   } catch (err) {
     console.error(err);
@@ -98,6 +97,6 @@ async function uploadProfileImage() {
       return;
     }
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 }

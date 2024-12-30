@@ -7,6 +7,7 @@ History
 Date        Author      Status      Description
 2024.12.09  이유민      Created     
 2024.12.09  이유민      Modified    내 채팅 API 연동
+2024.12.30  이유민      Modified    디버깅 코드 제거
 */
 const myChatContainer = document.getElementById("myChatContainer");
 const newChatList = JSON.parse(localStorage.getItem("newChats")) || [];
@@ -90,7 +91,6 @@ async function getMyChatAll() {
             </div>
   </a>
     `;
-    console.log(myChat.data[i].chat_id);
   }
 
   myChatContainer.innerHTML = myChatHTML;
