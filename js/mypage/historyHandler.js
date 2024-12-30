@@ -11,6 +11,8 @@ Date        Author      Status      Description
 2024.12.18  이유민      Modified    관심 상품 및 관심 마켓 추가
 2024.12.29  이유민      Modified    작성한 후기 추가
 2024.12.29  이유민      Modified    후기 작성하기 버튼 추가
+2024.12.30  이유민      Modified    디버깅 코드 제거
+2024.12.30  이유민      Modified    중고거래 구매 내역 추가
 */
 window.addEventListener("load", () => {
   const pathSegments = window.location.pathname.split("/");
@@ -28,6 +30,11 @@ async function mypageHistory(name) {
     case "sell-pre-loved":
       nameHTML = "중고거래 판매 내역";
       cardDataUrl = "product/pre-loved/my";
+      pointerUrl = "/pre-loved";
+      break;
+    case "purchase-pre-loved":
+      nameHTML = "중고거래 구매 내역";
+      cardDataUrl = "product/pre-loved/buy";
       pointerUrl = "/pre-loved";
       break;
     case "purchase-eco-market":
@@ -76,6 +83,7 @@ async function mypageHistory(name) {
       cardDataHTML = likeProduct(likesData);
     } else cardDataHTML = likeMarket(cardData.data);
   } else if (name === "write-review") {
+    // 작성한 리뷰
     cardDataHTML = writeReview(cardData.data);
   } else {
     // 그 외
@@ -86,6 +94,8 @@ async function mypageHistory(name) {
           Number(cardData.data[i].product_price).toLocaleString() + "원";
       } else if (name === "purchase-eco-market") {
         explain[0] = cardData.data[i].market_name;
+      } else if (name === "purchase-pre-loved") {
+        explain[0] = `${cardData.data[i].seller_nickname} 님 판매`;
       } else {
         explain[0] = "리본(Reborn)";
       }
@@ -93,6 +103,9 @@ async function mypageHistory(name) {
       // 두 번째 줄
       if (name === "sell-pre-loved") {
         explain[1] = cardData.data[i].product_created_at.split("T")[0];
+      } else if (name === "purchase-pre-loved") {
+        explain[1] =
+          Number(cardData.data[i].product_price).toLocaleString() + "원 ";
       } else {
         explain[1] =
           Number(cardData.data[i].product_price).toLocaleString() +
@@ -107,7 +120,6 @@ async function mypageHistory(name) {
           .substr(0, 16)
           .split("T");
         explain[2] = orderTime[0] + " " + orderTime[1] + " 결제";
-        console.log(cardData.data);
 
         if (name === "purchase-eco-market")
           explain[2] +=
@@ -179,8 +191,6 @@ document.addEventListener("click", (event) => {
 
 // 관심 상품
 function likeProduct(likesData) {
-  console.log(likesData);
-
   let resultHtml = "";
   let productLink = ""; // 제품 링크 관련
 
@@ -261,8 +271,6 @@ function likeProduct(likesData) {
 
 // 관심 마켓
 function likeMarket(likesData) {
-  console.log(likesData);
-
   let resultHtml = "";
 
   for (let i = 0; i < likesData.length; i++) {
@@ -310,7 +318,6 @@ function likeMarket(likesData) {
 }
 
 function writeReview(reviewData) {
-  console.log(reviewData);
   let reviewHTML = "";
 
   for (let i = 0; i < reviewData.length; i++) {
