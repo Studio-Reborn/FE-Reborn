@@ -12,19 +12,37 @@ Date        Author      Status      Description
 2024.12.04  이유민      Modified    API 경로 수정
 2024.12.17  이유민      Modified    좋아요 API 연동
 2024.12.30  이유민      Modified    예외 처리 코드 수정
+2025.01.05  이유민      Modified    검색 및 정렬 API 연동
 */
+const id = window.location.pathname.split("/").pop();
+
 const marketLikeNum = document.getElementById("marketLikeNum");
 const likeImg = document.getElementById("likeImg");
 
-window.addEventListener("load", () => {
-  const id = window.location.pathname.split("/").pop();
+let searchValue = undefined;
+let sortValue = document.getElementById("marketProductSort").value;
 
+let profileImageId = 0;
+
+window.addEventListener("load", () => {
   readMarketInfo(id);
-  readMarketProducts(id);
+  readMarketProducts(id, searchValue, sortValue);
   marketLike(id);
 });
 
-let profileImageId = 0;
+// 검색값 입력 시
+function logInputValue() {
+  searchValue = document.getElementById("marketProductSearch").value;
+  readMarketProducts(id, searchValue, sortValue);
+}
+
+// 정렬 변경 시
+document
+  .getElementById("marketProductSort")
+  .addEventListener("change", (event) => {
+    sortValue = event.target.value;
+    readMarketProducts(id, searchValue, sortValue);
+  });
 
 async function readMarketInfo(id) {
   try {
@@ -65,15 +83,19 @@ async function readMarketInfo(id) {
   }
 }
 
-async function readMarketProducts(id) {
+async function readMarketProducts(id, searchValue, sortValue) {
   const container = document.getElementById("ecoMarketProductContainer");
   let containerHTML = "";
 
   try {
     // 마켓의 판매 제품
-    const products = await axios.get(
-      `${window.API_SERVER_URL}/product/eco-market/market/${id}`
-    );
+    const products = !searchValue
+      ? await axios.get(
+          `${window.API_SERVER_URL}/product/eco-market/market/${id}?sort=${sortValue}`
+        )
+      : await axios.get(
+          `${window.API_SERVER_URL}/product/eco-market/market/${id}?sort=${sortValue}&search=${searchValue}`
+        );
 
     for (let i = 0; i < products.data.length; i++) {
       // 제품 이미지

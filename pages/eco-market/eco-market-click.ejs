@@ -10,6 +10,7 @@ Date        Author      Status      Description
 2024.11.21  이유민      Modified    API 연동
 2024.11.21  이유민      Modified    제품 추가 등 기능 추가
 2024.12.17  이유민      Modified    좋아요 API 연동
+2025.01.05  이유민      Modified    검색 및 정렬 API 연동
 -->
 <!-- 프로필 -->
 <div style="display: flex; align-items: center; justify-content: center; padding-bottom: 21px">
@@ -56,14 +57,13 @@ Date        Author      Status      Description
     margin-bottom: 41px;
   ">
   <div class="input-group mb-3" style="width: 437px; margin-right: 30px">
-    <input type="text" class="form-control" id="form-select" placeholder="상품을 검색해보세요." aria-label="eco-market-name" />
+    <input type="text" class="form-control" id="marketProductSearch" placeholder="상품을 검색해보세요." oninput="logInputValue()" />
   </div>
 
   <div>
-    <select class="form-select" id="form-select" aria-label="Default select example" style="width: 110px; text-align: center">
-      <option selected value="인기순">인기순</option>
-      <option value="이름순">이름순</option>
-      <option value="최신순">최신순</option>
+    <select class="form-select" id="marketProductSort" style="width: 110px; text-align: center">
+      <option selected value="name">이름순</option>
+      <option value="latest">최신순</option>
     </select>
   </div>
 </div>

@@ -19,12 +19,28 @@ Date        Author      Status      Description
 2024.11.26  이유민      Modified    API 경로 수정
 2024.12.10  이유민      Modified    제품 상태 표시 추가
 2024.12.30  이유민      Modified    예외 처리 코드 수정
+2025.01.02  이유민      Modified    검색 및 정렬 API 연동
 */
+let searchValue = undefined;
+let sortValue = document.getElementById("preLovedSort").value;
+
 window.addEventListener("load", () => {
-  preLoved();
+  preLoved(searchValue, sortValue);
 });
 
-async function preLoved() {
+// 검색값 입력 시
+function logInputValue() {
+  searchValue = document.getElementById("preLovedSearch").value;
+  preLoved(searchValue, sortValue);
+}
+
+// 정렬 변경 시
+document.getElementById("preLovedSort").addEventListener("change", (event) => {
+  sortValue = event.target.value;
+  preLoved(searchValue, sortValue);
+});
+
+async function preLoved(searchValue, sortValue) {
   // 로그인 안 한 경우 생성 버튼 나타나지 않음
   if (!localStorage.getItem("access_token"))
     document.getElementById("preLovedProductCreateBtn").style.display = "none";
@@ -33,9 +49,13 @@ async function preLoved() {
   let contentHTML = "";
 
   try {
-    const products = await axios.get(
-      `${window.API_SERVER_URL}/product/pre-loved`
-    );
+    const products = !searchValue
+      ? await axios.get(
+          `${window.API_SERVER_URL}/product/pre-loved?sort=${sortValue}`
+        )
+      : await axios.get(
+          `${window.API_SERVER_URL}/product/pre-loved?sort=${sortValue}&search=${searchValue}`
+        );
 
     for (let i = 0; i < products.data.length; i++) {
       const productImages = await axios.get(
