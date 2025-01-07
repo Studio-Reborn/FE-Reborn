@@ -13,6 +13,8 @@ Date        Author      Status      Description
 2024.12.29  이유민      Modified    후기 작성하기 버튼 추가
 2024.12.30  이유민      Modified    디버깅 코드 제거
 2024.12.30  이유민      Modified    중고거래 구매 내역 추가
+2024.12.30  이유민      Modified    결제 날짜 표시 오류 수정
+2025.01.06  이유민      Modified    작성한 후기 물건 클릭 시 페이지 이동 추가
 */
 window.addEventListener("load", () => {
   const pathSegments = window.location.pathname.split("/");
@@ -116,10 +118,9 @@ async function mypageHistory(name) {
 
       // 세 번째 줄
       if (name === "purchase-eco-market" || name === "purchase-reborn-remake") {
-        const orderTime = cardData.data[i].order_created_at
-          .substr(0, 16)
-          .split("T");
-        explain[2] = orderTime[0] + " " + orderTime[1] + " 결제";
+        explain[2] = `${new Date(
+          cardData.data[i].order_created_at
+        ).toLocaleString()} 결제`;
 
         if (name === "purchase-eco-market")
           explain[2] +=
@@ -317,6 +318,7 @@ function likeMarket(likesData) {
   return resultHtml;
 }
 
+// 작성한 후기
 function writeReview(reviewData) {
   let reviewHTML = "";
 
@@ -327,7 +329,9 @@ function writeReview(reviewData) {
           style="padding: 15px; border: 1px solid #ddd; border-radius: 10px; margin-bottom: 15px; overflow: hidden; cursor: pointer; transition: max-height 0.3s ease;">
           <div style="display: flex; align-items: center; justify-content: space-between;">
             <!-- 프로필 및 닉네임 -->
-            <div style="display: flex; align-items: center;">
+            <div id="marketProfileContainer" style="display: flex; align-items: center;" data-location-link="${
+              reviewData[i].market_id
+            }/${reviewData[i].review_product_id}">
               <img src="${window.API_SERVER_URL}/${
       reviewData[i].product_image_url[0]
     }" alt="상품 이미지" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
@@ -378,8 +382,27 @@ function writeReview(reviewData) {
 // 카드 클릭 이벤트
 document.addEventListener("click", (event) => {
   const card = event.target.closest(".review-card");
-  if (card && !event.target.closest("#updateReview, #deleteReview")) {
+  if (
+    card &&
+    !event.target.closest(
+      "#updateReview, #deleteReview,  #marketProfileContainer"
+    )
+  ) {
     toggleCard(card);
+  }
+
+  // 물건 정보 클릭 시 페이지 이동 관련
+  if (card && event.target.closest("#marketProfileContainer")) {
+    const dataLink = event.target
+      .closest("#marketProfileContainer")
+      .getAttribute("data-location-link");
+
+    if (dataLink.split("/")[0] === "undefined") {
+      location.href = `/reborn-remake/${dataLink.split("/")[1]}`;
+      return;
+    }
+
+    location.href = `/eco-market/${dataLink}`;
   }
 });
 

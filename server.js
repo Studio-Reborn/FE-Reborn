@@ -34,6 +34,9 @@ app.get("/login", (req, res) => {
 app.get("/auth", (req, res) => {
   res.render("../pages/auth/auth", { currentPage: "auth" });
 });
+app.get("/user/:id", (req, res) => {
+  res.render("../pages/pre-loved/pre-loved-user", { currentPage: "user" });
+});
 app.get("/pre-loved", (req, res) => {
   res.render("../pages/pre-loved/pre-loved", { currentPage: "pre-loved" });
 });
