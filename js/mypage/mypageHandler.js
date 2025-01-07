@@ -21,9 +21,12 @@ Date        Author      Status      Description
 2024.12.30  이유민      Modified    디버깅 코드 제거
 2024.12.30  이유민      Modified    중고거래 구매내역 API 연동
 2024.12.30  이유민      Modified    리본 리메이크 구매내역 API 연동
+2025.01.06  이유민      Modified    작성한 후기 물건 클릭 시 페이지 이동 추가
+2025.01.06  이유민      Modified    등급 API 연동
 */
 const userNickname = document.getElementById("userNickname");
 const userProfileImage = document.getElementById("userProfileImage");
+const userLevel = document.getElementById("userLevel");
 
 // 중고거래 판매 내역
 const purchasePreLovedContainer = document.getElementById(
@@ -82,6 +85,12 @@ async function getUserInfo() {
       },
     });
 
+    const level = await axios.get(`${window.API_SERVER_URL}/level/user`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    });
+
     const profile = await axios.get(`${window.API_SERVER_URL}/profile`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
@@ -90,6 +99,7 @@ async function getUserInfo() {
 
     userNickname.innerHTML = user.data.nickname;
     userProfileImage.src = `${window.API_SERVER_URL}/${profile.data.url}`;
+    userLevel.innerHTML = level.data.level_name;
 
     sellPreLoved(); // 중고거래 판매 내역
     buyPreLoved(); // 중고거래 구매 내역
@@ -498,6 +508,7 @@ async function buyRebornRemake() {
   purchaseRebornContainer.innerHTML += purchaseRebornHTML;
 }
 
+// 작성한 후기
 async function writeReview() {
   let reviewHTML = "";
 
@@ -520,7 +531,9 @@ async function writeReview() {
           style="padding: 15px; border: 1px solid #ddd; border-radius: 10px; margin-bottom: 15px; overflow: hidden; cursor: pointer; transition: max-height 0.3s ease;">
           <div style="display: flex; align-items: center; justify-content: space-between;">
             <!-- 프로필 및 닉네임 -->
-            <div style="display: flex; align-items: center;">
+            <div id="marketProfileContainer" style="display: flex; align-items: center;" data-location-link="${
+              reviews.data[i].market_id
+            }/${reviews.data[i].review_product_id}">
               <img src="${window.API_SERVER_URL}/${
         reviews.data[i].product_image_url[0]
       }" alt="상품 이미지" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
@@ -574,8 +587,29 @@ async function writeReview() {
 // 카드 클릭 이벤트
 document.addEventListener("click", (event) => {
   const card = event.target.closest(".review-card");
-  if (card && !event.target.closest("#updateReview, #deleteReview")) {
+
+  // 카드 확장 관련
+  if (
+    card &&
+    !event.target.closest(
+      "#updateReview, #deleteReview, #marketProfileContainer"
+    )
+  ) {
     toggleCard(card);
+  }
+
+  // 물건 정보 클릭 시 페이지 이동 관련
+  if (card && event.target.closest("#marketProfileContainer")) {
+    const dataLink = event.target
+      .closest("#marketProfileContainer")
+      .getAttribute("data-location-link");
+
+    if (dataLink.split("/")[0] === "undefined") {
+      location.href = `/reborn-remake/${dataLink.split("/")[1]}`;
+      return;
+    }
+
+    location.href = `/eco-market/${dataLink}`;
   }
 });
 
@@ -609,17 +643,16 @@ async function setModalContent(type, element) {
   const modalSubmitBtn = document.getElementById("modalSubmitBtn");
 
   if (type === "grade") {
+    const info = await axios.get(`${window.API_SERVER_URL}/level/info`);
+
     modalTitle.innerHTML = "등급 🏆";
-    modalBody.innerHTML = `
-    <div style="font-family: LINESeed-RG">
-      <span style="font-family: LINESeed-BD">새싹 리본 🌱</span> : 거래를 시작하지 않은 회원<br />
-      <span style="font-family: LINESeed-BD">잎새 리본 🌿</span> : 거래를 시작한 회원<br />
-      <span style="font-family: LINESeed-BD">씨앗 리본 ☘️</span> : 중고마켓에서 활발히 거래하는 회원<br />
-      <span style="font-family: LINESeed-BD">푸른 리본 🍀</span> : 에코마켓에서 활발히 거래하는 회원<br />
-      <span style="font-family: LINESeed-BD">활짝 리본 🪴</span> : 리본 리메이크 서비스를 자주 이용하는 회원<br />
-      <span style="font-family: LINESeed-BD">리본 서포터 🎀</span> : 높은 리사이클링 구매와 중고거래로 환경을 생각하는 회원<br />
-    </div>
-    `;
+    modalBody.innerHTML = `<div style="font-family: LINESeed-RG">`;
+
+    for (let i = 0; i < info.data.length; i++) {
+      modalBody.innerHTML += `<span style="font-family: LINESeed-BD">${info.data[i].name}</span> : ${info.data[i].description}<br />`;
+    }
+
+    modalBody.innerHTML += `</div>`;
   } else if (type === "createReview") {
     const productId = element.getAttribute("data-product-id");
     const itemsId = element.getAttribute("data-items-id");
