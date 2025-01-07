@@ -11,6 +11,7 @@ Date        Author      Status      Description
 2024.11.21  이유민      Modified    제품 추가 등 기능 추가
 2024.12.17  이유민      Modified    좋아요 API 연동
 2025.01.05  이유민      Modified    검색 및 정렬 API 연동
+2025.01.07  이유민      Modified    마켓별 후기 조회 추가
 -->
 <!-- 프로필 -->
 <div style="display: flex; align-items: center; justify-content: center; padding-bottom: 21px">
@@ -49,27 +50,47 @@ Date        Author      Status      Description
   </div>
 </div>
 
-<!-- 검색 및 정렬 -->
-<div style="
-    display: flex;
-    justify-content: center;
-    margin-top: 41px;
-    margin-bottom: 41px;
-  ">
-  <div class="input-group mb-3" style="width: 437px; margin-right: 30px">
-    <input type="text" class="form-control" id="marketProductSearch" placeholder="상품을 검색해보세요." oninput="logInputValue()" />
-  </div>
-
-  <div>
-    <select class="form-select" id="marketProductSort" style="width: 110px; text-align: center">
-      <option selected value="name">이름순</option>
-      <option value="latest">최신순</option>
-    </select>
-  </div>
+<!-- 탭 -->
+<div style="max-width: 738px; margin: 0 auto; margin-top: 20px; position: relative; border-bottom: 2px solid #D1E7DD; font-family: LINESeed-RG">
+  <ul class="tabButtons" style="list-style: none; padding: 0; margin: 0; display: flex;">
+    <li style="flex: 1; padding: 10px 20px; text-align: center; cursor: pointer; border: 1px solid #D1E7DD; border-bottom: none; background-color: #f5f5f5; border-top-left-radius: 8px; border-top-right-radius: 8px;" onclick="showTab('productTab')" id="productTabButton">
+      상품
+    </li>
+    <li style="flex: 1; padding: 10px 20px; text-align: center; cursor: pointer; border: 1px solid #D1E7DD; border-bottom: none; background-color: #e0e0e0; border-top-left-radius: 8px; border-top-right-radius: 8px;" onclick="showTab('reviewTab')" id="reviewTabButton">
+      마켓 전체 후기
+    </li>
+  </ul>
 </div>
 
-<!-- 카드 -->
-<div id="ecoMarketProductContainer"></div>
+<!-- 상품 창 -->
+<div id="productTab" class="tabContent">
+  <!-- 검색 및 정렬 -->
+  <div style="display: flex; justify-content: center; margin-top: 20px; margin-bottom: 20px;">
+    <div class="input-group mb-3" style="width: 437px; margin-right: 30px">
+      <input type="text" class="form-control" id="marketProductSearch" placeholder="상품을 검색해보세요." oninput="logInputValue()" />
+    </div>
+    <div>
+      <select class="form-select" id="marketProductSort" style="width: 110px; text-align: center">
+        <option selected value="name">이름순</option>
+        <option value="latest">최신순</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- 카드 -->
+  <div id="ecoMarketProductContainer"></div>
+</div>
+
+<!-- 후기 창 -->
+<div id="reviewTab" class="tabContent" style="display: none;">
+  <!-- 후기 -->
+  <div style="padding-top: 5px; max-width: 738px; margin: 0 auto;">
+    <div id="reviewContainer" style="margin-top: 15px;"></div>
+    <span id="nullReview" style="font-family: LINESeed-RG; font-size: 20px; color: #6c757d; display: none; text-align: center; margin-top: 30px">
+      후기가 없습니다.
+    </span>
+  </div>
+</div>
 
 <!-- 모달 -->
 <%- include("../views/components/modal", {

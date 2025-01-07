@@ -13,6 +13,7 @@ Date        Author      Status      Description
 2024.12.17  이유민      Modified    좋아요 API 연동
 2024.12.30  이유민      Modified    예외 처리 코드 수정
 2025.01.05  이유민      Modified    검색 및 정렬 API 연동
+2025.01.07  이유민      Modified    마켓별 후기 조회 API 연동
 */
 const id = window.location.pathname.split("/").pop();
 
@@ -28,6 +29,7 @@ window.addEventListener("load", () => {
   readMarketInfo(id);
   readMarketProducts(id, searchValue, sortValue);
   marketLike(id);
+  marketReviewAll(id);
 });
 
 // 검색값 입력 시
@@ -186,8 +188,139 @@ async function marketLike(id) {
   }
 }
 
+// 마켓 전체 후기
+async function marketReviewAll(id) {
+  let reviewHTML = "";
+  let check = "";
+  const reviewContainer = document.getElementById("reviewContainer");
+  try {
+    const reviews = await axios.get(
+      `${window.API_SERVER_URL}/review/market/${id}`
+    );
+
+    // 로그인 상태일 때, 제품 판매자와 본인 확인하기
+    if (localStorage.getItem("access_token")) {
+      // 본인 정보 가져오기
+      check = await axios.get(`${window.API_SERVER_URL}/users/my`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+    }
+
+    if (reviews.data.length === 0) {
+      document.getElementById("nullReview").style.display = "block";
+    } else {
+      for (let i = 0; i < reviews.data.length; i++) {
+        reviewHTML += `
+  <div 
+    class="review-card" 
+    style="padding: 15px; border: 1px solid #ddd; border-radius: 10px; margin-bottom: 15px; overflow: hidden; cursor: pointer; transition: max-height 0.3s ease;">
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+      <!-- 프로필 및 닉네임 -->
+      <div style="display: flex; align-items: center;">
+        <img src="${window.API_SERVER_URL}/${
+          reviews.data[i].user_profile_image_url
+        }" alt="프로필 이미지" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+        <div>
+          <p style="margin: 0; font-family: LINESeed-BD; font-size: 14px;">${
+            reviews.data[i].user_nickname
+          }</p>
+          <p style="margin: 0; font-family: LINESeed-RG; font-size: 12px; color: #6c757d;">
+            ${reviews.data[i].review_created_at.split("T")[0]}
+            ${
+              reviews.data[i].review_created_at !==
+              reviews.data[i].review_updated_at
+                ? `<span>수정됨</span>`
+                : ""
+            }
+          </p>
+        </div>
+      </div>
+
+      <!-- 수정 및 삭제 -->
+      ${
+        localStorage.getItem("access_token") &&
+        reviews.data[i].user_id === check.data.id
+          ? `<div id="principalCheck" style="gap: 10px; display: flex;">
+              <div id="updateReview" style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG; cursor: pointer;" data-review-id="${reviews.data[i].review_id}"
+              data-bs-toggle="modal" data-bs-target="#modalContainer" onclick="setModalContent('updateReview', this)">
+                수정
+              </div>
+              <div id="deleteReview" style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG; cursor: pointer;" data-review-id="${reviews.data[i].review_id}"
+               data-bs-toggle="modal" data-bs-target="#modalContainer" onclick="setModalContent('deleteReview', this)">
+                삭제
+              </div>
+            </div>`
+          : ""
+      }
+    </div>
+
+    <!-- 리뷰 내용 -->
+    <p 
+      class="review-content" 
+      style="margin-top: 10px; font-family: LINESeed-RG; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">
+      ${reviews.data[i].review_content}
+    </p>
+  </div>
+`;
+      }
+    }
+
+    reviewContainer.innerHTML = reviewHTML;
+
+    console.log(reviews.data);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// 카드 클릭 이벤트
+document.addEventListener("click", (event) => {
+  const card = event.target.closest(".review-card");
+  if (card && !event.target.closest("#updateReview, #deleteReview")) {
+    toggleCard(card);
+  }
+});
+
+// 리뷰 토글 함수
+function toggleCard(card) {
+  const content = card.querySelector(".review-content");
+
+  if (card.style.maxHeight === "none") {
+    // 줄이기 상태
+    content.style.display = "-webkit-box";
+    content.style.webkitLineClamp = "5";
+    card.style.maxHeight = "200px";
+  } else {
+    // 펼치기 상태
+    content.style.display = "block";
+    card.style.maxHeight = "none";
+  }
+}
+
+// 탭 관련
+function showTab(tabId) {
+  const tabs = document.querySelectorAll(".tabContent");
+  tabs.forEach((tab) => (tab.style.display = "none")); // 모든 탭 숨기기
+
+  document.getElementById(tabId).style.display = "block"; // 선택한 탭 보여주기
+
+  // 선택한 탭 강조 스타일 적용
+  const tabButtons = document.querySelectorAll(".tabButtons li");
+  tabButtons.forEach((button) => {
+    button.style.backgroundColor = "#D1E7DD"; // 비활성화된 탭 색상
+    button.style.borderBottom = "1px solid #D1E7DD"; // 경계 강조
+  });
+  document.getElementById(tabId + "Button").style.backgroundColor = "#fff"; // 활성화된 탭 색상
+  document.getElementById(tabId + "Button").style.borderBottom = "none"; // 활성화된 탭 경계 제거
+}
+
+// 기본적으로 첫 번째 탭 활성화
+showTab("productTab");
+
 // 모달 함수
-function setModalContent(type) {
+async function setModalContent(type, element) {
   if (!localStorage.getItem("access_token")) {
     alert("로그인 후 이용 가능합니다.");
 
@@ -335,6 +468,40 @@ function setModalContent(type) {
     modalSubmitBtn.innerHTML = "삭제";
     modalSubmitBtn.style.backgroundColor = "#E35D6A";
     modalContainer.setAttribute("data-modal-check", "deleteRequestEcoMarket");
+  } else if (type === "updateReview") {
+    const reviewId = element.getAttribute("data-review-id");
+
+    const response = await axios.get(
+      `${window.API_SERVER_URL}/review/info/${reviewId}`
+    );
+
+    modalTitle.textContent = "리뷰 수정하기";
+    modalBody.innerHTML = `
+        <!-- 리뷰 내용 -->
+        <div class="form-floating mb-3" style="width: 586px">
+          <textarea class="form-control" id="reviewContentNew" placeholder="리뷰 내용" style="height: 500px"></textarea>
+          <label for="reviewContentNew">리뷰 내용</label>
+        </div>
+          `;
+
+    document.getElementById("reviewContentNew").innerHTML =
+      response.data.content.replace(/<br>/g, "\n");
+
+    modalSubmitBtn.innerHTML = "수정";
+    modalSubmitBtn.style.backgroundColor = "#479F76";
+    modalContainer.setAttribute("data-modal-check", "updateReview");
+    modalContainer.setAttribute("data-review-id", reviewId);
+  } else if (type === "deleteReview") {
+    const reviewId = element.getAttribute("data-review-id");
+
+    modalTitle.textContent = "리뷰 삭제하기";
+    modalBody.innerHTML = `
+      <div style="font-family: LINESeed-BD; font-size: 30px; text-align: center">리뷰를 삭제하시겠습니까?</div>
+      `;
+    modalSubmitBtn.innerHTML = "삭제";
+    modalSubmitBtn.style.backgroundColor = "#E35D6A";
+    modalContainer.setAttribute("data-modal-check", "deleteReview");
+    modalContainer.setAttribute("data-review-id", reviewId);
   }
 }
 
