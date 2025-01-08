@@ -7,7 +7,9 @@ History
 Date        Author      Status      Description
 2025.01.07  이유민      Created     
 2025.01.07  이유민      Modified    일반 사용자 정보 조회 추가
+2025.01.08  이유민      Modified    판매 물품 좋아요 API 연동
 */
+let productLikeAllCnt = 0;
 const user_id = window.location.pathname.split("/").pop();
 const userPreLovedProductContainer = document.getElementById(
   "userPreLovedProductContainer"
@@ -43,6 +45,8 @@ async function getUserInfo(user_id) {
       // html
       if (i % 3 === 0) containerHTML += `<div class="card-contents">`;
 
+      productLikeAllCnt += Number(products.data[i].product_like_cnt);
+
       containerHTML += `
               <a href="/pre-loved/${products.data[i].product_id}">
                 <div class="card" style="width: 18rem">
@@ -67,7 +71,9 @@ async function getUserInfo(user_id) {
                     <p class="card-text">${Number(
                       products.data[i].product_price
                     ).toLocaleString()}원</p>
-                    <p class="card-text" style="color: #6c757d; font-size: 12px">후기 654</p>
+                    <p class="card-text" style="color: #6c757d; font-size: 12px">좋아요 ${Number(
+                      products.data[i].product_like_cnt
+                    ).toLocaleString()}</p>
                   </div>
                 </div>
               </a>
@@ -84,6 +90,8 @@ async function getUserInfo(user_id) {
     }
 
     userPreLovedProductContainer.innerHTML = containerHTML;
+
+    document.getElementById("userProductLikeNum").innerHTML = productLikeAllCnt;
   } catch (err) {
     console.error(err);
   }

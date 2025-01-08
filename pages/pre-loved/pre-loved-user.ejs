@@ -7,6 +7,7 @@ History
 Date        Author      Status      Description
 2025.01.07  이유민      Created     
 2025.01.07  이유민      Modified    일반 사용자 정보 조회 추가
+2025.01.08  이유민      Modified    판매 물품 좋아요 추가
 -->
 <!-- 프로필 -->
 <div style="display: flex; align-items: center; justify-content: center; padding-bottom: 21px">
@@ -24,11 +25,9 @@ Date        Author      Status      Description
   <hr id="gray-500" style="width: 738px; margin: 0; padding-bottom: 16px" />
 
   <div style="font-family: LINESeed-RG">
-    <div id="userDetail" style="padding-bottom: 9px; font-size: 15px">
-    </div>
     <div style="display: flex">
       <div style="color: #6c757d; font-size: 13px">
-        후기 2,829 좋아요 <span id="marketLikeNum"></span>
+        판매 물품 좋아요 <span id="userProductLikeNum"></span>
       </div>
       <div id="principalCheck" style="margin-left: auto; gap: 10px; display: none">
         <div id="createMarketProduct" style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG; cursor: pointer" data-bs-toggle="modal" data-bs-target="#modalContainer" onclick="setModalContent('createMarketProduct')">
