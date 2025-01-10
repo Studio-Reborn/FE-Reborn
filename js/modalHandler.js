@@ -25,6 +25,7 @@ Date        Author      Status      Description
 2024.12.02  이유민      Modified    라디오버튼 status 추가
 2024.12.17  이유민      Modified    제품 id 타입 수정
 2024.12.28  이유민      Modified    후기 API 연동
+2025.01.10  이유민      Modified    리본 리메이크 제품 추천 UI 수정 및 링크 추가
 */
 document
   .getElementById("modalSubmitBtn")
@@ -160,7 +161,7 @@ document
           },
         });
 
-        resultText.innerHTML = `리메이크 추천 제품 : ${response.data.theme}<br />
+        resultText.innerHTML = `리메이크 추천 제품 : <a href="/reborn-remake/${response.data.id}" style="font-family: LINESeed-BD">${response.data.theme}</a><br />
         추천 이유 : ${response.data.reason}<br />`;
         noticeText.style.display = "block";
 

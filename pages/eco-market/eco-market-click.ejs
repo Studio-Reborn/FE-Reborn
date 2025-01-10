@@ -12,6 +12,7 @@ Date        Author      Status      Description
 2024.12.17  이유민      Modified    좋아요 API 연동
 2025.01.05  이유민      Modified    검색 및 정렬 API 연동
 2025.01.07  이유민      Modified    마켓별 후기 조회 추가
+2025.01.08  이유민      Modified    후기 수 API 연동
 -->
 <!-- 프로필 -->
 <div style="display: flex; align-items: center; justify-content: center; padding-bottom: 21px">
@@ -33,7 +34,7 @@ Date        Author      Status      Description
     </div>
     <div style="display: flex">
       <div style="color: #6c757d; font-size: 13px">
-        후기 2,829 좋아요 <span id="marketLikeNum"></span>
+        후기 <span id="marketReviewNum"></span> 좋아요 <span id="marketLikeNum"></span>
       </div>
       <div id="principalCheck" style="margin-left: auto; gap: 10px; display: none">
         <div id="createMarketProduct" style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG; cursor: pointer" data-bs-toggle="modal" data-bs-target="#modalContainer" onclick="setModalContent('createMarketProduct')">

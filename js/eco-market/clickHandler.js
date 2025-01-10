@@ -14,6 +14,8 @@ Date        Author      Status      Description
 2024.12.30  이유민      Modified    예외 처리 코드 수정
 2025.01.05  이유민      Modified    검색 및 정렬 API 연동
 2025.01.07  이유민      Modified    마켓별 후기 조회 API 연동
+2025.01.08  이유민      Modified    후기 수 API 연동
+2025.01.10  이유민      Modified    후기 UI 수정
 */
 const id = window.location.pathname.split("/").pop();
 
@@ -88,6 +90,7 @@ async function readMarketInfo(id) {
 async function readMarketProducts(id, searchValue, sortValue) {
   const container = document.getElementById("ecoMarketProductContainer");
   let containerHTML = "";
+  let marketProductAllCnt = 0;
 
   try {
     // 마켓의 판매 제품
@@ -100,11 +103,7 @@ async function readMarketProducts(id, searchValue, sortValue) {
         );
 
     for (let i = 0; i < products.data.length; i++) {
-      // 제품 이미지
-      const productImage = await axios.get(
-        `${window.API_SERVER_URL}/product-image/${products.data[i].product_image_id}`
-      );
-
+      marketProductAllCnt += Number(products.data[i].product_review_cnt);
       // html
       if (i % 3 === 0) containerHTML += `<div class="card-contents">`;
 
@@ -112,14 +111,18 @@ async function readMarketProducts(id, searchValue, sortValue) {
         <a href="/eco-market/${id}/${products.data[i].id}">
           <div class="card" style="width: 18rem">
             <img src="${window.API_SERVER_URL}/${
-        productImage.data.url[0]
+        products.data[i].product_image_url[0]
       }" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
             <div class="card-body">
               <h5 class="card-title">${products.data[i].name}</h5>
               <p class="card-text">${Number(
                 products.data[i].price
               ).toLocaleString()}원</p>
-              <p class="card-text" style="color: #6c757d; font-size: 12px">후기 654</p>
+              <p class="card-text" style="color: #6c757d; font-size: 12px">후기 ${Number(
+                products.data[i].product_review_cnt
+              ).toLocaleString()} 좋아요 ${Number(
+        products.data[i].product_like_cnt
+      ).toLocaleString()}</p>
             </div>
           </div>
         </a>
@@ -136,6 +139,8 @@ async function readMarketProducts(id, searchValue, sortValue) {
     }
 
     container.innerHTML = containerHTML;
+    document.getElementById("marketReviewNum").innerHTML =
+      marketProductAllCnt.toLocaleString();
   } catch (err) {
     console.error(err);
   }
@@ -218,15 +223,24 @@ async function marketReviewAll(id) {
     style="padding: 15px; border: 1px solid #ddd; border-radius: 10px; margin-bottom: 15px; overflow: hidden; cursor: pointer; transition: max-height 0.3s ease;">
     <div style="display: flex; align-items: center; justify-content: space-between;">
       <!-- 프로필 및 닉네임 -->
-      <div style="display: flex; align-items: center;">
+      <div id="productProfile" style="display: flex; align-items: center;" data-location-link="${id}/${
+          reviews.data[i].product_id
+        }">
         <img src="${window.API_SERVER_URL}/${
-          reviews.data[i].user_profile_image_url
+          reviews.data[i].product_image_url[0]
         }" alt="프로필 이미지" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
         <div>
           <p style="margin: 0; font-family: LINESeed-BD; font-size: 14px;">${
-            reviews.data[i].user_nickname
+            reviews.data[i].product_name.length >= 20
+              ? reviews.data[i].product_name.slice(0, 20) + "..."
+              : reviews.data[i].product_name
           }</p>
           <p style="margin: 0; font-family: LINESeed-RG; font-size: 12px; color: #6c757d;">
+          <span style="font-family: LINESeed-BD">${
+            reviews.data[i].user_nickname.length >= 15
+              ? reviews.data[i].user_nickname.slice(0, 15) + "..."
+              : reviews.data[i].user_nickname
+          }</span>님 작성 | 
             ${reviews.data[i].review_created_at.split("T")[0]}
             ${
               reviews.data[i].review_created_at !==
@@ -268,8 +282,6 @@ async function marketReviewAll(id) {
     }
 
     reviewContainer.innerHTML = reviewHTML;
-
-    console.log(reviews.data);
   } catch (err) {
     console.error(err);
   }
@@ -278,8 +290,19 @@ async function marketReviewAll(id) {
 // 카드 클릭 이벤트
 document.addEventListener("click", (event) => {
   const card = event.target.closest(".review-card");
-  if (card && !event.target.closest("#updateReview, #deleteReview")) {
+  if (
+    card &&
+    !event.target.closest("#updateReview, #deleteReview, #productProfile")
+  ) {
     toggleCard(card);
+  }
+
+  if (card && event.target.closest("#productProfile")) {
+    const dataLink = event.target
+      .closest("#productProfile")
+      .getAttribute("data-location-link");
+
+    location.href = `/eco-market/${dataLink}`;
   }
 });
 

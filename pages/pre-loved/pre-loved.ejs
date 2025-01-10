@@ -16,6 +16,7 @@ Date        Author      Status      Description
 2024.11.20  이유민      Modified    제품 이미지 업로드 API 연동
 2024.11.22  이유민      Modified    모달 문구 추가
 2025.01.02  이유민      Modified    검색 및 정렬 API 연동
+2025.01.08  이유민      Modified    판매중 제품만 보기 추가
 -->
 <!-- 설명 -->
 <div class="page-box" style="background-color: #f8d7da; padding-top: 182px; padding-bottom: 182px">
@@ -47,11 +48,26 @@ Date        Author      Status      Description
   </div>
 
   <div>
-    <select class="form-select" id="preLovedSort" style="width: 110px; text-align: center">
+    <select class="form-select" id="preLovedSort" style="width: 110px; text-align: center; margin-right: 30px">
       <option selected value="latest">최신순</option>
       <option value="name">이름순</option>
     </select>
   </div>
+
+  <button id="onlyAvailableButton" style="
+      font-family: LINESeed-RG;
+      background-color: #FFFFFF;
+      color: #333;
+      border: 1px solid #dedede;
+      border-radius: 5px;
+      padding: 6px 16px;
+      height: 38px; 
+      font-size: 15px; 
+      cursor: pointer;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    " onclick="toggleAvailableProductsButton()">
+    판매중인 제품 보기
+  </button>
 </div>
 
 <!-- 카드 -->

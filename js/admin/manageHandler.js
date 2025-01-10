@@ -7,10 +7,13 @@ History
 Date        Author      Status      Description
 2024.12.04  이유민      Created     
 2024.12.04  이유민      Modified    관리자 활동 API 연동
+2025.01.10  이유민      Modified    검색 및 정렬 API 연동
 */
-window.addEventListener("load", () => {
-  const pathSegments = window.location.pathname.split("/")[2];
+const pathSegments = window.location.pathname.split("/")[2];
+let searchValue = undefined;
+let sortValue = undefined;
 
+window.addEventListener("load", () => {
   if (
     ![
       "create-eco-market",
@@ -26,7 +29,7 @@ window.addEventListener("load", () => {
   adminManage(pathSegments);
 });
 
-async function adminManage(path) {
+async function adminManage(path, searchValue, sortValue) {
   let title = "";
   let dataUrl = "";
   let cardDataHTML = "";
@@ -47,7 +50,9 @@ async function adminManage(path) {
     case "manage-admin":
       title =
         "관리자 추가/삭제 <span style='font-family: LINESeed-RG; font-size: 15px; color: #6c757d'>* 사용자 유형 클릭 시 수정 가능합니다.</span>";
-      dataUrl = "users";
+      dataUrl = !searchValue
+        ? `users?sort=${sortValue}`
+        : `users?sort=${sortValue}&search=${searchValue}`;
       break;
   }
 
@@ -234,12 +239,17 @@ async function adminManage(path) {
             margin-bottom: 21px;
         ">
             <div class="input-group mb-3" style="width: 437px; margin-right: 30px">
-                <input type="text" class="form-control" id="form-select" placeholder="사용자를 검색해보세요." aria-label="Username" />
+              <input type="text" class="form-control" id="adminSearch" placeholder="사용자를 검색해보세요." oninput="searchContent()">
+              <button class="global-btn" type="button" id="searchButton" onclick="logInputValue()" style="width: 70px">초기화</button>
             </div>
             <div>
-                <select class="form-select" id="form-select" aria-label="Default select example" style="width: 110px; text-align: center">
-                <option selected value="이름순">이름순</option>
-                <option value="최신순">최신순</option>
+                <select class="form-select" id="adminSort" style="width: 110px; text-align: center" onchange="logChangeInput(event)">
+                  <option ${
+                    sortValue === "name" ? "selected" : ""
+                  } value="name">이름순</option>
+                  <option  ${
+                    sortValue === "latest" ? "selected" : ""
+                  } value="latest">최신순</option>
                 </select>
             </div>
         </div>
@@ -364,4 +374,34 @@ async function changeUserRole(user_id, user_nickname, user_role) {
 
     location.reload(true);
   }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(() => {
+    const adminSortElement = document.getElementById("adminSort");
+    sortValue = adminSortElement ? adminSortElement.value : "name";
+  }, 100); // 렌더링 완료를 기다림
+});
+
+function searchContent() {
+  const searchInput = document.getElementById("adminSearch");
+  const searchButton = document.getElementById("searchButton");
+
+  if (searchInput.value === "") {
+    searchButton.textContent = "초기화"; // 입력값이 없으면 "초기화"
+  } else {
+    searchButton.textContent = "검색"; // 입력값이 있으면 "검색"
+  }
+}
+
+// 검색값 입력 시
+async function logInputValue() {
+  searchValue = document.getElementById("adminSearch").value;
+  await adminManage(pathSegments, searchValue, sortValue);
+}
+
+// 정렬
+async function logChangeInput(event) {
+  sortValue = event.target.value;
+  await adminManage(pathSegments, searchValue, sortValue);
 }
