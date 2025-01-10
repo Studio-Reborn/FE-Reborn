@@ -13,6 +13,7 @@ Date        Author      Status      Description
 2024.12.18  이유민      Modified    좋아요 API 연동
 2024.12.30  이유민      Modified    예외 처리 코드 수정
 2025.01.07  이유민      Modified    후기 API 연동
+2025.01.10  이유민      Modified    후기 UI 수정
 */
 const productData = {
   name: "",
@@ -180,7 +181,7 @@ async function productReview(id) {
         <div>
           <p style="margin: 0; font-family: LINESeed-BD; font-size: 14px;">${
             reviews.data[i].user_nickname
-          }</p>
+          }<span style="font-family: LINESeed-RG">님</span></p>
           <p style="margin: 0; font-family: LINESeed-RG; font-size: 12px; color: #6c757d;">
             ${reviews.data[i].review_created_at.split("T")[0]}
             ${
