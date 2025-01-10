@@ -21,6 +21,7 @@ Date        Author      Status      Description
 2024.12.30  이유민      Modified    예외 처리 코드 수정
 2025.01.02  이유민      Modified    검색 및 정렬 API 연동
 2025.01.08  이유민      Modified    판매중 제품만 보기 API 연동
+2025.01.09  이유민      Modified    오류 수정
 */
 let searchValue = undefined;
 let sortValue = document.getElementById("preLovedSort").value;
@@ -33,13 +34,13 @@ window.addEventListener("load", () => {
 // 검색값 입력 시
 function logInputValue() {
   searchValue = document.getElementById("preLovedSearch").value;
-  preLoved(searchValue, sortValue);
+  preLoved(searchValue, sortValue, statusValue);
 }
 
 // 정렬 변경 시
 document.getElementById("preLovedSort").addEventListener("change", (event) => {
   sortValue = event.target.value;
-  preLoved(searchValue, sortValue);
+  preLoved(searchValue, sortValue, statusValue);
 });
 
 // 판매중 제품만 보기 관련
