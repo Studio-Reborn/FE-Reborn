@@ -18,12 +18,54 @@ Date        Author      Status      Description
 2024.11.22  이유민      Modified    카드 정렬 추가
 2024.11.26  이유민      Modified    API 경로 수정
 2024.12.10  이유민      Modified    제품 상태 표시 추가
+2024.12.30  이유민      Modified    예외 처리 코드 수정
+2025.01.02  이유민      Modified    검색 및 정렬 API 연동
+2025.01.08  이유민      Modified    판매중 제품만 보기 API 연동
+2025.01.09  이유민      Modified    오류 수정
 */
+let searchValue = undefined;
+let sortValue = document.getElementById("preLovedSort").value;
+let statusValue = "false";
+
 window.addEventListener("load", () => {
-  preLoved();
+  preLoved(searchValue, sortValue, statusValue);
 });
 
-async function preLoved() {
+// 검색값 입력 시
+function logInputValue() {
+  searchValue = document.getElementById("preLovedSearch").value;
+  preLoved(searchValue, sortValue, statusValue);
+}
+
+// 정렬 변경 시
+document.getElementById("preLovedSort").addEventListener("change", (event) => {
+  sortValue = event.target.value;
+  preLoved(searchValue, sortValue, statusValue);
+});
+
+// 판매중 제품만 보기 관련
+function toggleAvailableProductsButton() {
+  const button = document.getElementById("onlyAvailableButton");
+
+  // 전체로 돌릴 때
+  if (statusValue === "true") {
+    button.style.backgroundColor = "#FFFFFF";
+    button.style.color = "#000000";
+    button.style.border = "1px solid #dedede";
+    button.setAttribute("data-active", "false");
+  } else {
+    // 판매중으로 돌릴 때
+    button.style.backgroundColor = "#479f76";
+    button.style.border = "1px solid #479f76";
+    button.style.color = "#FFFFFF";
+    button.setAttribute("data-active", "true");
+  }
+
+  statusValue = button.getAttribute("data-active");
+  preLoved(searchValue, sortValue, statusValue);
+}
+
+async function preLoved(searchValue, sortValue, statusValue) {
   // 로그인 안 한 경우 생성 버튼 나타나지 않음
   if (!localStorage.getItem("access_token"))
     document.getElementById("preLovedProductCreateBtn").style.display = "none";
@@ -32,9 +74,13 @@ async function preLoved() {
   let contentHTML = "";
 
   try {
-    const products = await axios.get(
-      `${window.API_SERVER_URL}/product/pre-loved`
-    );
+    const products = !searchValue
+      ? await axios.get(
+          `${window.API_SERVER_URL}/product/pre-loved?sort=${sortValue}&status=${statusValue}`
+        )
+      : await axios.get(
+          `${window.API_SERVER_URL}/product/pre-loved?sort=${sortValue}&search=${searchValue}&status=${statusValue}`
+        );
 
     for (let i = 0; i < products.data.length; i++) {
       const productImages = await axios.get(
@@ -96,7 +142,7 @@ async function preLoved() {
 
     container.innerHTML = contentHTML;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 }
 

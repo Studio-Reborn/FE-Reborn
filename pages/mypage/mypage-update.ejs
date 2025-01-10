@@ -11,6 +11,7 @@ Date        Author      Status      Description
 2024.11.13  이유민      Modified    닉네임 변경 API 연동
 2024.11.13  이유민      Modified    비밀번호 변경 API 연동
 2024.11.27  이유민      Modified    스크립트 경로 수정
+2025.01.09  이유민      Modified    사용자 소개 수정 UI 추가
 -->
 <div style="max-width: 738px; margin: 0 auto; padding-top: 36px">
   <!-- 제목 -->
@@ -39,11 +40,19 @@ Date        Author      Status      Description
       <div class="col-md-8">
         <div class="card-body">
           <!-- 닉네임 -->
-          <span style="font-family: LINESeed-RG; font-size: 20px; display: block; padding-top: 20px" id="gray-600">
+          <span style="font-family: LINESeed-RG; font-size: 20px; display: block; padding-top: 20px; color: #6c757d">
             닉네임
           </span>
           <div class="input-group mb-3" style="width: 90%; padding-top: 5px">
-            <input type="text" class="form-control" id="userNickname" aria-label="nickname" />
+            <input type="text" class="form-control" id="userNickname" style="outline: none; box-shadow: none; " />
+          </div>
+
+          <!-- 소개 -->
+          <span style="font-family: LINESeed-RG; font-size: 20px; display: block; padding-top: 5px; color: #6c757d">
+            소개
+          </span>
+          <div class="input-group mb-3" style="width: 90%; padding-top: 5px">
+            <textarea id="userDescription" class="form-control" rows="1" style="resize: none; font-size: 15px; outline: none; box-shadow: none; height: 60px"></textarea>
           </div>
         </div>
       </div>

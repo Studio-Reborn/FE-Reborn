@@ -24,6 +24,8 @@ Date        Author      Status      Description
 2024.11.26  이유민      Modified    API 경로 수정
 2024.12.02  이유민      Modified    라디오버튼 status 추가
 2024.12.17  이유민      Modified    제품 id 타입 수정
+2024.12.28  이유민      Modified    후기 API 연동
+2025.01.10  이유민      Modified    리본 리메이크 제품 추천 UI 수정 및 링크 추가
 */
 document
   .getElementById("modalSubmitBtn")
@@ -159,7 +161,7 @@ document
           },
         });
 
-        resultText.innerHTML = `리메이크 추천 제품 : ${response.data.theme}<br />
+        resultText.innerHTML = `리메이크 추천 제품 : <a href="/reborn-remake/${response.data.id}" style="font-family: LINESeed-BD">${response.data.theme}</a><br />
         추천 이유 : ${response.data.reason}<br />`;
         noticeText.style.display = "block";
 
@@ -476,6 +478,72 @@ document
 
         alert("마켓 물품이 성공적으로 삭제되었습니다.");
         location.href = `/eco-market/${market_id}`;
+
+        return;
+      } else if (modalCheck === "createReview") {
+        const product_id = document
+          .getElementById("modalContainer")
+          .getAttribute("data-product-id");
+
+        const items_id = document
+          .getElementById("modalContainer")
+          .getAttribute("data-items-id");
+
+        const content = document
+          .getElementById("reviewContent")
+          .value.replace(/\n/g, "<br>");
+
+        await axios.post(
+          `${window.API_SERVER_URL}/review`,
+          { product_id, content, items_id },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
+
+        alert("리뷰가 성공적으로 등록되었습니다.");
+        location.reload(true);
+
+        return;
+      } else if (modalCheck === "updateReview") {
+        // CASE : 리뷰 수정
+        const reviewId = document
+          .getElementById("modalContainer")
+          .getAttribute("data-review-id");
+        const content = document
+          .getElementById("reviewContentNew")
+          .value.replace(/\n/g, "<br>");
+
+        await axios.patch(
+          `${window.API_SERVER_URL}/review/${reviewId}`,
+          { content },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
+
+        alert("리뷰가 성공적으로 변경되었습니다.");
+        location.reload(true);
+
+        return;
+      } else if (modalCheck === "deleteReview") {
+        // CASE : 리뷰 삭제
+        const reviewId = document
+          .getElementById("modalContainer")
+          .getAttribute("data-review-id");
+
+        await axios.delete(`${window.API_SERVER_URL}/review/${reviewId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        });
+
+        alert("리뷰가 성공적으로 삭제되었습니다.");
+        location.reload(true);
 
         return;
       }

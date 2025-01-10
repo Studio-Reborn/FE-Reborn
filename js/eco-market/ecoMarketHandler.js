@@ -8,22 +8,43 @@ Date        Author      Status      Description
 2024.11.21  이유민      Created     
 2024.11.21  이유민      Modified    에코마켓 전체 API 연동
 2024.12.17  이유민      Modified    코드 리팩토링
+2024.12.30  이유민      Modified    디버깅 코드 제거
+2025.01.02  이유민      Modified    검색 및 정렬 API 연동
 */
+let searchValue = undefined;
+let sortValue = document.getElementById("marketSort").value;
+
 window.addEventListener("load", () => {
   // 토큰 없을 경우 버튼 없음
   if (!localStorage.getItem("access_token"))
     document.getElementById("createEcoMarketBtn").style.display = "none";
 
-  readMarketAll();
+  readMarketAll(searchValue, sortValue);
 });
 
-async function readMarketAll() {
+// 검색값 입력 시
+function logInputValue() {
+  searchValue = document.getElementById("marketSearch").value;
+  readMarketAll(searchValue, sortValue);
+}
+
+// 정렬 변경 시
+document.getElementById("marketSort").addEventListener("change", (event) => {
+  sortValue = event.target.value;
+  readMarketAll(searchValue, sortValue);
+});
+
+async function readMarketAll(searchValue, sortValue) {
   const container = document.getElementById("ecoMarketContainer");
   let contentHTML = "";
 
   try {
     // 마켓 정보
-    const markets = await axios.get(`${window.API_SERVER_URL}/market`);
+    const markets = !searchValue
+      ? await axios.get(`${window.API_SERVER_URL}/market?sort=${sortValue}`)
+      : await axios.get(
+          `${window.API_SERVER_URL}/market?sort=${sortValue}&search=${searchValue}`
+        );
 
     for (let i = 0; i < markets.data.length; i++) {
       if (i % 2 === 0)
@@ -62,8 +83,6 @@ async function readMarketAll() {
       if (i % 2 === 1 || i === markets.data.length - 1) contentHTML += "</div>";
     }
 
-    // console.log(contentHTML);
-
     container.innerHTML = contentHTML;
   } catch (err) {
     console.error(err);
@@ -98,6 +117,6 @@ async function uploadProfileImage() {
       return;
     }
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 }

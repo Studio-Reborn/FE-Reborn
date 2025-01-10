@@ -8,6 +8,7 @@ Date        Author      Status      Description
 2024.12.05  이유민      Created     
 2024.12.05  이유민      Modified    채팅 API 연동
 2024.12.17  이유민      Modified    판매자 확인 추가
+2024.12.30  이유민      Modified    중고거래 판매 완료 API 연동
 */
 const chat_id = window.location.pathname.split("/").pop();
 let message = "";
@@ -229,6 +230,17 @@ function renderButtons(response, user) {
       await axios.patch(
         `${window.API_SERVER_URL}/product/pre-loved/${response.data.chat.product_id}`,
         { status: "판매완료" },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+
+      // buyer_user_id 값 갱신
+      await axios.patch(
+        `${window.API_SERVER_URL}/product/sold-out/${response.data.chat.product_id}`,
+        { buyer_user_id: response.data.chat.buyer_id },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,

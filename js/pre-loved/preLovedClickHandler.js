@@ -18,6 +18,8 @@ Date        Author      Status      Description
 2024.12.16  이유민      Modified    좋아요 연동
 2024.12.16  이유민      Modified    좋아요 수 연동
 2024.12.17  이유민      Modified    코드 리팩토링
+2024.12.30  이유민      Modified    예외 처리 코드 수정
+2025.01.07  이유민      Modified    판매자 정보 페이지 연동
 */
 const productName = document.getElementById("productName");
 const productPrice = document.getElementById("productPrice");
@@ -92,6 +94,8 @@ async function readProductData(id) {
     const user = await axios.get(
       `${window.API_SERVER_URL}/users/info/${product.data.user_id}`
     );
+
+    console.log(user.data);
     const profile = await axios.get(
       `${window.API_SERVER_URL}/profile/${user.data.profile_image_id}`
     );
@@ -125,9 +129,13 @@ async function readProductData(id) {
       document.getElementById("chatBar").style.display = "flex";
     }
 
+    document.getElementById("userContainer").addEventListener("click", () => {
+      location.href = `/user/${user.data.id}`;
+    });
+
     return;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 }
 

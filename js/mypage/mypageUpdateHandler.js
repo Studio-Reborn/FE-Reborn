@@ -11,6 +11,8 @@ Date        Author      Status      Description
 2024.11.13  이유민      Modified    비밀번호 변경 API 연동
 2024.11.18  이유민      Modified    API 경로 수정
 2024.12.04  이유민      Modified    API 경로 수정
+2024.12.30  이유민      Modified    예외 처리 코드 수정
+2025.01.09  이유민      Modified    사용자 정보 수정 코드 리팩토링
 */
 // 토큰 없을 경우 마이페이지 접근 금지
 window.addEventListener("load", () => {
@@ -24,20 +26,24 @@ document
   .getElementById("submitBtn")
   .addEventListener("click", async function () {
     const nickname = document.getElementById("userNickname").value;
+    const description = document.getElementById("userDescription").value;
 
     const changePassword = document.getElementById("changePassword").value;
     const passwordCheck = document.getElementById("passwordCheck").value;
     const password = document.getElementById("password").value;
 
     try {
-      if (nickname) await updateNickname(nickname);
+      // if (nickname) await updateNickname(nickname);
+      if (nickname || description)
+        await updateUserInfo({ nickname, description });
+
       if (changePassword || passwordCheck || password)
         await updatePassword(password, changePassword, passwordCheck);
 
       alert("회원 정보가 수정되었습니다.");
       location.href = "/mypage";
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   });
 
@@ -51,28 +57,25 @@ async function uploadFile() {
       const formData = new FormData();
       formData.append("file", file); // 파일을 FormData에 추가
 
-      const response = await axios.post(
-        `${window.API_SERVER_URL}/upload/profile`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data", // 파일 업로드 시 필요한 헤더
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
-        }
-      );
+      await axios.post(`${window.API_SERVER_URL}/upload/profile`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // 파일 업로드 시 필요한 헤더
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
 
       alert("프로필 이미지가 변경되었습니다.");
       location.href = "/mypage/update";
     }
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 }
 
 // 유저 정보 가져오기
 async function getUserInfo() {
   const userNickname = document.getElementById("userNickname");
+  const userDescription = document.getElementById("userDescription");
   const userProfileImg = document.getElementById("userProfileImg");
 
   try {
@@ -82,34 +85,25 @@ async function getUserInfo() {
       },
     });
 
-    const profile = await axios.get(`${window.API_SERVER_URL}/profile`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-      },
-    });
-
     userNickname.placeholder = response.data.nickname;
-    userProfileImg.src = `${window.API_SERVER_URL}/${profile.data.url}`;
+    userDescription.placeholder = response.data.description;
+    userProfileImg.src = `${window.API_SERVER_URL}/${response.data.profile_image_url}`;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 }
 
-// 닉네임 수정
-async function updateNickname(nickname) {
-  try {
-    await axios.patch(
-      `${window.API_SERVER_URL}/users/nickname`,
-      { nickname },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      }
-    );
-  } catch (err) {
-    console.log(err);
-  }
+// 사용자 정보 수정
+async function updateUserInfo({ nickname, description }) {
+  const requestData = {};
+  if (nickname) requestData.nickname = nickname;
+  if (description) requestData.description = description;
+
+  await axios.patch(`${window.API_SERVER_URL}/users`, requestData, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    },
+  });
 }
 
 // 비밀번호 변경

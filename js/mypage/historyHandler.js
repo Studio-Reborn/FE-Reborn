@@ -9,6 +9,12 @@ Date        Author      Status      Description
 2024.12.03  이유민      Modified    마이페이지 전체 내역 페이지 추가
 2024.12.10  이유민      Modified    중고거래 판매 제품 상태 표시 추가
 2024.12.18  이유민      Modified    관심 상품 및 관심 마켓 추가
+2024.12.29  이유민      Modified    작성한 후기 추가
+2024.12.29  이유민      Modified    후기 작성하기 버튼 추가
+2024.12.30  이유민      Modified    디버깅 코드 제거
+2024.12.30  이유민      Modified    중고거래 구매 내역 추가
+2024.12.30  이유민      Modified    결제 날짜 표시 오류 수정
+2025.01.06  이유민      Modified    작성한 후기 물건 클릭 시 페이지 이동 추가
 */
 window.addEventListener("load", () => {
   const pathSegments = window.location.pathname.split("/");
@@ -26,6 +32,11 @@ async function mypageHistory(name) {
     case "sell-pre-loved":
       nameHTML = "중고거래 판매 내역";
       cardDataUrl = "product/pre-loved/my";
+      pointerUrl = "/pre-loved";
+      break;
+    case "purchase-pre-loved":
+      nameHTML = "중고거래 구매 내역";
+      cardDataUrl = "product/pre-loved/buy";
       pointerUrl = "/pre-loved";
       break;
     case "purchase-eco-market":
@@ -48,6 +59,10 @@ async function mypageHistory(name) {
       cardDataUrl = "like/market/my";
       pointerUrl = "/eco-market";
       break;
+    case "write-review":
+      nameHTML = "작성한 후기";
+      cardDataUrl = "review/my";
+      break;
   }
 
   const cardData = await axios.get(`${window.API_SERVER_URL}/${cardDataUrl}`, {
@@ -69,6 +84,9 @@ async function mypageHistory(name) {
 
       cardDataHTML = likeProduct(likesData);
     } else cardDataHTML = likeMarket(cardData.data);
+  } else if (name === "write-review") {
+    // 작성한 리뷰
+    cardDataHTML = writeReview(cardData.data);
   } else {
     // 그 외
     for (let i = 0; i < cardData.data.length; i++) {
@@ -78,6 +96,8 @@ async function mypageHistory(name) {
           Number(cardData.data[i].product_price).toLocaleString() + "원";
       } else if (name === "purchase-eco-market") {
         explain[0] = cardData.data[i].market_name;
+      } else if (name === "purchase-pre-loved") {
+        explain[0] = `${cardData.data[i].seller_nickname} 님 판매`;
       } else {
         explain[0] = "리본(Reborn)";
       }
@@ -85,6 +105,9 @@ async function mypageHistory(name) {
       // 두 번째 줄
       if (name === "sell-pre-loved") {
         explain[1] = cardData.data[i].product_created_at.split("T")[0];
+      } else if (name === "purchase-pre-loved") {
+        explain[1] =
+          Number(cardData.data[i].product_price).toLocaleString() + "원 ";
       } else {
         explain[1] =
           Number(cardData.data[i].product_price).toLocaleString() +
@@ -95,10 +118,20 @@ async function mypageHistory(name) {
 
       // 세 번째 줄
       if (name === "purchase-eco-market" || name === "purchase-reborn-remake") {
-        const orderTime = cardData.data[i].order_created_at
-          .substr(0, 16)
-          .split("T");
-        explain[2] = orderTime[0] + " " + orderTime[1] + " 결제";
+        explain[2] = `${new Date(
+          cardData.data[i].order_created_at
+        ).toLocaleString()} 결제`;
+
+        if (name === "purchase-eco-market")
+          explain[2] +=
+            cardData.data[i].has_review === 0
+              ? `<div>
+          <button class="global-btn open-modal-btn"
+                  data-product-id="${cardData.data[i].product_id}"
+                  data-items-id="${cardData.data[i].items_id}"
+                  data-bs-toggle="modal" data-bs-target="#modalContainer" onclick="setModalContent('createReview', this)">후기 작성하기</button>
+        </div>`
+              : "";
       }
 
       cardDataHTML += `
@@ -149,10 +182,16 @@ async function mypageHistory(name) {
   document.getElementById("cardDataContainer").innerHTML = cardDataHTML;
 }
 
+// 후기 작성하기 버튼 클릭 관련
+document.addEventListener("click", (event) => {
+  if (event.target.classList.contains("open-modal-btn")) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+});
+
 // 관심 상품
 function likeProduct(likesData) {
-  console.log(likesData);
-
   let resultHtml = "";
   let productLink = ""; // 제품 링크 관련
 
@@ -233,8 +272,6 @@ function likeProduct(likesData) {
 
 // 관심 마켓
 function likeMarket(likesData) {
-  console.log(likesData);
-
   let resultHtml = "";
 
   for (let i = 0; i < likesData.length; i++) {
@@ -279,4 +316,179 @@ function likeMarket(likesData) {
     if (i % 3 === 2 || i === likesData.length - 1) resultHtml += `</div>`;
   }
   return resultHtml;
+}
+
+// 작성한 후기
+function writeReview(reviewData) {
+  let reviewHTML = "";
+
+  for (let i = 0; i < reviewData.length; i++) {
+    reviewHTML += `
+        <div
+          class="review-card"
+          style="padding: 15px; border: 1px solid #ddd; border-radius: 10px; margin-bottom: 15px; overflow: hidden; cursor: pointer; transition: max-height 0.3s ease;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <!-- 프로필 및 닉네임 -->
+            <div id="marketProfileContainer" style="display: flex; align-items: center;" data-location-link="${
+              reviewData[i].market_id
+            }/${reviewData[i].review_product_id}">
+              <img src="${window.API_SERVER_URL}/${
+      reviewData[i].product_image_url[0]
+    }" alt="상품 이미지" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+              <div>
+                <p style="margin: 0; font-family: LINESeed-BD; font-size: 14px;">${
+                  reviewData[i].product_name.length > 30
+                    ? `${reviewData[i].product_name.slice(0, 30)}...`
+                    : reviewData[i].product_name
+                }</p>
+                <p style="margin: 0; font-family: LINESeed-RG; font-size: 12px; color: #6c757d;">
+                  ${Number(reviewData[i].product_price).toLocaleString()}원 (${
+      reviewData[i].market_name.length > 20
+        ? `${reviewData[i].market_name.slice(0, 20)}...`
+        : reviewData[i].market_name
+    } 판매)
+                </p>
+              </div>
+            </div>
+            <!-- 수정 및 삭제 -->
+            <div id="principalCheck" style="gap: 10px; display: flex;">
+              <div id="updateReview" style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG; cursor: pointer;" data-review-id="${
+                reviewData[i].review_id
+              }"
+              data-bs-toggle="modal" data-bs-target="#modalContainer" onclick="setModalContent('updateReview', this)">
+                수정
+              </div>
+              <div id="deleteReview" style="color: #6c757d; font-size: 13px; font-family: LINESeed-RG; cursor: pointer;" data-review-id="${
+                reviewData[i].review_id
+              }"
+               data-bs-toggle="modal" data-bs-target="#modalContainer" onclick="setModalContent('deleteReview', this)">
+                삭제
+              </div>
+            </div>
+          </div>
+          <!-- 리뷰 내용 -->
+          <p
+            class="review-content"
+            style="margin-top: 10px; font-family: LINESeed-RG; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">
+            ${reviewData[i].review_content}
+          </p>
+        </div>
+      `;
+  }
+
+  return reviewHTML;
+}
+
+// 카드 클릭 이벤트
+document.addEventListener("click", (event) => {
+  const card = event.target.closest(".review-card");
+  if (
+    card &&
+    !event.target.closest(
+      "#updateReview, #deleteReview,  #marketProfileContainer"
+    )
+  ) {
+    toggleCard(card);
+  }
+
+  // 물건 정보 클릭 시 페이지 이동 관련
+  if (card && event.target.closest("#marketProfileContainer")) {
+    const dataLink = event.target
+      .closest("#marketProfileContainer")
+      .getAttribute("data-location-link");
+
+    if (dataLink.split("/")[0] === "undefined") {
+      location.href = `/reborn-remake/${dataLink.split("/")[1]}`;
+      return;
+    }
+
+    location.href = `/eco-market/${dataLink}`;
+  }
+});
+
+// 리뷰 토글 함수
+function toggleCard(card) {
+  const content = card.querySelector(".review-content");
+
+  if (card.style.maxHeight === "none") {
+    // 줄이기 상태
+    content.style.display = "-webkit-box";
+    content.style.webkitLineClamp = "5";
+    card.style.maxHeight = "200px";
+  } else {
+    // 펼치기 상태
+    content.style.display = "block";
+    card.style.maxHeight = "none";
+  }
+}
+
+// 모달 함수
+async function setModalContent(type, element) {
+  if (!localStorage.getItem("access_token")) {
+    alert("로그인 후 이용 가능합니다.");
+
+    location.href = "/login";
+  }
+
+  const modalTitle = document.getElementById("modalTitle");
+  const modalBody = document.querySelector(".modal-body");
+  const modalContainer = document.getElementById("modalContainer");
+  const modalSubmitBtn = document.getElementById("modalSubmitBtn");
+
+  if (type === "createReview") {
+    const productId = element.getAttribute("data-product-id");
+    const itemsId = element.getAttribute("data-items-id");
+
+    modalTitle.textContent = "리뷰 등록하기";
+    modalBody.innerHTML = `
+        <!-- 리뷰 내용 -->
+        <div class="form-floating mb-3" style="width: 586px">
+          <textarea class="form-control" id="reviewContent" placeholder="리뷰 내용" style="height: 500px"></textarea>
+          <label for="reviewContent">리뷰 내용</label>
+        </div>
+          `;
+
+    modalSubmitBtn.innerHTML = "등록";
+    modalSubmitBtn.style.backgroundColor = "#479F76";
+    modalSubmitBtn.style.display = "flex";
+    modalContainer.setAttribute("data-modal-check", "createReview");
+    modalContainer.setAttribute("data-product-id", `${productId}`);
+    modalContainer.setAttribute("data-items-id", `${itemsId}`);
+  } else if (type === "updateReview") {
+    const reviewId = element.getAttribute("data-review-id");
+
+    const response = await axios.get(
+      `${window.API_SERVER_URL}/review/info/${reviewId}`
+    );
+
+    modalTitle.textContent = "리뷰 수정하기";
+    modalBody.innerHTML = `
+        <!-- 리뷰 내용 -->
+        <div class="form-floating mb-3" style="width: 586px">
+          <textarea class="form-control" id="reviewContentNew" placeholder="리뷰 내용" style="height: 500px"></textarea>
+          <label for="reviewContentNew">리뷰 내용</label>
+        </div>
+          `;
+
+    document.getElementById("reviewContentNew").innerHTML =
+      response.data.content.replace(/<br>/g, "\n");
+
+    modalSubmitBtn.innerHTML = "수정";
+    modalSubmitBtn.style.backgroundColor = "#479F76";
+    modalSubmitBtn.style.display = "flex";
+    modalContainer.setAttribute("data-modal-check", "updateReview");
+    modalContainer.setAttribute("data-review-id", reviewId);
+  } else if (type === "deleteReview") {
+    const reviewId = element.getAttribute("data-review-id");
+
+    modalTitle.textContent = "리뷰 삭제하기";
+    modalBody.innerHTML = `
+      <div style="font-family: LINESeed-BD; font-size: 30px; text-align: center">리뷰를 삭제하시겠습니까?</div>
+      `;
+    modalSubmitBtn.innerHTML = "삭제";
+    modalSubmitBtn.style.backgroundColor = "#E35D6A";
+    modalSubmitBtn.style.display = "flex";
+    modalContainer.setAttribute("data-modal-check", "deleteReview");
+    modalContainer.setAttribute("data-review-id", reviewId);
+  }
 }

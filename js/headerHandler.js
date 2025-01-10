@@ -18,6 +18,7 @@ Date        Author      Status      Description
 2024.12.04  이유민      Modified    API 경로 수정
 2024.12.05  이유민      Modified    채팅 폴더명 변경
 2024.12.10  이유민      Modified    새 채팅 표시 추가
+2024.12.30  이유민      Modified    예외 처리 코드 수정
 */
 const currentChatId = window.location.pathname.split("/").pop();
 const newChats = JSON.parse(localStorage.getItem("newChats")) || [];
@@ -76,7 +77,7 @@ async function loginCheckInHeader() {
       nickname = response.data.nickname;
       profileImageUrl = profile.data.url;
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
 
     document.getElementById("loginCheck").innerHTML = `
