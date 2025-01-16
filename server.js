@@ -120,6 +120,11 @@ app.get("/chat/:id", (req, res) => {
     currentPage: "chat",
   });
 });
+app.get("/cart", (req, res) => {
+  res.render("../pages/cart/cart", {
+    currentPage: "cart",
+  });
+});
 app.get("/404", (req, res) => {
   res.render("../pages/notFound", {
     currentPage: "404",
