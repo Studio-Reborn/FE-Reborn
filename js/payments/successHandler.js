@@ -9,6 +9,7 @@ Date        Author      Status      Description
 2024.11.25  이유민      Modified    결제 API 연동
 2024.11.28  이유민      Modified    리본 리메이크 결제 API 연동
 2025.01.17  이유민      Modified    결제 코드 리팩토링
+2025.01.17  이유민      Modified    장바구니 결제 시 장바구니 아이템 삭제 추가
 */
 window.addEventListener("load", () => {
   if (!localStorage.getItem("access_token")) {
@@ -112,6 +113,15 @@ async function confirm() {
         },
       }
     );
+
+    // 장바구니 결제 시 장바구니 데이터 삭제
+    if (session.data.page === "cart") {
+      await axios.delete(`${window.API_SERVER_URL}/cart`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+    }
 
     // 입력 정보 화면 표시
     document.getElementById(

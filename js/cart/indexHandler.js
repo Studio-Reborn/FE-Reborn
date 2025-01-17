@@ -8,6 +8,8 @@ Date        Author      Status      Description
 2025.01.16  이유민      Created     
 2025.01.16  이유민      Modified    장바구니 API 연동
 2025.01.17  이유민      Modified    결제 시 사용될 세션 코드 추가
+2025.01.17  이유민      Modified    문구 추가
+2025.01.17  이유민      Modified    장바구니 결제 시 장바구니 아이템 삭제 추가
 */
 const cartContainer = document.getElementById("cartContainer");
 const totalPriceContainer = document.getElementById("totalPriceContainer");
@@ -33,6 +35,16 @@ async function readMyCart() {
       },
     });
 
+    if (items.data.length === 0) {
+      cartHTML += `
+        <span style="font-family: LINESeed-RG; font-size: 20px; color: #6c757d;">
+          장바구니 아이템이 없습니다.
+        </span>
+      `;
+
+      document.getElementById("cartFooter").style.display = "none";
+    }
+
     for (let i = 0; i < items.data.length; i++) {
       totalPrice +=
         Number(items.data[i].product_price) *
@@ -43,6 +55,7 @@ async function readMyCart() {
         product_cnt: items.data[i].item_quantity,
         product_price: Number(items.data[i].product_price),
         category: items.data[i].market_id === "Reborn" ? "reborn" : "",
+        page: "cart",
       });
 
       cartHTML += `

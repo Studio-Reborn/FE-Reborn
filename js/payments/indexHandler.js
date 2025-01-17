@@ -10,6 +10,7 @@ Date        Author      Status      Description
 2024.11.26  이유민      Modified    API 경로 수정
 2024.11.28  이유민      Modified    리본 리메이크 결제 API 연동
 2025.01.17  이유민      Modified    결제 코드 리팩토링
+2025.01.17  이유민      Modified    장바구니 결제 시 장바구니 아이템 삭제 추가
 */
 // 토큰 없을 경우 접근 금지
 window.addEventListener("load", () => {
@@ -44,8 +45,6 @@ async function readProductInfo() {
       `/api/get-session-data?dataType=productData`
     );
 
-    console.log(session.data);
-
     for (let i = 0; i < session.data.length; i++) {
       // 제품 정보
       const info =
@@ -58,8 +57,6 @@ async function readProductInfo() {
             );
 
       amount.value += Number(info.data.price) * session.data[i].product_cnt;
-
-      console.log(info.data);
 
       productInfoHTML += `
         <div class="card mb-3" style="width: 738px; height: 245px">
@@ -182,6 +179,7 @@ async function requestPayment() {
         address,
         detail_address,
         extra_address,
+        page: session.data[0].page ? "cart" : "",
       },
     });
 
