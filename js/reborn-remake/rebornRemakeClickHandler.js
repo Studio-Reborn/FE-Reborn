@@ -15,6 +15,7 @@ Date        Author      Status      Description
 2025.01.07  이유민      Modified    후기 API 연동
 2025.01.10  이유민      Modified    후기 UI 수정
 2025.01.16  이유민      Modified    장바구니 API 연동
+2025.01.17  이유민      Modified    결제 코드 리팩토링
 */
 const productData = {
   name: "",
@@ -284,12 +285,14 @@ document.getElementById("orderBtn").addEventListener("click", async () => {
   try {
     await axios.post(`/api/save-session-data`, {
       dataType: "productData",
-      data: {
-        product_id: productData.id,
-        product_cnt: totalCnt,
-        product_price: productData.price,
-        category: "reborn",
-      },
+      data: [
+        {
+          product_id: productData.id,
+          product_cnt: totalCnt,
+          product_price: productData.price,
+          category: "reborn",
+        },
+      ],
     });
 
     window.location.href = "/payments";

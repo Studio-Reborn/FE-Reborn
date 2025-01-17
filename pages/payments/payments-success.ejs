@@ -9,6 +9,7 @@ Date        Author      Status      Description
 2024.11.05  이유민      Modified    결제 성공 페이지 추가
 2024.11.25  이유민      Modified    결제 API 연동
 2024.12.17  이유민      Modified    결제 카드 디자인 수정
+2025.01.17  이유민      Modified    결제 코드 리팩토링
 -->
 <div style="max-width: 738px; margin: 0 auto; padding-top: 36px;">
   <!-- 결제 완료 -->
@@ -20,27 +21,7 @@ Date        Author      Status      Description
   <hr id="gray-500" style="width: 738px; padding-top: 16px;" />
 
   <!-- 주문상품 -->
-  <div class="card mb-3" style="width: 738px; height: 245px">
-    <div class="row g-0" style="height: 100%">
-      <div class="col-md-4" style="height: 100%">
-        <img id="purchaseImage" src="" class="img-fluid rounded-start" alt="..." style="width: 100%; height: 100%; object-fit: cover" />
-      </div>
-      <div class="col-md-8">
-        <div class="card-body">
-          <h5 id="purchaseTitle" class="card-title"></h5>
-          <p class="card-text">
-            <small class="text-body-secondary" style="font-family: LINESeed-RG">
-              <div><span id="purchaseMarket"></span> 배송</div>
-              <div>
-                <span id="purchasePrice"></span>원 <span id="purchaseCount"></span>개
-              </div>
-              <!-- <div id="productOption">두꺼운 코스터</div> -->
-            </small>
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div id="purchaseProductsContainer"></div>
 
   <!-- 수평선 -->
   <hr id="gray-500" style="width: 738px; margin-top: 32px;" />

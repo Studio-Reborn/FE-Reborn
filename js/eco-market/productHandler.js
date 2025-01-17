@@ -22,6 +22,7 @@ Date        Author      Status      Description
 2024.12.28  이유민      Modified    후기 수정 및 삭제 API 연동
 2024.12.30  이유민      Modified    디버깅 코드 제거
 2025.01.16  이유민      Modified    장바구니 API 연동
+2025.01.17  이유민      Modified    결제 코드 리팩토링
 */
 const likeImg = document.getElementById("likeImg");
 const likesNumber = document.getElementById("likesNumber");
@@ -339,11 +340,13 @@ document.getElementById("orderBtn").addEventListener("click", async () => {
   try {
     await axios.post(`/api/save-session-data`, {
       dataType: "productData",
-      data: {
-        product_id: productData.id,
-        product_cnt: totalCnt,
-        product_price: productData.price,
-      },
+      data: [
+        {
+          product_id: productData.id,
+          product_cnt: totalCnt,
+          product_price: productData.price,
+        },
+      ],
     });
 
     window.location.href = "/payments";

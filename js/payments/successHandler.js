@@ -8,6 +8,7 @@ Date        Author      Status      Description
 2024.11.25  이유민      Created     
 2024.11.25  이유민      Modified    결제 API 연동
 2024.11.28  이유민      Modified    리본 리메이크 결제 API 연동
+2025.01.17  이유민      Modified    결제 코드 리팩토링
 */
 window.addEventListener("load", () => {
   if (!localStorage.getItem("access_token")) {
@@ -21,26 +22,21 @@ window.addEventListener("load", () => {
 });
 
 const urlParams = new URLSearchParams(window.location.search);
+const purchaseProductsContainer = document.getElementById(
+  "purchaseProductsContainer"
+);
 
 async function confirm() {
   const paymentKey = urlParams.get("paymentKey");
   const orderId = urlParams.get("orderId");
   const amount = urlParams.get("amount");
   let order_items = [];
+  let purchaseHTML = "";
 
   try {
     const session = await axios.get(
       `/api/get-session-data?dataType=purchaseData`
     );
-
-    // order_items 관련
-    const items = await axios.get(`/api/get-session-data?dataType=productData`);
-
-    order_items.push({
-      product_id: items.data.product_id,
-      quantity: items.data.product_cnt,
-      price: Number(items.data.product_price),
-    });
 
     if (!session.data) {
       alert("접근할 수 없습니다.");
@@ -48,7 +44,54 @@ async function confirm() {
       return;
     }
 
-    const category = items.data.category === "reborn" ? "reborn" : "market";
+    for (let i = 0; i < session.data.product_info.length; i++) {
+      order_items.push({
+        product_id: session.data.product_info[i].product_id,
+        quantity: Number(session.data.product_info[i].quantity),
+        price: Number(session.data.product_info[i].product_price),
+        category:
+          session.data.product_info[i].market_id === "" ? "reborn" : "market",
+      });
+
+      const cardHref =
+        session.data.product_info[i].market_id === ""
+          ? `/reborn-remake/${session.data.product_info[i].product_id}`
+          : `/eco-market/${session.data.product_info[i].market_id}/${session.data.product_info[i].product_id}`;
+
+      purchaseHTML += `
+      <a href="${cardHref}">
+        <div class="card mb-3" style="width: 738px; height: 245px">
+          <div class="row g-0" style="height: 100%">
+            <div class="col-md-4" style="height: 100%">
+              <img src="${window.API_SERVER_URL}/${
+        session.data.product_info[i].product_image
+      }" class="img-fluid rounded-start" alt="..." style="width: 100%; height: 100%; object-fit: cover" />
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-title">${
+                  session.data.product_info[i].product_name
+                }</h5>
+                <p class="card-text">
+                  <small class="text-body-secondary" style="font-family: LINESeed-RG">
+                    <div>${session.data.product_info[i].market_name} 배송</div>
+                    <div>
+                      ${Number(
+                        session.data.product_info[i].product_price
+                      ).toLocaleString()}원 ${
+        session.data.product_info[i].quantity
+      }개
+                    </div>
+                    <!-- <div id="productOption">두꺼운 코스터</div> -->
+                  </small>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+      `;
+    }
 
     // 결제
     await axios.post(
@@ -62,7 +105,6 @@ async function confirm() {
         detail_address: session.data.detail_address,
         extra_address: session.data.extra_address,
         order_items,
-        category,
       },
       {
         headers: {
@@ -83,24 +125,7 @@ async function confirm() {
     ).innerHTML = `(${session.data.postcode}) ${session.data.address} ${session.data.detail_address} ${session.data.extra_address}`;
 
     // 카드(구매제품) 정보
-    const info =
-      items.data.category === "reborn"
-        ? await axios.get(
-            `${window.API_SERVER_URL}/remake/product/${items.data.product_id}`
-          )
-        : await axios.get(
-            `${window.API_SERVER_URL}/product/eco-market/info/${items.data.product_id}`
-          );
-
-    document.getElementById("purchaseTitle").innerHTML = info.data.name; // 제품 이름
-    document.getElementById("purchasePrice").innerHTML = Number(
-      info.data.price
-    ).toLocaleString(); // 제품 가격
-    document.getElementById("purchaseCount").innerHTML = items.data.product_cnt; // 구매 수량
-    document.getElementById(
-      "purchaseImage"
-    ).src = `${window.API_SERVER_URL}/${info.data.product_image_url[0]}`; // 제품 이미지
-    document.getElementById("purchaseMarket").innerHTML = info.data.market_name;
+    purchaseProductsContainer.innerHTML = purchaseHTML;
 
     return;
   } catch (err) {
