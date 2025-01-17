@@ -7,10 +7,12 @@ History
 Date        Author      Status      Description
 2025.01.16  이유민      Created     
 2025.01.16  이유민      Modified    장바구니 API 연동
+2025.01.17  이유민      Modified    결제 시 사용될 세션 코드 추가
 */
 const cartContainer = document.getElementById("cartContainer");
 const totalPriceContainer = document.getElementById("totalPriceContainer");
 let totalPrice = 0; // 결제 총 금액
+let productArr = [];
 
 window.addEventListener("load", () => {
   // 토큰 없을 경우 버튼 없음
@@ -35,6 +37,13 @@ async function readMyCart() {
       totalPrice +=
         Number(items.data[i].product_price) *
         Number(items.data[i].item_quantity);
+
+      productArr.push({
+        product_id: items.data[i].product_id,
+        product_cnt: items.data[i].item_quantity,
+        product_price: Number(items.data[i].product_price),
+        category: items.data[i].market_id === "Reborn" ? "reborn" : "",
+      });
 
       cartHTML += `
         <div class="cart-item" 
@@ -162,3 +171,14 @@ async function deleteCartItem(itemId) {
     location.reload(true);
   }
 }
+
+document
+  .getElementById("cartProductPayments")
+  .addEventListener("click", async () => {
+    await axios.post(`/api/save-session-data`, {
+      dataType: "productData",
+      data: productArr,
+    });
+
+    window.location.href = "/payments";
+  });
