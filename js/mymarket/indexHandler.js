@@ -7,6 +7,7 @@ History
 Date        Author      Status      Description
 2025.01.18  이유민      Created     
 2025.01.18  이유민      Modified    내 마켓 추가
+2025.01.18  이유민      Modified    디버깅 코드 제거
 */
 window.addEventListener("load", () => {
   if (!localStorage.getItem("access_token")) {
@@ -66,5 +67,4 @@ async function myMarket() {
   }
 
   myMarketContainer.innerHTML = myMarketHTML;
-  console.log(markets.data);
 }

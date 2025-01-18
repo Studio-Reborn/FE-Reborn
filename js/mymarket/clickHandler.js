@@ -7,6 +7,7 @@ History
 Date        Author      Status      Description
 2025.01.18  이유민      Created     
 2025.01.18  이유민      Modified    내 마켓 추가
+2025.01.18  이유민      Modified    디버깅 코드 제거
 */
 const id = window.location.pathname.split("/").pop();
 const marketTitle = document.getElementById("marketTitle");
@@ -114,7 +115,6 @@ async function myMarket(id) {
   }
 
   document.getElementById("sellingContainer").innerHTML = infoHTML;
-  console.log(info.data);
 }
 
 async function updateData(item_id, name, value) {
