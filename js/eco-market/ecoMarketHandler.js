@@ -10,6 +10,7 @@ Date        Author      Status      Description
 2024.12.17  이유민      Modified    코드 리팩토링
 2024.12.30  이유민      Modified    디버깅 코드 제거
 2025.01.02  이유민      Modified    검색 및 정렬 API 연동
+2025.01.18  이유민      Modified    마켓별 후기 수 API 연동
 */
 let searchValue = undefined;
 let sortValue = document.getElementById("marketSort").value;
@@ -46,7 +47,13 @@ async function readMarketAll(searchValue, sortValue) {
           `${window.API_SERVER_URL}/market?sort=${sortValue}&search=${searchValue}`
         );
 
+    console.log(markets.data);
+
     for (let i = 0; i < markets.data.length; i++) {
+      const reviews = await axios.get(
+        `${window.API_SERVER_URL}/review/market/${markets.data[i].id}`
+      );
+
       if (i % 2 === 0)
         contentHTML += '<div class="card-contents" style="gap: 66px">';
 
@@ -67,9 +74,11 @@ async function readMarketAll(searchValue, sortValue) {
                   }</p>
                 </div>
                 <p class="card-text" style="text-align: right; margin: 0; padding: 10px;">
-                  <small class="text-body-secondary">후기 2,829 좋아요 ${Number(
-                    markets.data[i].market_likes
-                  ).toLocaleString()}</small>
+                  <small class="text-body-secondary">후기 ${Number(
+                    reviews.data.length
+                  ).toLocaleString()} 좋아요 ${Number(
+        markets.data[i].market_likes
+      ).toLocaleString()}</small>
                 </p>
               </div>
             </div>
