@@ -10,6 +10,7 @@ Date        Author      Status      Description
 2024.11.28  이유민      Modified    리본 리메이크 결제 API 연동
 2025.01.17  이유민      Modified    결제 코드 리팩토링
 2025.01.17  이유민      Modified    장바구니 결제 시 장바구니 아이템 삭제 추가
+2025.01.18  이유민      Modified    name 및 phone 추가
 */
 window.addEventListener("load", () => {
   if (!localStorage.getItem("access_token")) {
@@ -106,6 +107,8 @@ async function confirm() {
         detail_address: session.data.detail_address,
         extra_address: session.data.extra_address,
         order_items,
+        name: session.data.name,
+        phone: session.data.phone,
       },
       {
         headers: {
