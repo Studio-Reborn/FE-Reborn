@@ -16,6 +16,7 @@ Date        Author      Status      Description
 2025.01.07  이유민      Modified    마켓별 후기 조회 API 연동
 2025.01.08  이유민      Modified    후기 수 API 연동
 2025.01.10  이유민      Modified    후기 UI 수정
+2025.01.18  이유민      Modified    API 경로 수정
 */
 const id = window.location.pathname.split("/").pop();
 
@@ -51,7 +52,7 @@ document
 async function readMarketInfo(id) {
   try {
     // 마켓 정보 관련
-    const info = await axios.get(`${window.API_SERVER_URL}/market/${id}`);
+    const info = await axios.get(`${window.API_SERVER_URL}/market/info/${id}`);
 
     document.getElementById("marketName").innerHTML = info.data.market_name;
     document.getElementById("marketDetail").innerHTML = info.data.market_detail;
