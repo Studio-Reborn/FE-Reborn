@@ -15,6 +15,7 @@ Date        Author      Status      Description
 2024.12.30  이유민      Modified    중고거래 구매 내역 추가
 2024.12.30  이유민      Modified    결제 날짜 표시 오류 수정
 2025.01.06  이유민      Modified    작성한 후기 물건 클릭 시 페이지 이동 추가
+2025.01.18  이유민      Modified    리본 리메이크 후기 API 연동
 */
 window.addEventListener("load", () => {
   const pathSegments = window.location.pathname.split("/");
@@ -122,16 +123,15 @@ async function mypageHistory(name) {
           cardData.data[i].order_created_at
         ).toLocaleString()} 결제`;
 
-        if (name === "purchase-eco-market")
-          explain[2] +=
-            cardData.data[i].has_review === 0
-              ? `<div>
+        explain[2] +=
+          cardData.data[i].has_review === 0
+            ? `<div>
           <button class="global-btn open-modal-btn"
                   data-product-id="${cardData.data[i].product_id}"
                   data-items-id="${cardData.data[i].items_id}"
                   data-bs-toggle="modal" data-bs-target="#modalContainer" onclick="setModalContent('createReview', this)">후기 작성하기</button>
         </div>`
-              : "";
+            : "";
       }
 
       cardDataHTML += `
@@ -143,7 +143,7 @@ async function mypageHistory(name) {
                 <div class="col-md-4" style="height: 100%">
                     <img src="${window.API_SERVER_URL}/${
         cardData.data[i].product_image[0]
-      }" class="img-fluid rounded-start" alt="제품 이미지" style="height: 100%;  width: auto; object-fit: cover" />`;
+      }" class="img-fluid rounded-start" alt="제품 이미지" style="height: 100%; width: 100%; object-fit: cover;" />`;
 
       if (
         name == "sell-pre-loved" &&
