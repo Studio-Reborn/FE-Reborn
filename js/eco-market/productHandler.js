@@ -21,17 +21,19 @@ Date        Author      Status      Description
 2024.12.19  이유민      Modified    후기 API 연동
 2024.12.28  이유민      Modified    후기 수정 및 삭제 API 연동
 2024.12.30  이유민      Modified    디버깅 코드 제거
+2025.01.16  이유민      Modified    장바구니 API 연동
+2025.01.17  이유민      Modified    결제 코드 리팩토링
 */
 const likeImg = document.getElementById("likeImg");
 const likesNumber = document.getElementById("likesNumber");
 const reviewContainer = document.getElementById("reviewContainer");
 const reviewsNumber = document.getElementById("reviewsNumber");
 
-window.addEventListener("load", () => {
-  const pathSegments = window.location.pathname.split("/");
-  const market_id = parseInt(pathSegments[2], 10);
-  const id = pathSegments[3];
+const pathSegments = window.location.pathname.split("/");
+const market_id = parseInt(pathSegments[2], 10);
+const id = pathSegments[3];
 
+window.addEventListener("load", () => {
   readProductInfo(market_id, id);
   productLike(id);
   productReview(id);
@@ -315,15 +317,36 @@ function increaseQuantity() {
   ).toLocaleString()}원`;
 }
 
+// 장바구니 버튼
+document.getElementById("cartBtn").addEventListener("click", async () => {
+  await axios.post(
+    `${window.API_SERVER_URL}/cart`,
+    {
+      product_id: id,
+      quantity: Number(document.getElementById("quantityInput").value),
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    }
+  );
+
+  alert("장바구니에 추가되었습니다.");
+});
+
+// 결제 버튼
 document.getElementById("orderBtn").addEventListener("click", async () => {
   try {
     await axios.post(`/api/save-session-data`, {
       dataType: "productData",
-      data: {
-        product_id: productData.id,
-        product_cnt: totalCnt,
-        product_price: productData.price,
-      },
+      data: [
+        {
+          product_id: productData.id,
+          product_cnt: totalCnt,
+          product_price: productData.price,
+        },
+      ],
     });
 
     window.location.href = "/payments";

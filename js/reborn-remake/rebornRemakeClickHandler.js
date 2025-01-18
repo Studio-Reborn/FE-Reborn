@@ -14,6 +14,8 @@ Date        Author      Status      Description
 2024.12.30  이유민      Modified    예외 처리 코드 수정
 2025.01.07  이유민      Modified    후기 API 연동
 2025.01.10  이유민      Modified    후기 UI 수정
+2025.01.16  이유민      Modified    장바구니 API 연동
+2025.01.17  이유민      Modified    결제 코드 리팩토링
 */
 const productData = {
   name: "",
@@ -24,9 +26,9 @@ const productData = {
   id: 0,
 };
 
-window.addEventListener("load", () => {
-  const id = window.location.pathname.split("/").pop();
+const id = window.location.pathname.split("/").pop();
 
+window.addEventListener("load", () => {
   readProductData(id);
   productLike(id);
   productReview(id);
@@ -261,16 +263,36 @@ function increaseQuantity() {
   ).toLocaleString()}원`;
 }
 
+// 장바구니 버튼
+document.getElementById("cartBtn").addEventListener("click", async () => {
+  await axios.post(
+    `${window.API_SERVER_URL}/cart`,
+    {
+      product_id: id,
+      quantity: Number(document.getElementById("quantityInput").value),
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    }
+  );
+  alert("장바구니에 추가되었습니다.");
+});
+
+// 결제 버튼
 document.getElementById("orderBtn").addEventListener("click", async () => {
   try {
     await axios.post(`/api/save-session-data`, {
       dataType: "productData",
-      data: {
-        product_id: productData.id,
-        product_cnt: totalCnt,
-        product_price: productData.price,
-        category: "reborn",
-      },
+      data: [
+        {
+          product_id: productData.id,
+          product_cnt: totalCnt,
+          product_price: productData.price,
+          category: "reborn",
+        },
+      ],
     });
 
     window.location.href = "/payments";

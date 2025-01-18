@@ -9,6 +9,8 @@ Date        Author      Status      Description
 2024.11.25  이유민      Modified    결제 API 연동
 2024.11.26  이유민      Modified    API 경로 수정
 2024.11.28  이유민      Modified    리본 리메이크 결제 API 연동
+2025.01.17  이유민      Modified    결제 코드 리팩토링
+2025.01.17  이유민      Modified    장바구니 결제 시 장바구니 아이템 삭제 추가
 */
 // 토큰 없을 경우 접근 금지
 window.addEventListener("load", () => {
@@ -29,42 +31,68 @@ let amount = {
 };
 let selectedPaymentMethod = null;
 
+const paymentsProductContainer = document.getElementById(
+  "paymentsProductContainer"
+);
+const paymentsTotalPrice = document.getElementById("paymentsTotalPrice");
+
 // 데이터 불러오기
 async function readProductInfo() {
+  let productInfoHTML = "";
   try {
     // 세션
     const session = await axios.get(
       `/api/get-session-data?dataType=productData`
     );
 
-    // 제품 정보
-    const info =
-      session.data.category === "reborn"
-        ? await axios.get(
-            `${window.API_SERVER_URL}/remake/product/${session.data.product_id}`
-          )
-        : await axios.get(
-            `${window.API_SERVER_URL}/product/eco-market/info/${session.data.product_id}`
-          );
+    for (let i = 0; i < session.data.length; i++) {
+      // 제품 정보
+      const info =
+        session.data[i].category === "reborn"
+          ? await axios.get(
+              `${window.API_SERVER_URL}/remake/product/${session.data[i].product_id}`
+            )
+          : await axios.get(
+              `${window.API_SERVER_URL}/product/eco-market/info/${session.data[i].product_id}`
+            );
 
-    document.getElementById("productTitle").innerHTML = `${info.data.name}`;
-    document.getElementById("productPrice").innerHTML = `${Number(
-      info.data.price
-    ).toLocaleString()}`;
-    document.getElementById(
-      "productCount"
-    ).innerHTML = `${session.data.product_cnt}`;
-    document.getElementById("paymentsTotalPrice").innerHTML = `${(
-      Number(info.data.price) * session.data.product_cnt
-    ).toLocaleString()}`;
-    document.getElementById(
-      "productMarket"
-    ).innerHTML = `${info.data.market_name}`;
-    document.getElementById(
-      "productImage"
-    ).src = `${window.API_SERVER_URL}/${info.data.product_image_url[0]}`;
+      amount.value += Number(info.data.price) * session.data[i].product_cnt;
 
-    amount.value = Number(info.data.price) * session.data.product_cnt;
+      productInfoHTML += `
+        <div class="card mb-3" style="width: 738px; height: 245px">
+          <div class="row g-0" style="height: 100%">
+            <div class="col-md-4" style="height: 100%">
+              <img src="${window.API_SERVER_URL}/${
+        info.data.product_image_url[0]
+      }" class="img-fluid rounded-start" alt="..." style="width: 100%; height: 100%; object-fit: cover" />
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-title" style="font-family: LINESeed-BD">${
+                  info.data.name
+                }</h5>
+                <p class="card-text">
+                  <small class="text-body-secondary" style="font-family: LINESeed-RG">
+                    <div>${info.data.market_name} 배송</div>
+                    <div>
+                      ${Number(
+                        info.data.price
+                      ).toLocaleString()}원 <span id="productCount">${
+        session.data[i].product_cnt
+      }</span>개
+                    </div>
+                    <!-- <div id="productOption">두꺼운 코스터</div> -->
+                  </small>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    paymentsProductContainer.innerHTML = productInfoHTML;
+    paymentsTotalPrice.innerHTML = Number(amount.value).toLocaleString();
 
     return;
   } catch (err) {
@@ -104,42 +132,64 @@ async function requestPayment() {
       `/api/get-session-data?dataType=productData`
     );
 
-    // 가격 맞는지 확인
-    const product =
-      session.data.category === "reborn"
-        ? await axios.get(
-            `${window.API_SERVER_URL}/remake/product/${session.data.product_id}`
-          )
-        : await axios.get(
-            `${window.API_SERVER_URL}/product/eco-market/info/${session.data.product_id}`
-          );
+    let amountCheck = 0;
+    let purchaseProductsInfo = [];
 
-    if (
-      Number(product.data.price) * Number(session.data.product_cnt) !==
-      amount.value
-    ) {
-      alert("오류가 발생했습니다. 이전 페이지로 이동합니다.");
-      history.go(-1);
+    for (let i = 0; i < session.data.length; i++) {
+      // 가격 맞는지 확인
+      const product =
+        session.data[i].category === "reborn"
+          ? await axios.get(
+              `${window.API_SERVER_URL}/remake/product/${session.data[i].product_id}`
+            )
+          : await axios.get(
+              `${window.API_SERVER_URL}/product/eco-market/info/${session.data[i].product_id}`
+            );
 
-      return;
+      amountCheck +=
+        Number(product.data.price) * Number(session.data[i].product_cnt);
+
+      purchaseProductsInfo.push({
+        product_id: product.data.id,
+        product_name: product.data.name,
+        market_id:
+          session.data[i].category === "reborn" ? "" : product.data.market_id,
+        market_name: product.data.market_name,
+        product_price: product.data.price,
+        quantity: session.data[i].product_cnt,
+        product_image: product.data.product_image_url[0],
+      });
+
+      if (i === session.data.length - 1 && amountCheck !== amount.value) {
+        alert("오류가 발생했습니다. 이전 페이지로 이동합니다.");
+        history.go(-1);
+
+        return;
+      }
     }
 
     // 세션에 구매내역 저장
     await axios.post("/api/save-session-data", {
       dataType: "purchaseData",
       data: {
-        product_id: product.data.id,
+        product_info: purchaseProductsInfo,
         name,
         phone,
         postcode,
         address,
         detail_address,
         extra_address,
+        page: session.data[0].page ? "cart" : "",
       },
     });
 
     // 결제
-    const orderName = product.data.name;
+    const orderName =
+      purchaseProductsInfo.length > 1
+        ? `${purchaseProductsInfo[0].product_name} 외 ${
+            purchaseProductsInfo.length - 1
+          }건`
+        : `${purchaseProductsInfo[0].product_name}`;
 
     switch (selectedPaymentMethod) {
       case "CARD":

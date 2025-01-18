@@ -8,6 +8,7 @@ Date        Author      Status      Description
 2024.11.04  이유민      Created     
 2024.11.04  이유민      Modified    홈 화면 추가
 2024.12.30  이유민      Modified    홈 화면 수정
+2025.01.17  이유민      Modified    홈 화면 UI 수정
 -->
 <!-- 상단 -->
 <div style="
@@ -71,56 +72,50 @@ Date        Author      Status      Description
   </div>
 </div>
 
-<style>
-  /* 카드 스타일 */
-  .info-card {
-    width: 30%;
-    padding: 20px;
-    background-color: #d1e7dd;
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s;
-    text-align: center;
-    cursor: pointer;
-  }
+<div>
+  <div class="story-section fade-in" style="display: flex; align-items: center; margin-bottom: 60px">
+    <img src="/assets/images/pre-loved-card.svg" alt="중고거래 화면" style="height: 100%; width: 45%; border-radius: 20px; margin-left: 3%" />
+    <div style="margin: 0 auto; max-width: 600px; width: 45%; padding-left: 3%;">
+      <h2 style="color: #D79D9D; font-size: 32px; font-family: LINESeed-BD;">📦 중고 거래</h2>
+      <p style="font-size: 18px; font-family: LINESeed-RG;">
+        리본의 중고 거래는 가까운 이웃과 신뢰할 수 있는 거래를 제공합니다. <br />
+        사용하지 않는 물건을 새 주인에게 전달하며 자원의 순환에 동참하세요.
+      </p>
+    </div>
+  </div>
 
-  /* 카드 hover 효과 */
-  .info-card:hover {
-    transform: scale(1.05);
-    background-color: #b0e0e6;
-    /* 파우더 블루 색상 */
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  }
+  <div class="story-section fade-in" style="display: flex; align-items: center; flex-direction: row-reverse; margin-bottom: 60px">
+    <img src="/assets/images/eco-market-card.svg" alt=" 에코마켓 화면" style="height: 100%; width: 45%; border-radius: 20px; margin-right: 3%" />
+    <div style="margin: 0 auto; max-width: 600px; width: 45%; padding-right: 3%">
+      <h2 style="color: #A3B8FF; font-size: 32px; font-family: LINESeed-BD;">🌍 에코 마켓</h2>
+      <p style="font-size: 18px; font-family: LINESeed-RG;">
+        업사이클링 제품부터 친환경 제품까지, 다양한 아이템이 가득한 에코 마켓! <br />
+        지구를 위한 착한 소비를 지금 시작해 보세요.
+      </p>
+    </div>
+  </div>
 
-  /* 제목 스타일 */
-  .info-card h3 {
-    font-size: 24px;
-    color: #479F76;
-    margin-bottom: 15px;
-  }
+  <!-- 리메이크 -->
+  <div class="story-section fade-in" style="display: flex; align-items: center;">
+    <img src="/assets/images/reborn-remake-card.svg" alt="리메이크 화면" style="height: 100%; width: 45%; border-radius: 20px; margin-left: 3%" />
+    <div style="margin: 0 auto; max-width: 600px; width: 45%; padding-left: 3%">
+      <h2 style="color: #C2B0D4; font-size: 32px; font-family: LINESeed-BD;">🎨 리메이크</h2>
+      <p style="font-size: 18px; font-family: LINESeed-RG;">
+        사용하지 않는 물건에 새로운 생명을 불어넣는 리본 리메이크. <br />
+        당신의 아이디어가 특별한 가치를 만들어냅니다!
+      </p>
+    </div>
+  </div>
+</div>
 
-  /* 본문 텍스트 스타일 */
-  .info-card p {
-    font-size: 16px;
-    color: #6c757d;
-    line-height: 1.6;
-  }
+<div class="final-message story-section fade-in" style="text-align: center; padding: 300px 0;  font-family: LINESeed-BD; position: relative;">
+  <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+    <h3 style="display: inline-block; padding: 10px 20px; font-size: 50px;">
+      함께 나아가는 지속 가능한 미래 <br />
+      그 시작을 리본과 함께 시작해주세요.
+    </h3>
+  </div>
+</div>
 
-  .info-card p strong {
-    color: #000000;
-  }
-
-  /* 전체 배치 조정 */
-  @media (max-width: 768px) {
-    .info-card {
-      width: 100%;
-      margin-bottom: 20px;
-    }
-
-    div[style*="padding: 60px"] {
-      padding: 30px;
-    }
-  }
-</style>
-
+<link href="/css/home.css" rel="stylesheet" />
 <script src="/js/indexHandler.js"></script>

@@ -20,6 +20,7 @@ Date        Author      Status      Description
 2024.12.17  이유민      Modified    코드 리팩토링
 2024.12.30  이유민      Modified    예외 처리 코드 수정
 2025.01.07  이유민      Modified    판매자 정보 페이지 연동
+2025.01.17  이유민      Modified    디버깅 코드 제거
 */
 const productName = document.getElementById("productName");
 const productPrice = document.getElementById("productPrice");
@@ -95,7 +96,6 @@ async function readProductData(id) {
       `${window.API_SERVER_URL}/users/info/${product.data.user_id}`
     );
 
-    console.log(user.data);
     const profile = await axios.get(
       `${window.API_SERVER_URL}/profile/${user.data.profile_image_id}`
     );
