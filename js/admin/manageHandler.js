@@ -8,6 +8,7 @@ Date        Author      Status      Description
 2024.12.04  이유민      Created     
 2024.12.04  이유민      Modified    관리자 활동 API 연동
 2025.01.10  이유민      Modified    검색 및 정렬 API 연동
+2025.01.18  이유민      Modified    리본 리메이크 판매 내역 추가
 */
 const pathSegments = window.location.pathname.split("/")[2];
 let searchValue = undefined;
@@ -20,6 +21,7 @@ window.addEventListener("load", () => {
       "delete-eco-market",
       "request-reborn-remake",
       "manage-admin",
+      "selling-reborn-remake",
     ].includes(pathSegments)
   ) {
     location.href = "/404";
@@ -46,6 +48,10 @@ async function adminManage(path, searchValue, sortValue) {
     case "request-reborn-remake":
       title = "리본 리메이크 제품 요청 내역";
       dataUrl = "remake/request";
+      break;
+    case "selling-reborn-remake":
+      title = "리본 리메이크 제품 판매 내역";
+      dataUrl = `billing/item/remake`;
       break;
     case "manage-admin":
       title =
@@ -228,6 +234,84 @@ async function adminManage(path, searchValue, sortValue) {
         `;
       }
     }
+  } else if (path === "selling-reborn-remake") {
+    let cardDataHTML = `
+    <div style="max-height: 400px; overflow-y: auto; border: 1px solid #ccc; border-radius: 8px; padding: 16px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <table class="table" style="width: 100%; border-collapse: collapse; text-align: left; font-family: LINESeed-RG;">
+            <thead style="font-family: LINESeed-BD; position: sticky; top: 0; background-color: #f9f9f9; z-index: 1; border-bottom: 2px solid #ddd;">
+                <tr>
+                    <th scope="col" style="padding: 12px;">#</th>
+                    <th scope="col" style="padding: 12px;">이름</th>
+                    <th scope="col" style="padding: 12px;">전화번호</th>
+                    <th scope="col" style="padding: 12px; min-width: 150px;">제품명</th>
+                    <th scope="col" style="padding: 12px; text-align: center;">수량</th>
+                    <th scope="col" style="padding: 12px;">우편번호</th>
+                    <th scope="col" style="padding: 12px; min-width: 200px;">주소</th>
+                    <th scope="col" style="padding: 12px; text-align: center;">배송상태</th>
+                    <th scope="col" style="padding: 12px; text-align: center;">운송장번호</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    for (let i = 0; i < response.data.length; i++) {
+      cardDataHTML += `
+        <tr style="border-bottom: 1px solid #ddd;">
+            <th scope="row" style="font-family: LINESeed-BD; padding: 12px; text-align: center;">${
+              i + 1
+            }</th>
+            <td style="padding: 12px;">${response.data[i].user_name}</td>
+            <td style="padding: 12px;">${response.data[i].user_phone}</td>
+            <td style="padding: 12px;">
+            <a href="/reborn-remake/${
+              response.data[i].product_id
+            }" style="color: black">${response.data[i].product_name}
+            </a>
+            </td>
+            <td style="padding: 12px; text-align: center;">${
+              response.data[i].items_quantity
+            }</td>
+            <td style="padding: 12px;">${response.data[i].orders_postcode}</td>
+            <td style="padding: 12px;">${response.data[i].orders_address} ${
+        response.data[i].orders_detail_address
+      } ${response.data[i].orders_extra_address}</td>
+            <td style="padding: 12px; text-align: center;">
+            <select class="form-select" style="width: 110px; text-align: center;" id="status-${
+              response.data[i].items_id
+            }" onchange="updateData(${
+        response.data[i].items_id
+      }, 'status',  this.value)">
+                <option value="결제완료" ${
+                  response.data[i].items_status === "결제완료" ? "selected" : ""
+                }>결제완료</option>
+                <option value="배송중" ${
+                  response.data[i].items_status === "배송중" ? "selected" : ""
+                }>배송중</option>
+                <option value="배송완료" ${
+                  response.data[i].items_status === "배송완료" ? "selected" : ""
+                }>배송완료</option>
+            </select>
+            </td>
+            <td style="padding: 12px; text-align: center;">
+                <input type="text" class="form-control" id="tracking-${
+                  response.data[i].items_id
+                }" placeholder="${
+        response.data[i].items_tracking_number
+      }" oninput="updateData(${
+        response.data[i].items_id
+      }, 'tracking_number',  this.value)"/>
+            </td>
+        </tr>
+    `;
+    }
+
+    cardDataHTML += `
+            </tbody>
+        </table>
+    </div>
+    `;
+
+    document.getElementById("sellingRemake").innerHTML = cardDataHTML;
   } else if (path === "manage-admin") {
     // 관리자 변경
     cardDataHTML += `
@@ -301,7 +385,9 @@ async function adminManage(path, searchValue, sortValue) {
   }
 
   document.getElementById("adminManageTitle").innerHTML = title;
-  document.getElementById("contentContainer").innerHTML = cardDataHTML;
+
+  if (path !== "selling-reborn-remake")
+    document.getElementById("contentContainer").innerHTML = cardDataHTML;
 }
 
 // 에코 마켓 생성 승인
@@ -356,6 +442,19 @@ async function deleteRequest(request_id) {
 
     location.reload(true);
   }
+}
+
+// 리본 리메이크 판매 상태 변경
+async function updateData(item_id, name, value) {
+  await axios.patch(
+    `${window.API_SERVER_URL}/billing/item/${item_id}`,
+    { [name]: value },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    }
+  );
 }
 
 // 사용자 유형 변경
