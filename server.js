@@ -125,6 +125,16 @@ app.get("/cart", (req, res) => {
     currentPage: "cart",
   });
 });
+app.get("/mymarket", (req, res) => {
+  res.render("../pages/mymarket/mymarket", {
+    currentPage: "mymarket",
+  });
+});
+app.get("/mymarket/:id", (req, res) => {
+  res.render("../pages/mymarket/mymarket-click", {
+    currentPage: "mymarket",
+  });
+});
 app.get("/404", (req, res) => {
   res.render("../pages/notFound", {
     currentPage: "404",

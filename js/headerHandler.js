@@ -20,6 +20,7 @@ Date        Author      Status      Description
 2024.12.10  이유민      Modified    새 채팅 표시 추가
 2024.12.30  이유민      Modified    예외 처리 코드 수정
 2025.01.16  이유민      Modified    장바구니 UI 추가
+2025.01.18  이유민      Modified    내 마켓 추가
 */
 const currentChatId = window.location.pathname.split("/").pop();
 const newChats = JSON.parse(localStorage.getItem("newChats")) || [];
@@ -99,7 +100,8 @@ async function loginCheckInHeader() {
             </div>
 
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="margin-top: 25px; margin-right: 50px">
-            <li><a class="dropdown-item" href="/login" onclick="logout()">로그아웃</a></li>
+            <li><a class="dropdown-item" href="/mypage">마이페이지</a></li>
+            <li><a class="dropdown-item" href="/mymarket">내 마켓</a></li>
             <li><a class="dropdown-item" href="/chat">
               <div style="position: relative; display: inline-block;">내 채팅
                 <span
@@ -108,8 +110,8 @@ async function loginCheckInHeader() {
                 </span>
               </div>
             </a></li>
-            <li><a class="dropdown-item" href="/mypage">마이페이지</a></li>
             <li id="adminDropDown" style="display: none"><a class="dropdown-item" href="/admin">관리자</a></li>
+            <li><a class="dropdown-item" href="/login" onclick="logout()">로그아웃</a></li>
           </ul>
         </div>
 
