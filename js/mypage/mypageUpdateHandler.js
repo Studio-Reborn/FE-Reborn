@@ -13,12 +13,37 @@ Date        Author      Status      Description
 2024.12.04  이유민      Modified    API 경로 수정
 2024.12.30  이유민      Modified    예외 처리 코드 수정
 2025.01.09  이유민      Modified    사용자 정보 수정 코드 리팩토링
+2025.01.19  이유민      Modified    회원 탈퇴 API 연동
 */
 // 토큰 없을 경우 마이페이지 접근 금지
 window.addEventListener("load", () => {
   if (!localStorage.getItem("access_token")) location.href = "/login";
 
   getUserInfo();
+});
+
+// 회원 탈퇴 버튼
+document.getElementById("deleteUserBtn").addEventListener("click", async () => {
+  const check = confirm(
+    "회원탈퇴를 진행하시겠습니까? 탈퇴 후에는 계정 복구가 불가능합니다."
+  );
+
+  try {
+    if (check) {
+      await axios.delete(`${window.API_SERVER_URL}/users`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+
+      alert("회원 탈퇴가 성공적으로 진행되었습니다. 그동안 감사했습니다. ☺️");
+
+      localStorage.removeItem("access_token");
+      location.href = "/login";
+    }
+  } catch (err) {
+    if (err.response.data.statusCode === 409) alert(err.response.data.message);
+  }
 });
 
 // 저장 버튼 클릭 시 발생하는 이벤트
