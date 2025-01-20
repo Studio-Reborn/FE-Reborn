@@ -8,6 +8,7 @@ Date        Author      Status      Description
 2025.01.18  이유민      Created     
 2025.01.18  이유민      Modified    내 마켓 추가
 2025.01.18  이유민      Modified    디버깅 코드 제거
+2025.01.19  이유민      Modified    상점 디테일 추가
 */
 window.addEventListener("load", () => {
   if (!localStorage.getItem("access_token")) {
@@ -46,6 +47,17 @@ async function myMarket() {
                 ? markets.data[i].market_name.slice(0, 10) + "..."
                 : markets.data[i].market_name
             }</h3>
+            ${
+              markets.data[i].market_is_verified === 0
+                ? '<b style="font-family: LINESeed-RG; font-size: 16px; color: #E35D6A; margin: 4px 0;">오픈 전</b>'
+                : ""
+            }
+
+            ${
+              markets.data[i].market_is_deletion === 1
+                ? '<b style="font-family: LINESeed-RG; font-size: 16px; color: #E35D6A; margin: 4px 0;">삭제 요청</b>'
+                : ""
+            }
             <p style="font-family: LINESeed-RG; font-size: 16px; color: #6c757d; margin: 4px 0;">배송 전 제품 수: <b>${Number(
               markets.data[i].before_delivery_count
             ).toLocaleString()}개</b></p>
