@@ -9,6 +9,7 @@ Date        Author      Status      Description
 2024.12.04  이유민      Modified    관리자 활동 API 연동
 2025.01.10  이유민      Modified    검색 및 정렬 API 연동
 2025.01.18  이유민      Modified    리본 리메이크 판매 내역 추가
+2025.01.20  이유민      Modified    카드 이미지 UI 수정
 */
 const pathSegments = window.location.pathname.split("/")[2];
 let searchValue = undefined;
@@ -81,7 +82,7 @@ async function adminManage(path, searchValue, sortValue) {
                 <div class="col-md-4" style="height: 100%">
                     <img src="${window.API_SERVER_URL}/${
         response.data[i].market_profile_image
-      }" class="img-fluid rounded-start" alt="프로필" style="height: 100%; width: auto; object-fit: cover" />
+      }" class="img-fluid rounded-start" alt="프로필" style="height: 100%; width: 100%; object-fit: cover" />
                 </div>
                 <div class="col-md-8" style="height: 100%; position: relative">
                     <div class="card-text-container" style="
@@ -141,7 +142,7 @@ async function adminManage(path, searchValue, sortValue) {
                     <div class="col-md-4" style="height: 100%">
                         <img src="${window.API_SERVER_URL}/${
         response.data[i].market_profile_image
-      }" class="img-fluid rounded-start" alt="프로필" style="height: 100%; width: auto; object-fit: cover" />
+      }" class="img-fluid rounded-start" alt="프로필" style="height: 100%; width: 100%; object-fit: cover" />
                     </div>
                     <div class="col-md-8" style="height: 100%; position: relative">
                         <div class="card-text-container" style="
