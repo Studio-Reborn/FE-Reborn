@@ -10,6 +10,7 @@ Date        Author      Status      Description
 2025.01.18  이유민      Modified    디버깅 코드 제거
 2025.01.19  이유민      Modified    상점명 클릭 코드 리팩토링
 2025.01.20  이유민      Modified    코드 리팩토링
+2025.01.20  이유민      Modified    반려 관련 기능 및 UI 추가
 */
 const id = window.location.pathname.split("/").pop();
 const marketTitle = document.getElementById("marketTitle");
@@ -18,6 +19,9 @@ let marketIsVerified = 0;
 const marketProfile = document.getElementById("marketProfile");
 const marketName = document.getElementById("marketName");
 const marketDescription = document.getElementById("marketDescription");
+const rejectedTitle = document.getElementById("rejectedTitle");
+const rejectedCreateMarket = document.getElementById("rejectedCreateMarket");
+const rejectedReason = document.getElementById("rejectedReason");
 
 window.addEventListener("load", () => {
   if (!localStorage.getItem("access_token")) {
@@ -36,7 +40,8 @@ async function myMarket(id) {
   });
 
   if (info.data[0].market_is_verified === "rejected") {
-    document.getElementById("rejectedMarket").style.display = "block";
+    rejectedCreateMarket.style.display = "block";
+    rejectedTitle.innerHTML = "마켓 생성 재신청하기";
     marketProfile.setAttribute(
       "data-profile-id",
       `${info.data[0].market_profile_id}`
@@ -44,6 +49,29 @@ async function myMarket(id) {
     marketProfile.src = `${window.API_SERVER_URL}/${info.data[0].market_profile_url}`;
     marketName.value = info.data[0].market_name;
     marketDescription.textContent = info.data[0].market_detail;
+  }
+
+  if (
+    info.data[0].market_is_verified === "approved" &&
+    info.data[0].market_is_deletion === "rejected"
+  ) {
+    const rejection = await axios.get(
+      `${window.API_SERVER_URL}/market/rejection/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      }
+    );
+
+    if (rejection.data.visibility === true) {
+      document.getElementById("rejectedDeleteMarket").style.display = "block";
+      rejectedReason.innerHTML = rejection.data.reason;
+
+      rejectedReason.addEventListener("click", async () => {
+        await removeReason(rejection.data.id);
+      });
+    }
   }
 
   marketTitle.innerHTML = info.data[0].market_name;
@@ -151,6 +179,7 @@ function titleClick() {
   location.href = `/eco-market/${id}`;
 }
 
+// 승인 재신청
 async function marketRetry() {
   const check = confirm(
     "재신청 이후 관리자의 승인이 완료될 때까지 수정할 수 없습니다. \n재신청하시겠습니까?"
@@ -176,6 +205,29 @@ async function marketRetry() {
   }
 }
 
+// 반려 사유 숨김 처리
+async function removeReason(reject_id) {
+  const check = confirm(
+    "제거한 후에는 사유가 갱신되기 전까지 조회할 수 없습니다. \n제거하시겠습니까?"
+  );
+
+  if (check) {
+    await axios.patch(
+      `${window.API_SERVER_URL}/market/rejection/${reject_id}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      }
+    );
+
+    alert("반려 사유가 숨김 처리되었습니다.");
+    location.reload(true);
+  }
+}
+
+// 마켓 커버 업로드
 async function uploadFile() {
   try {
     const fileInput = document.getElementById("inputGroupFile01");
@@ -196,7 +248,6 @@ async function uploadFile() {
         }
       );
 
-      console.log(response.data);
       marketProfile.src = `${window.API_SERVER_URL}/${response.data.url}`;
       marketProfile.setAttribute("data-profile-id", `${response.data.id}`);
 

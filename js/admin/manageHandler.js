@@ -11,6 +11,7 @@ Date        Author      Status      Description
 2025.01.18  이유민      Modified    리본 리메이크 판매 내역 추가
 2025.01.20  이유민      Modified    카드 이미지 UI 수정
 2025.01.20  이유민      Modified    코드 리팩토링
+2025.01.20  이유민      Modified    반려 관련 기능 및 UI 추가
 */
 const pathSegments = window.location.pathname.split("/")[2];
 let searchValue = undefined;
@@ -186,10 +187,11 @@ async function adminManage(path, searchValue, sortValue) {
                             right: 0;
                             display: flex;
                             align-items: center;
-                            justify-content: flex-end;
-                            padding: 10px;
+                            justify-content: space-between;
                             background: white; 
                         ">
+                        <textarea id="rejectionReason" class="form-control" placeholder="반려 이유를 입력하세요" style="height: 39px; width: 70%; resize: none;" onkeydown="preventEnter(event)"></textarea>
+                        <div style="display: flex;">
                     <button type="button" class="global-btn" onclick="checkDeleteMarket(${
                       response.data[i].market_id
                     }, 'rejected')" style="margin-right: 10px; background-color: #E35D6A"">
@@ -200,6 +202,7 @@ async function adminManage(path, searchValue, sortValue) {
                         }, 'approved')">
                             승인
                         </button>
+                        </div>
                         </div>
                     </div>
                 </div>
@@ -427,12 +430,18 @@ async function updateIsVerified(market_id, is_verified) {
 
 // 에코 마켓 삭제 요청 수정
 async function checkDeleteMarket(market_id, is_deletion_requested) {
+  const reason = document.getElementById("rejectionReason").value;
   const check =
     is_deletion_requested === "approved"
       ? confirm("이 요청을 승인하시겠습니까?")
       : confirm("이 요청을 반려하시겠습니까?");
 
   if (check) {
+    if (reason === "") {
+      alert("반려 이유를 작성해주세요.");
+      return;
+    }
+
     await axios.delete(
       `${window.API_SERVER_URL}/market/${market_id}?is_deletion_requested=${is_deletion_requested}`,
       {
@@ -442,8 +451,24 @@ async function checkDeleteMarket(market_id, is_deletion_requested) {
       }
     );
 
+    await axios.post(
+      `${window.API_SERVER_URL}/market/rejection/${market_id}`,
+      { reason },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      }
+    );
+
     alert("정상 처리되었습니다.");
     location.reload(true);
+  }
+}
+
+function preventEnter(event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
   }
 }
 
