@@ -24,6 +24,7 @@ Date        Author      Status      Description
 2025.01.06  이유민      Modified    작성한 후기 물건 클릭 시 페이지 이동 추가
 2025.01.06  이유민      Modified    등급 API 연동
 2025.01.18  이유민      Modified    리본 리메이크 후기 API 연동
+2025.01.20  이유민      Modified    오류 수정
 */
 const userNickname = document.getElementById("userNickname");
 const userProfileImage = document.getElementById("userProfileImage");
@@ -544,6 +545,8 @@ async function writeReview() {
     for (let i = 0; i < reviews.data.length; i++) {
       if (i > 1) break;
 
+      console.log(reviews.data[i]);
+
       reviewHTML += `
         <div
           class="review-card"
@@ -566,7 +569,9 @@ async function writeReview() {
                   ${Number(
                     reviews.data[i].product_price
                   ).toLocaleString()}원 (${
-        reviews.data[i].market_name.length > 20
+        reviews.data[i].market_name === null
+          ? "삭제된 마켓"
+          : reviews.data[i].market_name.length > 20
           ? `${reviews.data[i].market_name.slice(0, 20)}...`
           : reviews.data[i].market_name
       } 판매)
