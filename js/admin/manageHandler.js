@@ -10,6 +10,7 @@ Date        Author      Status      Description
 2025.01.10  이유민      Modified    검색 및 정렬 API 연동
 2025.01.18  이유민      Modified    리본 리메이크 판매 내역 추가
 2025.01.20  이유민      Modified    카드 이미지 UI 수정
+2025.01.20  이유민      Modified    코드 리팩토링
 */
 const pathSegments = window.location.pathname.split("/")[2];
 let searchValue = undefined;
@@ -122,10 +123,15 @@ async function adminManage(path, searchValue, sortValue) {
                         padding: 10px;
                         background: white; 
                     ">
-                    <button type="button" class="global-btn" onclick="checkCreateMarket(${
+                    <button type="button" class="global-btn" onclick="updateIsVerified(${
                       response.data[i].market_id
-                    })">
-                        확인
+                    }, 'rejected')" style="margin-right: 10px; background-color: #E35D6A"">
+                        반려
+                    </button>
+                    <button type="button" class="global-btn" onclick="updateIsVerified(${
+                      response.data[i].market_id
+                    }, 'approved')">
+                        승인
                     </button>
                     </div>
                 </div>
@@ -184,10 +190,15 @@ async function adminManage(path, searchValue, sortValue) {
                             padding: 10px;
                             background: white; 
                         ">
-                        <button type="button" class="global-btn" style="background-color: #E35D6A" onclick="checkDeleteMarket(${
+                    <button type="button" class="global-btn" onclick="checkDeleteMarket(${
+                      response.data[i].market_id
+                    }, 'rejected')" style="margin-right: 10px; background-color: #E35D6A"">
+                        반려
+                    </button>
+                        <button type="button" class="global-btn" onclick="checkDeleteMarket(${
                           response.data[i].market_id
-                        })">
-                            확인
+                        }, 'approved')">
+                            승인
                         </button>
                         </div>
                     </div>
@@ -391,14 +402,17 @@ async function adminManage(path, searchValue, sortValue) {
     document.getElementById("contentContainer").innerHTML = cardDataHTML;
 }
 
-// 에코 마켓 생성 승인
-async function checkCreateMarket(market_id) {
-  const check = confirm("이 요청을 승인하여 에코 마켓을 생성하시겠습니까?");
+// 에코 마켓 승인 요청 수정
+async function updateIsVerified(market_id, is_verified) {
+  const check =
+    is_verified === "approved"
+      ? confirm("이 요청을 승인하시겠습니까?")
+      : confirm("이 요청을 반려하시겠습니까?");
 
   if (check) {
     await axios.patch(
       `${window.API_SERVER_URL}/market/request/check/${market_id}`,
-      null,
+      { is_verified },
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
@@ -406,23 +420,29 @@ async function checkCreateMarket(market_id) {
       }
     );
 
-    alert("요청이 승인되었습니다.");
+    alert("정상 처리되었습니다.");
     location.reload(true);
   }
 }
 
-// 에코 마켓 삭제 승인
-async function checkDeleteMarket(market_id) {
-  const check = confirm("이 요청을 승인하여 에코 마켓을 삭제하시겠습니까?");
+// 에코 마켓 삭제 요청 수정
+async function checkDeleteMarket(market_id, is_deletion_requested) {
+  const check =
+    is_deletion_requested === "approved"
+      ? confirm("이 요청을 승인하시겠습니까?")
+      : confirm("이 요청을 반려하시겠습니까?");
 
   if (check) {
-    await axios.delete(`${window.API_SERVER_URL}/market/${market_id}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-      },
-    });
+    await axios.delete(
+      `${window.API_SERVER_URL}/market/${market_id}?is_deletion_requested=${is_deletion_requested}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      }
+    );
 
-    alert("성공적으로 삭제되었습니다.");
+    alert("정상 처리되었습니다.");
     location.reload(true);
   }
 }

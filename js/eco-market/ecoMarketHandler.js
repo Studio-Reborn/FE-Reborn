@@ -47,8 +47,6 @@ async function readMarketAll(searchValue, sortValue) {
           `${window.API_SERVER_URL}/market?sort=${sortValue}&search=${searchValue}`
         );
 
-    console.log(markets.data);
-
     for (let i = 0; i < markets.data.length; i++) {
       const reviews = await axios.get(
         `${window.API_SERVER_URL}/review/market/${markets.data[i].id}`

@@ -545,8 +545,6 @@ async function writeReview() {
     for (let i = 0; i < reviews.data.length; i++) {
       if (i > 1) break;
 
-      console.log(reviews.data[i]);
-
       reviewHTML += `
         <div
           class="review-card"

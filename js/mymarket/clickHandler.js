@@ -9,10 +9,15 @@ Date        Author      Status      Description
 2025.01.18  이유민      Modified    내 마켓 추가
 2025.01.18  이유민      Modified    디버깅 코드 제거
 2025.01.19  이유민      Modified    상점명 클릭 코드 리팩토링
+2025.01.20  이유민      Modified    코드 리팩토링
 */
 const id = window.location.pathname.split("/").pop();
 const marketTitle = document.getElementById("marketTitle");
 let marketIsVerified = 0;
+
+const marketProfile = document.getElementById("marketProfile");
+const marketName = document.getElementById("marketName");
+const marketDescription = document.getElementById("marketDescription");
 
 window.addEventListener("load", () => {
   if (!localStorage.getItem("access_token")) {
@@ -29,6 +34,17 @@ async function myMarket(id) {
       Authorization: `Bearer ${localStorage.getItem("access_token")}`,
     },
   });
+
+  if (info.data[0].market_is_verified === "rejected") {
+    document.getElementById("rejectedMarket").style.display = "block";
+    marketProfile.setAttribute(
+      "data-profile-id",
+      `${info.data[0].market_profile_id}`
+    );
+    marketProfile.src = `${window.API_SERVER_URL}/${info.data[0].market_profile_url}`;
+    marketName.value = info.data[0].market_name;
+    marketDescription.textContent = info.data[0].market_detail;
+  }
 
   marketTitle.innerHTML = info.data[0].market_name;
 
@@ -128,9 +144,68 @@ async function updateData(item_id, name, value) {
 }
 
 function titleClick() {
-  if (marketIsVerified === 0) {
+  if (marketIsVerified !== "approved") {
     alert("마켓 오픈 전입니다.");
     return;
   }
   location.href = `/eco-market/${id}`;
+}
+
+async function marketRetry() {
+  const check = confirm(
+    "재신청 이후 관리자의 승인이 완료될 때까지 수정할 수 없습니다. \n재신청하시겠습니까?"
+  );
+
+  if (check) {
+    await axios.patch(
+      `${window.API_SERVER_URL}/market/retry/${id}`,
+      {
+        profile_image_id: marketProfile.getAttribute("data-profile-id"),
+        market_name: marketName.value,
+        market_detail: marketDescription.value,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      }
+    );
+
+    alert("에코마켓 재신청이 완료되었습니다.");
+    location.reload(true);
+  }
+}
+
+async function uploadFile() {
+  try {
+    const fileInput = document.getElementById("inputGroupFile01");
+    const file = fileInput.files[0];
+
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await axios.post(
+        `${window.API_SERVER_URL}/upload/profile/eco-market`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+
+      console.log(response.data);
+      marketProfile.src = `${window.API_SERVER_URL}/${response.data.url}`;
+      marketProfile.setAttribute("data-profile-id", `${response.data.id}`);
+
+      alert(
+        "재신청 버튼을 눌러야 마켓 프로필 이미지가 정상적으로 변경됩니다. \n변경 사항을 확인 후 재신청해 주세요."
+      );
+      return;
+    }
+  } catch (err) {
+    console.error(err);
+  }
 }
