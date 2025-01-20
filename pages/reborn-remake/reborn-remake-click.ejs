@@ -14,6 +14,7 @@ Date        Author      Status      Description
 2024.12.18  이유민      Modified    좋아요 API 연동
 2025.01.07  이유민      Modified    후기 API 연동
 2025.01.16  이유민      Modified    장바구니 UI 추가
+2025.01.19  이유민      Modified    좋아요 코드 리팩토링
 -->
 <!-- 상품 이미지 -->
 <div style="display: flex; align-items: center; justify-content: center; padding-bottom: 21px">
@@ -29,7 +30,7 @@ Date        Author      Status      Description
       <img src="/assets/images/Reborn_logo1.svg" alt="리본로고" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; margin-right: 10px;">
       <p style="font-family: LINESeed-BD; font-size: 20px; margin: 0; color: black;">Reborn</p>
     </div>
-    <img id="likeImg" src="/assets/icons/heart.svg" style="width: 20px; height: 20px; cursor: pointer; margin-left: auto" />
+    <img id="likeImg" src="/assets/icons/heart.svg" style="width: 20px; height: 20px; cursor: pointer; margin-left: auto" onclick="likeImageClick()" />
   </div>
 
   <hr id="gray-500" style="width: 738px; margin: 0; padding-bottom: 16px" />
@@ -84,9 +85,9 @@ Date        Author      Status      Description
       </div>
 
       <!-- 장바구니 버튼 -->
-      <button type="button" id="cartBtn" class="global-btn" style="">장바구니</button>
+      <button type="button" id="cartBtn" class="global-btn" onclick="cartBtnClick()">장바구니</button>
       <!-- 결제 버튼 -->
-      <button type="button" id="orderBtn" class="global-btn" style="width: 77px;">결제</button>
+      <button type="button" id="orderBtn" class="global-btn" style="width: 77px;" onclick="orderBtnClick()">결제</button>
     </div>
   </nav>
 </div>

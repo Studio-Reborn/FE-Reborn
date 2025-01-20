@@ -11,6 +11,7 @@ Date        Author      Status      Description
 2024.11.28  이유민      Modified    리본 리메이크 결제 API 연동
 2025.01.17  이유민      Modified    결제 코드 리팩토링
 2025.01.17  이유민      Modified    장바구니 결제 시 장바구니 아이템 삭제 추가
+2025.01.19  이유민      Modified    전화번호 입력 코드 리팩토링
 */
 // 토큰 없을 경우 접근 금지
 window.addEventListener("load", () => {
@@ -335,4 +336,18 @@ function sample6_execDaumPostcode() {
       document.getElementById("sample6_detailAddress").focus();
     },
   }).open();
+}
+
+function formatPhoneNumber(input) {
+  // 숫자만 추출
+  const numbers = input.value.replace(/\D/g, "");
+
+  // 형식 지정
+  const formatted = numbers.replace(
+    /(\d{3})(\d{3,4})?(\d{4})?/,
+    (match, p1, p2, p3) => [p1, p2, p3].filter(Boolean).join("-")
+  );
+
+  // 포맷된 값 적용
+  input.value = formatted;
 }

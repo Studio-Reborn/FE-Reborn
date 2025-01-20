@@ -8,13 +8,11 @@ Date        Author      Status      Description
 2025.01.18  이유민      Created     
 2025.01.18  이유민      Modified    내 마켓 추가
 2025.01.18  이유민      Modified    디버깅 코드 제거
+2025.01.19  이유민      Modified    상점명 클릭 코드 리팩토링
 */
 const id = window.location.pathname.split("/").pop();
 const marketTitle = document.getElementById("marketTitle");
-
-marketTitle.addEventListener("click", () => {
-  location.href = `/eco-market/${id}`;
-});
+let marketIsVerified = 0;
 
 window.addEventListener("load", () => {
   if (!localStorage.getItem("access_token")) {
@@ -26,15 +24,15 @@ window.addEventListener("load", () => {
 });
 
 async function myMarket(id) {
-  const market = await axios.get(`${window.API_SERVER_URL}/market/info/${id}`);
-
-  marketTitle.innerHTML = `${market.data.market_name}`;
-
   const info = await axios.get(`${window.API_SERVER_URL}/market/my/${id}`, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("access_token")}`,
     },
   });
+
+  marketTitle.innerHTML = info.data[0].market_name;
+
+  marketIsVerified = info.data[0].market_is_verified;
 
   let infoHTML = `
     <div style="max-height: 400px; overflow-y: auto; border: 1px solid #ccc; border-radius: 8px; padding: 16px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
@@ -127,4 +125,12 @@ async function updateData(item_id, name, value) {
       },
     }
   );
+}
+
+function titleClick() {
+  if (marketIsVerified === 0) {
+    alert("마켓 오픈 전입니다.");
+    return;
+  }
+  location.href = `/eco-market/${id}`;
 }

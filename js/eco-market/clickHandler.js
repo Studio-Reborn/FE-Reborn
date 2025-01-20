@@ -17,6 +17,7 @@ Date        Author      Status      Description
 2025.01.08  이유민      Modified    후기 수 API 연동
 2025.01.10  이유민      Modified    후기 UI 수정
 2025.01.18  이유민      Modified    API 경로 수정
+2025.01.19  이유민      Modified    좋아요 코드 리팩토링
 */
 const id = window.location.pathname.split("/").pop();
 
@@ -165,20 +166,6 @@ async function marketLike(id) {
       } else {
         likeImg.src = `${window.location.origin}/assets/icons/heart-fill.svg`;
       }
-
-      likeImg.addEventListener("click", async () => {
-        await axios.post(
-          `${window.API_SERVER_URL}/like/market`,
-          { market_id: id },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-          }
-        );
-
-        location.reload(true);
-      });
     }
 
     // 좋아요 수 관련
@@ -192,6 +179,26 @@ async function marketLike(id) {
   } catch (err) {
     console.error(err);
   }
+}
+
+async function likeImageClick() {
+  if (!localStorage.getItem("access_token")) {
+    alert("로그인 후 이용 가능합니다.");
+    location.href = "/login";
+    return;
+  }
+
+  await axios.post(
+    `${window.API_SERVER_URL}/like/market`,
+    { market_id: id },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    }
+  );
+
+  location.reload(true);
 }
 
 // 마켓 전체 후기
@@ -387,7 +394,7 @@ async function setModalContent(type, element) {
 
         <!-- 제품 수량 -->
         <div class="form-floating mb-3" style="width: 586px">
-          <input type="number" class="form-control" id="marketProductQuantity" placeholder="제품 수량">
+          <input type="number" class="form-control" id="marketProductQuantity" placeholder="제품 수량" value="10000">
           <label for="marketProductQuantity">제품 수량</label>
         </div>
         `;

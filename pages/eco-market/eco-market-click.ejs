@@ -13,6 +13,7 @@ Date        Author      Status      Description
 2025.01.05  이유민      Modified    검색 및 정렬 API 연동
 2025.01.07  이유민      Modified    마켓별 후기 조회 추가
 2025.01.08  이유민      Modified    후기 수 API 연동
+2025.01.19  이유민      Modified    좋아요 코드 리팩토링
 -->
 <!-- 프로필 -->
 <div style="display: flex; align-items: center; justify-content: center; padding-bottom: 21px">
@@ -24,7 +25,7 @@ Date        Author      Status      Description
   <div style="display: flex; align-items: center; margin-bottom: 9px">
     <img id="marketProfileImageSmall" src="" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; margin-right: 10px;">
     <p id="marketName" style="font-family: LINESeed-BD; font-size: 20px; margin: 0;"></p>
-    <img id="likeImg" src="/assets/icons/heart.svg" style="width: 20px; height: 20px; cursor: pointer; margin-left: auto" />
+    <img id="likeImg" src="/assets/icons/heart.svg" style="width: 20px; height: 20px; cursor: pointer; margin-left: auto" onclick="likeImageClick()" />
   </div>
 
   <hr id="gray-500" style="width: 738px; margin: 0; padding-bottom: 16px" />

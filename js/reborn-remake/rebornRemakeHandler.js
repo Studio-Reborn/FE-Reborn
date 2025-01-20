@@ -96,6 +96,7 @@ function setModalContent(type) {
     alert("로그인 후 이용 가능합니다.");
 
     location.href = "/login";
+    return;
   }
 
   const modalTitle = document.getElementById("modalTitle");
