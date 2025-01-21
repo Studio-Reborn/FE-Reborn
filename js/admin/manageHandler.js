@@ -12,6 +12,7 @@ Date        Author      Status      Description
 2025.01.20  이유민      Modified    카드 이미지 UI 수정
 2025.01.20  이유민      Modified    코드 리팩토링
 2025.01.20  이유민      Modified    반려 관련 기능 및 UI 추가
+2025.01.21  이유민      Modified    반려 이유 작성 추가
 */
 const pathSegments = window.location.pathname.split("/")[2];
 let searchValue = undefined;
@@ -120,10 +121,12 @@ async function adminManage(path, searchValue, sortValue) {
                         right: 0;
                         display: flex;
                         align-items: center;
-                        justify-content: flex-end;
+                        justify-content: space-between;
                         padding: 10px;
                         background: white; 
                     ">
+                    <textarea id="rejectionReason" class="form-control" placeholder="반려 이유를 입력하세요" style="height: 39px; width: 70%; resize: none;" onkeydown="preventEnter(event)"></textarea>
+                    <div style="display: flex;">
                     <button type="button" class="global-btn" onclick="updateIsVerified(${
                       response.data[i].market_id
                     }, 'rejected')" style="margin-right: 10px; background-color: #E35D6A"">
@@ -134,6 +137,7 @@ async function adminManage(path, searchValue, sortValue) {
                     }, 'approved')">
                         승인
                     </button>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -407,12 +411,31 @@ async function adminManage(path, searchValue, sortValue) {
 
 // 에코 마켓 승인 요청 수정
 async function updateIsVerified(market_id, is_verified) {
+  const reason = document.getElementById("rejectionReason").value;
   const check =
     is_verified === "approved"
       ? confirm("이 요청을 승인하시겠습니까?")
       : confirm("이 요청을 반려하시겠습니까?");
 
   if (check) {
+    if (is_verified === "rejected") {
+      if (reason === "") {
+        alert("반려 이유를 작성해주세요.");
+        return;
+      }
+
+      // 반려 사유
+      await axios.post(
+        `${window.API_SERVER_URL}/market/rejection/${market_id}`,
+        { reason },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+    }
+
     await axios.patch(
       `${window.API_SERVER_URL}/market/request/check/${market_id}`,
       { is_verified },
@@ -437,23 +460,27 @@ async function checkDeleteMarket(market_id, is_deletion_requested) {
       : confirm("이 요청을 반려하시겠습니까?");
 
   if (check) {
-    if (reason === "") {
-      alert("반려 이유를 작성해주세요.");
-      return;
+    if (is_deletion_requested === "rejected") {
+      if (reason === "") {
+        alert("반려 이유를 작성해주세요.");
+        return;
+      }
+
+      // 반려 사유
+      await axios.post(
+        `${window.API_SERVER_URL}/market/rejection/${market_id}`,
+        { reason },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
     }
 
+    // 삭제 반려
     await axios.delete(
       `${window.API_SERVER_URL}/market/${market_id}?is_deletion_requested=${is_deletion_requested}`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      }
-    );
-
-    await axios.post(
-      `${window.API_SERVER_URL}/market/rejection/${market_id}`,
-      { reason },
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,

@@ -11,6 +11,7 @@ Date        Author      Status      Description
 2025.01.19  이유민      Modified    상점명 클릭 코드 리팩토링
 2025.01.20  이유민      Modified    코드 리팩토링
 2025.01.20  이유민      Modified    반려 관련 기능 및 UI 추가
+2025.01.21  이유민      Modified    반려 이유 작성 추가
 */
 const id = window.location.pathname.split("/").pop();
 const marketTitle = document.getElementById("marketTitle");
@@ -39,6 +40,7 @@ async function myMarket(id) {
     },
   });
 
+  // 마켓 신청 반려 시
   if (info.data[0].market_is_verified === "rejected") {
     rejectedCreateMarket.style.display = "block";
     rejectedTitle.innerHTML = "마켓 생성 재신청하기";
@@ -49,20 +51,18 @@ async function myMarket(id) {
     marketProfile.src = `${window.API_SERVER_URL}/${info.data[0].market_profile_url}`;
     marketName.value = info.data[0].market_name;
     marketDescription.textContent = info.data[0].market_detail;
+
+    const rejection = await readRejectData();
+    document.getElementById("createRejectedReason").innerHTML =
+      rejection.data.reason;
   }
 
+  // 마켓 삭제 반려 시
   if (
     info.data[0].market_is_verified === "approved" &&
     info.data[0].market_is_deletion === "rejected"
   ) {
-    const rejection = await axios.get(
-      `${window.API_SERVER_URL}/market/rejection/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      }
-    );
+    const rejection = await readRejectData();
 
     if (rejection.data.visibility === true) {
       document.getElementById("rejectedDeleteMarket").style.display = "block";
@@ -223,6 +223,31 @@ async function removeReason(reject_id) {
     );
 
     alert("반려 사유가 숨김 처리되었습니다.");
+    location.reload(true);
+  }
+}
+
+// 반려 사유 조회
+async function readRejectData() {
+  return await axios.get(`${window.API_SERVER_URL}/market/rejection/${id}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    },
+  });
+}
+
+async function deleteMarket() {
+  const check = confirm("마켓 신청을 철회하시겠습니까?");
+
+  if (check) {
+    await axios.delete(`${window.API_SERVER_URL}/market/rejection/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    });
+
+    alert("마켓 신청이 철회되었습니다.");
+    history.go(-1);
     location.reload(true);
   }
 }
