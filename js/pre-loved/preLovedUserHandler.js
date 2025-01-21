@@ -9,6 +9,7 @@ Date        Author      Status      Description
 2025.01.07  이유민      Modified    일반 사용자 정보 조회 추가
 2025.01.08  이유민      Modified    판매 물품 좋아요 API 연동
 2025.01.09  이유민      Modified    검색, 정렬 및 판매중인 제품만 API 연동
+2025.01.21  이유민      Modified    UI 수정
 */
 let searchValue = undefined;
 let sortValue = document.getElementById("userProductSort").value;
@@ -95,7 +96,13 @@ async function getUserInfo(user_id, searchValue, sortValue, statusValue) {
 
     for (let i = 0; i < products.data.length; i++) {
       // html
-      if (i % 3 === 0) containerHTML += `<div class="card-contents">`;
+      if (i % 3 === 0) {
+        containerHTML += `<div class="card-contents"`;
+
+        i === 0
+          ? (containerHTML += `">`)
+          : (containerHTML += ` style="margin-top: 47px">`);
+      }
 
       containerHTML += `
               <a href="/pre-loved/${products.data[i].product_id}">

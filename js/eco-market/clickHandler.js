@@ -18,6 +18,7 @@ Date        Author      Status      Description
 2025.01.10  이유민      Modified    후기 UI 수정
 2025.01.18  이유민      Modified    API 경로 수정
 2025.01.19  이유민      Modified    좋아요 코드 리팩토링
+2025.01.21  이유민      Modified    UI 수정
 */
 const id = window.location.pathname.split("/").pop();
 
@@ -107,7 +108,13 @@ async function readMarketProducts(id, searchValue, sortValue) {
     for (let i = 0; i < products.data.length; i++) {
       marketProductAllCnt += Number(products.data[i].product_review_cnt);
       // html
-      if (i % 3 === 0) containerHTML += `<div class="card-contents">`;
+      if (i % 3 === 0) {
+        containerHTML += `<div class="card-contents"`;
+
+        i === 0
+          ? (containerHTML += `">`)
+          : (containerHTML += ` style="margin-top: 47px">`);
+      }
 
       containerHTML += `
         <a href="/eco-market/${id}/${products.data[i].id}">
@@ -116,7 +123,11 @@ async function readMarketProducts(id, searchValue, sortValue) {
         products.data[i].product_image_url[0]
       }" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
             <div class="card-body">
-              <h5 class="card-title">${products.data[i].name}</h5>
+              <h5 class="card-title">${
+                products.data[i].name.length > 12
+                  ? products.data[i].name.slice(0, 12) + "..."
+                  : products.data[i].name
+              }</h5>
               <p class="card-text">${Number(
                 products.data[i].price
               ).toLocaleString()}원</p>
