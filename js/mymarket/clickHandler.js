@@ -12,6 +12,7 @@ Date        Author      Status      Description
 2025.01.20  이유민      Modified    코드 리팩토링
 2025.01.20  이유민      Modified    반려 관련 기능 및 UI 추가
 2025.01.21  이유민      Modified    반려 이유 작성 추가
+2025.01.22  이유민      Modified    예외 처리 코드 수정
 */
 const id = window.location.pathname.split("/").pop();
 const marketTitle = document.getElementById("marketTitle");
@@ -181,27 +182,31 @@ function titleClick() {
 
 // 승인 재신청
 async function marketRetry() {
-  const check = confirm(
-    "재신청 이후 관리자의 승인이 완료될 때까지 수정할 수 없습니다. \n재신청하시겠습니까?"
-  );
-
-  if (check) {
-    await axios.patch(
-      `${window.API_SERVER_URL}/market/retry/${id}`,
-      {
-        profile_image_id: marketProfile.getAttribute("data-profile-id"),
-        market_name: marketName.value,
-        market_detail: marketDescription.value,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      }
+  try {
+    const check = confirm(
+      "재신청 이후 관리자의 승인이 완료될 때까지 수정할 수 없습니다. \n재신청하시겠습니까?"
     );
 
-    alert("에코마켓 재신청이 완료되었습니다.");
-    location.reload(true);
+    if (check) {
+      await axios.patch(
+        `${window.API_SERVER_URL}/market/retry/${id}`,
+        {
+          profile_image_id: marketProfile.getAttribute("data-profile-id"),
+          market_name: marketName.value,
+          market_detail: marketDescription.value,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+
+      alert("에코마켓 재신청이 완료되었습니다.");
+      location.reload(true);
+    }
+  } catch (err) {
+    if (err.response.data.statusCode === 409) alert(err.response.data.message);
   }
 }
 
