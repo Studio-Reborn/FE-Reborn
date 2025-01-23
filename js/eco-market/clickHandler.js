@@ -19,6 +19,7 @@ Date        Author      Status      Description
 2025.01.18  이유민      Modified    API 경로 수정
 2025.01.19  이유민      Modified    좋아요 코드 리팩토링
 2025.01.21  이유민      Modified    UI 수정
+2025.01.23  이유민      Modified    무한 스크롤 추가
 */
 const id = window.location.pathname.split("/").pop();
 
@@ -28,28 +29,77 @@ const likeImg = document.getElementById("likeImg");
 let searchValue = undefined;
 let sortValue = document.getElementById("marketProductSort").value;
 
+let debounceTimeout;
+const debounceDelay = 500;
+
+let currentPage = 1; // 현재 페이지
+let isLoading = false; // 데이터 로드 상태
+let hasMoreData = true; // 추가 데이터 여부
+
 let profileImageId = 0;
 
-window.addEventListener("load", () => {
-  readMarketInfo(id);
-  readMarketProducts(id, searchValue, sortValue);
-  marketLike(id);
-  marketReviewAll(id);
+const container = document.getElementById("ecoMarketProductContainer");
+
+window.addEventListener("load", async () => {
+  await Promise.all([
+    readMarketInfo(id),
+    readMarketProducts(id, searchValue, sortValue, currentPage),
+    marketLike(id),
+    marketReviewAll(id),
+  ]);
 });
 
 // 검색값 입력 시
-function logInputValue() {
-  searchValue = document.getElementById("marketProductSearch").value;
-  readMarketProducts(id, searchValue, sortValue);
+async function logInputValue() {
+  clearTimeout(debounceTimeout);
+  debounceTimeout = setTimeout(() => {
+    searchValue = document.getElementById("marketProductSearch").value;
+    refreshProducts(searchValue, sortValue);
+  }, debounceDelay);
 }
 
 // 정렬 변경 시
 document
   .getElementById("marketProductSort")
-  .addEventListener("change", (event) => {
+  .addEventListener("change", async (event) => {
     sortValue = event.target.value;
-    readMarketProducts(id, searchValue, sortValue);
+    await refreshProducts(searchValue, sortValue);
   });
+
+// 무한 스크롤 관련
+window.addEventListener("scroll", async () => {
+  const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+
+  if (
+    scrollTop + clientHeight >= scrollHeight - 100 &&
+    hasMoreData &&
+    !isLoading
+  ) {
+    isLoading = true; // 로딩 시작
+    currentPage++; // 다음 페이지 증가
+    await readMarketProducts(id, searchValue, sortValue, currentPage);
+    isLoading = false; // 로딩 완료
+  }
+});
+
+// 검색, 정렬, 판매중 사용 시 html 코드 리셋
+async function refreshProducts(searchValue, sortValue) {
+  if (isLoading) return;
+
+  currentPage = 1; // 페이지 초기화
+  hasMoreData = true; // 추가 데이터 플래그 초기화
+  isLoading = true; // 로딩 상태 초기화
+  container.innerHTML = ""; // 기존 컨텐츠 비우기
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth", // 부드럽게 스크롤
+  });
+
+  await readMarketProducts(id, searchValue, sortValue, currentPage); // 새 데이터 로드
+
+  isLoading = false; // 로딩 완료
+}
 
 async function readMarketInfo(id) {
   try {
@@ -90,8 +140,11 @@ async function readMarketInfo(id) {
   }
 }
 
-async function readMarketProducts(id, searchValue, sortValue) {
-  const container = document.getElementById("ecoMarketProductContainer");
+async function readMarketProducts(id, searchValue, sortValue, page) {
+  if (!hasMoreData) return;
+
+  isLoading = true;
+
   let containerHTML = "";
   let marketProductAllCnt = 0;
 
@@ -99,61 +152,71 @@ async function readMarketProducts(id, searchValue, sortValue) {
     // 마켓의 판매 제품
     const products = !searchValue
       ? await axios.get(
-          `${window.API_SERVER_URL}/product/eco-market/market/${id}?sort=${sortValue}`
+          `${window.API_SERVER_URL}/product/eco-market/market/${id}?sort=${sortValue}&page=${page}`
         )
       : await axios.get(
-          `${window.API_SERVER_URL}/product/eco-market/market/${id}?sort=${sortValue}&search=${searchValue}`
+          `${window.API_SERVER_URL}/product/eco-market/market/${id}?sort=${sortValue}&search=${searchValue}&page=${page}`
         );
 
-    for (let i = 0; i < products.data.length; i++) {
-      marketProductAllCnt += Number(products.data[i].product_review_cnt);
+    if (products.data.data.length === 0) {
+      hasMoreData = false; // 더 이상 데이터가 없으면 플래그 변경
+      isLoading = false;
+      return;
+    }
+
+    for (let i = 0; i < products.data.data.length; i++) {
+      marketProductAllCnt += Number(products.data.data[i].product_review_cnt);
       // html
       if (i % 3 === 0) {
         containerHTML += `<div class="card-contents"`;
 
-        i === 0
+        currentPage === 1 && i === 0
           ? (containerHTML += `">`)
           : (containerHTML += ` style="margin-top: 47px">`);
       }
 
       containerHTML += `
-        <a href="/eco-market/${id}/${products.data[i].id}">
+        <a href="/eco-market/${id}/${products.data.data[i].id}">
           <div class="card" style="width: 18rem">
             <img src="${window.API_SERVER_URL}/${
-        products.data[i].product_image_url[0]
+        products.data.data[i].product_image_url[0]
       }" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
             <div class="card-body">
               <h5 class="card-title">${
-                products.data[i].name.length > 12
-                  ? products.data[i].name.slice(0, 12) + "..."
-                  : products.data[i].name
+                products.data.data[i].name.length > 12
+                  ? products.data.data[i].name.slice(0, 12) + "..."
+                  : products.data.data[i].name
               }</h5>
               <p class="card-text">${Number(
-                products.data[i].price
+                products.data.data[i].price
               ).toLocaleString()}원</p>
               <p class="card-text" style="color: #6c757d; font-size: 12px">후기 ${Number(
-                products.data[i].product_review_cnt
+                products.data.data[i].product_review_cnt
               ).toLocaleString()} 좋아요 ${Number(
-        products.data[i].product_like_cnt
+        products.data.data[i].product_like_cnt
       ).toLocaleString()}</p>
             </div>
           </div>
         </a>
       `;
 
-      if (products.data.length % 3 !== 0 && i === products.data.length - 1) {
+      if (
+        products.data.data.length % 3 !== 0 &&
+        i === products.data.data.length - 1
+      ) {
         containerHTML += `<div class="card" style="width: 18rem; visibility: hidden;"></div>`;
 
-        if (products.data.length % 3 === 1)
+        if (products.data.data.length % 3 === 1)
           containerHTML += `<div class="card" style="width: 18rem; visibility: hidden;"></div>`;
       }
 
       if (i % 3 === 2) containerHTML += `</div>`;
     }
 
-    container.innerHTML = containerHTML;
-    document.getElementById("marketReviewNum").innerHTML =
-      marketProductAllCnt.toLocaleString();
+    container.innerHTML += containerHTML;
+    isLoading = false; // 로드 상태 비활성화
+    // document.getElementById("marketReviewNum").innerHTML =
+    //   marketProductAllCnt.toLocaleString();
   } catch (err) {
     console.error(err);
   }
