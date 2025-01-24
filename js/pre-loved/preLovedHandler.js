@@ -22,29 +22,46 @@ Date        Author      Status      Description
 2025.01.02  이유민      Modified    검색 및 정렬 API 연동
 2025.01.08  이유민      Modified    판매중 제품만 보기 API 연동
 2025.01.09  이유민      Modified    오류 수정
+2025.01.22  이유민      Modified    무한 스크롤 추가
 */
 let searchValue = undefined;
 let sortValue = document.getElementById("preLovedSort").value;
 let statusValue = "false";
+let debounceTimeout;
+const debounceDelay = 500;
 
-window.addEventListener("load", () => {
-  preLoved(searchValue, sortValue, statusValue);
+let currentPage = 1; // 현재 페이지
+let isLoading = false; // 데이터 로드 상태
+let hasMoreData = true; // 추가 데이터 여부
+const container = document.getElementById("productContainer");
+
+window.addEventListener("load", async () => {
+  // 로그인 안 한 경우 생성 버튼 나타나지 않음
+  if (!localStorage.getItem("access_token"))
+    document.getElementById("preLovedProductCreateBtn").style.display = "none";
+
+  await preLoved(searchValue, sortValue, statusValue, currentPage);
 });
 
 // 검색값 입력 시
-function logInputValue() {
-  searchValue = document.getElementById("preLovedSearch").value;
-  preLoved(searchValue, sortValue, statusValue);
+async function logInputValue() {
+  clearTimeout(debounceTimeout); // 기존 타이머 클리어
+  debounceTimeout = setTimeout(() => {
+    searchValue = document.getElementById("preLovedSearch").value;
+    refreshProducts(searchValue, sortValue, statusValue); // 일정 시간 후에만 호출
+  }, debounceDelay); // debounceDelay에 설정한 시간만큼 지연 후 호출
 }
 
 // 정렬 변경 시
-document.getElementById("preLovedSort").addEventListener("change", (event) => {
-  sortValue = event.target.value;
-  preLoved(searchValue, sortValue, statusValue);
-});
+document
+  .getElementById("preLovedSort")
+  .addEventListener("change", async (event) => {
+    sortValue = event.target.value;
+    await refreshProducts(searchValue, sortValue, statusValue);
+  });
 
 // 판매중 제품만 보기 관련
-function toggleAvailableProductsButton() {
+async function toggleAvailableProductsButton() {
   const button = document.getElementById("onlyAvailableButton");
 
   // 전체로 돌릴 때
@@ -62,41 +79,81 @@ function toggleAvailableProductsButton() {
   }
 
   statusValue = button.getAttribute("data-active");
-  preLoved(searchValue, sortValue, statusValue);
+  await refreshProducts(searchValue, sortValue, statusValue);
 }
 
-async function preLoved(searchValue, sortValue, statusValue) {
-  // 로그인 안 한 경우 생성 버튼 나타나지 않음
-  if (!localStorage.getItem("access_token"))
-    document.getElementById("preLovedProductCreateBtn").style.display = "none";
+// 무한 스크롤 관련
+window.addEventListener("scroll", async () => {
+  const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
 
-  const container = document.getElementById("productContainer");
+  if (
+    scrollTop + clientHeight >= scrollHeight - 100 &&
+    hasMoreData &&
+    !isLoading
+  ) {
+    isLoading = true; // 로딩 시작
+    currentPage++; // 다음 페이지 증가
+    await preLoved(searchValue, sortValue, statusValue, currentPage);
+    isLoading = false; // 로딩 완료
+  }
+});
+
+// 검색, 정렬, 판매중 사용 시 html 코드 리셋
+async function refreshProducts(searchValue, sortValue, statusValue) {
+  if (isLoading) return;
+
+  currentPage = 1; // 페이지 초기화
+  hasMoreData = true; // 추가 데이터 플래그 초기화
+  isLoading = true; // 로딩 상태 초기화
+  container.innerHTML = ""; // 기존 컨텐츠 비우기
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth", // 부드럽게 스크롤
+  });
+
+  await preLoved(searchValue, sortValue, statusValue, currentPage); // 새 데이터 로드
+
+  isLoading = false; // 로딩 완료
+}
+
+// 제품 데이터 가져오기
+async function preLoved(searchValue, sortValue, statusValue, page) {
+  if (!hasMoreData) return;
+
+  isLoading = true;
   let contentHTML = "";
 
   try {
     const products = !searchValue
       ? await axios.get(
-          `${window.API_SERVER_URL}/product/pre-loved?sort=${sortValue}&status=${statusValue}`
+          `${window.API_SERVER_URL}/product/pre-loved?sort=${sortValue}&status=${statusValue}&page=${page}`
         )
       : await axios.get(
-          `${window.API_SERVER_URL}/product/pre-loved?sort=${sortValue}&search=${searchValue}&status=${statusValue}`
+          `${window.API_SERVER_URL}/product/pre-loved?sort=${sortValue}&search=${searchValue}&status=${statusValue}&page=${page}`
         );
 
-    for (let i = 0; i < products.data.length; i++) {
+    if (products.data.products.length === 0) {
+      hasMoreData = false; // 더 이상 데이터가 없으면 플래그 변경
+      isLoading = false;
+      return;
+    }
+
+    for (let i = 0; i < products.data.products.length; i++) {
       const productImages = await axios.get(
-        `${window.API_SERVER_URL}/product-image/${products.data[i].product_image_id}`
+        `${window.API_SERVER_URL}/product-image/${products.data.products[i].product_image_id}`
       );
 
       if (i % 3 === 0) {
         contentHTML += `<div class="card-contents"`;
 
-        i === 0
+        currentPage === 1 && i === 0
           ? (contentHTML += `">`)
           : (contentHTML += ` style="margin-top: 47px">`);
       }
 
       contentHTML += `
-      <a href="/pre-loved/${products.data[i].id}">
+      <a href="/pre-loved/${products.data.products[i].id}">
         <div class="card" style="width: 18rem">
           <img
             src="${window.API_SERVER_URL}/${productImages.data.url[0]}"
@@ -105,42 +162,46 @@ async function preLoved(searchValue, sortValue, statusValue) {
             style="height: 214px; object-fit: cover"
           />`;
 
-      if (products.data[i].status !== "판매중")
+      if (products.data.products[i].status !== "판매중")
         contentHTML += `<!-- 반투명 오버레이 -->
           <div style="position: absolute; top: 0; left: 0; width: 100%; height: 214px; 
               background-color: rgba(255, 255, 255, 0.5);">
             <span style="font-family: LINESeed-BD; font-size: 30px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #E35D6A">
-            ${products.data[i].status}
+            ${products.data.products[i].status}
             </span>
           </div>`;
 
       contentHTML += `<div class="card-body">
           <!-- 판매명이 13글자 이상이면 12글자까지 잘라서 화면에 표시 -->
             <h5 class="card-title">${
-              products.data[i].name.length > 12
-                ? products.data[i].name.slice(0, 12) + "..."
-                : products.data[i].name
+              products.data.products[i].name.length > 12
+                ? products.data.products[i].name.slice(0, 12) + "..."
+                : products.data.products[i].name
             }</h5>
             <p class="card-text">${Number(
-              products.data[i].price
+              products.data.products[i].price
             ).toLocaleString()}원</p>
           </div>
         </div>
       </a>
       `;
 
-      if (products.data.length % 3 !== 0 && i === products.data.length - 1) {
+      if (
+        products.data.products.length % 3 !== 0 &&
+        i === products.data.products.length - 1
+      ) {
         contentHTML += `<div class="card" style="width: 18rem; visibility: hidden;"></div>`;
 
-        if (products.data.length % 3 === 1)
+        if (products.data.products.length % 3 === 1)
           contentHTML += `<div class="card" style="width: 18rem; visibility: hidden;"></div>`;
       }
 
-      if (i % 3 === 2 || i === products.data.length - 1)
+      if (i % 3 === 2 || i === products.data.products.length - 1)
         contentHTML += `</div>`;
     }
 
-    container.innerHTML = contentHTML;
+    container.innerHTML += contentHTML;
+    isLoading = false; // 로드 상태 비활성화
   } catch (err) {
     console.error(err);
   }

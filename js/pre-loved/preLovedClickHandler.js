@@ -20,6 +20,8 @@ Date        Author      Status      Description
 2024.12.17  이유민      Modified    코드 리팩토링
 2024.12.30  이유민      Modified    예외 처리 코드 수정
 2025.01.07  이유민      Modified    판매자 정보 페이지 연동
+2025.01.17  이유민      Modified    디버깅 코드 제거
+2025.01.19  이유민      Modified    좋아요 코드 리팩토링
 */
 const productName = document.getElementById("productName");
 const productPrice = document.getElementById("productPrice");
@@ -41,9 +43,9 @@ const productData = {
   seller_id: 0,
 };
 
-window.addEventListener("load", () => {
-  const id = window.location.pathname.split("/").pop();
+const id = window.location.pathname.split("/").pop();
 
+window.addEventListener("load", () => {
   readProductData(id);
   productLike(id);
 });
@@ -95,7 +97,6 @@ async function readProductData(id) {
       `${window.API_SERVER_URL}/users/info/${product.data.user_id}`
     );
 
-    console.log(user.data);
     const profile = await axios.get(
       `${window.API_SERVER_URL}/profile/${user.data.profile_image_id}`
     );
@@ -157,20 +158,6 @@ async function productLike(id) {
       } else {
         likeImg.src = `${window.location.origin}/assets/icons/heart-fill.svg`;
       }
-
-      likeImg.addEventListener("click", async () => {
-        await axios.post(
-          `${window.API_SERVER_URL}/like/product`,
-          { product_id: id },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-          }
-        );
-
-        location.reload(true);
-      });
     }
 
     // 좋아요 수 관련
@@ -184,11 +171,31 @@ async function productLike(id) {
   }
 }
 
+async function likeImageClick() {
+  if (!localStorage.getItem("access_token")) {
+    alert("로그인 후 이용 가능합니다.");
+    location.href = "/login";
+    return;
+  }
+
+  await axios.post(
+    `${window.API_SERVER_URL}/like/product`,
+    { product_id: id },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    }
+  );
+
+  location.reload(true);
+}
+
 function setModalContent(type) {
   if (!localStorage.getItem("access_token")) {
     alert("로그인 후 이용 가능합니다.");
-
     location.href = "/login";
+    return;
   }
 
   const modalTitle = document.getElementById("modalTitle");
@@ -243,12 +250,6 @@ function setModalContent(type) {
             <input class="form-check-input" type="radio" name="productStatus" id="statusSoldOut" value="판매완료">
             <label class="form-check-label" for="statusSoldOut">
               판매완료
-            </label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="productStatus" id="statusHidden" value="숨김">
-            <label class="form-check-label" for="statusHidden">
-              숨김
             </label>
           </div>
         </div>
@@ -318,6 +319,12 @@ function setModalContent(type) {
 
 // 채팅방 생성
 async function createChat() {
+  if (!localStorage.getItem("access_token")) {
+    alert("로그인 후 사용 가능합니다.");
+    location.href = "/login";
+    return;
+  }
+
   try {
     const chat = await axios.post(
       `${window.API_SERVER_URL}/chat`,

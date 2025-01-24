@@ -8,6 +8,11 @@ Date        Author      Status      Description
 2024.12.04  이유민      Created     
 2024.12.04  이유민      Modified    관리자 활동 API 연동
 2025.01.10  이유민      Modified    검색 및 정렬 API 연동
+2025.01.18  이유민      Modified    리본 리메이크 판매 내역 추가
+2025.01.20  이유민      Modified    카드 이미지 UI 수정
+2025.01.20  이유민      Modified    코드 리팩토링
+2025.01.20  이유민      Modified    반려 관련 기능 및 UI 추가
+2025.01.21  이유민      Modified    반려 이유 작성 추가
 */
 const pathSegments = window.location.pathname.split("/")[2];
 let searchValue = undefined;
@@ -20,6 +25,7 @@ window.addEventListener("load", () => {
       "delete-eco-market",
       "request-reborn-remake",
       "manage-admin",
+      "selling-reborn-remake",
     ].includes(pathSegments)
   ) {
     location.href = "/404";
@@ -46,6 +52,10 @@ async function adminManage(path, searchValue, sortValue) {
     case "request-reborn-remake":
       title = "리본 리메이크 제품 요청 내역";
       dataUrl = "remake/request";
+      break;
+    case "selling-reborn-remake":
+      title = "리본 리메이크 제품 판매 내역";
+      dataUrl = `billing/item/remake`;
       break;
     case "manage-admin":
       title =
@@ -75,7 +85,7 @@ async function adminManage(path, searchValue, sortValue) {
                 <div class="col-md-4" style="height: 100%">
                     <img src="${window.API_SERVER_URL}/${
         response.data[i].market_profile_image
-      }" class="img-fluid rounded-start" alt="프로필" style="height: 100%; width: auto; object-fit: cover" />
+      }" class="img-fluid rounded-start" alt="프로필" style="height: 100%; width: 100%; object-fit: cover" />
                 </div>
                 <div class="col-md-8" style="height: 100%; position: relative">
                     <div class="card-text-container" style="
@@ -111,15 +121,23 @@ async function adminManage(path, searchValue, sortValue) {
                         right: 0;
                         display: flex;
                         align-items: center;
-                        justify-content: flex-end;
+                        justify-content: space-between;
                         padding: 10px;
                         background: white; 
                     ">
-                    <button type="button" class="global-btn" onclick="checkCreateMarket(${
+                    <textarea id="rejectionReason" class="form-control" placeholder="반려 이유를 입력하세요" style="height: 39px; width: 70%; resize: none;" onkeydown="preventEnter(event)"></textarea>
+                    <div style="display: flex;">
+                    <button type="button" class="global-btn" onclick="updateIsVerified(${
                       response.data[i].market_id
-                    })">
-                        확인
+                    }, 'rejected')" style="margin-right: 10px; background-color: #E35D6A"">
+                        반려
                     </button>
+                    <button type="button" class="global-btn" onclick="updateIsVerified(${
+                      response.data[i].market_id
+                    }, 'approved')">
+                        승인
+                    </button>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -135,7 +153,7 @@ async function adminManage(path, searchValue, sortValue) {
                     <div class="col-md-4" style="height: 100%">
                         <img src="${window.API_SERVER_URL}/${
         response.data[i].market_profile_image
-      }" class="img-fluid rounded-start" alt="프로필" style="height: 100%; width: auto; object-fit: cover" />
+      }" class="img-fluid rounded-start" alt="프로필" style="height: 100%; width: 100%; object-fit: cover" />
                     </div>
                     <div class="col-md-8" style="height: 100%; position: relative">
                         <div class="card-text-container" style="
@@ -173,15 +191,22 @@ async function adminManage(path, searchValue, sortValue) {
                             right: 0;
                             display: flex;
                             align-items: center;
-                            justify-content: flex-end;
-                            padding: 10px;
+                            justify-content: space-between;
                             background: white; 
                         ">
-                        <button type="button" class="global-btn" style="background-color: #E35D6A" onclick="checkDeleteMarket(${
+                        <textarea id="rejectionReason" class="form-control" placeholder="반려 이유를 입력하세요" style="height: 39px; width: 70%; resize: none;" onkeydown="preventEnter(event)"></textarea>
+                        <div style="display: flex;">
+                    <button type="button" class="global-btn" onclick="checkDeleteMarket(${
+                      response.data[i].market_id
+                    }, 'rejected')" style="margin-right: 10px; background-color: #E35D6A"">
+                        반려
+                    </button>
+                        <button type="button" class="global-btn" onclick="checkDeleteMarket(${
                           response.data[i].market_id
-                        })">
-                            확인
+                        }, 'approved')">
+                            승인
                         </button>
+                        </div>
                         </div>
                     </div>
                 </div>
@@ -228,6 +253,84 @@ async function adminManage(path, searchValue, sortValue) {
         `;
       }
     }
+  } else if (path === "selling-reborn-remake") {
+    let cardDataHTML = `
+    <div style="max-height: 400px; overflow-y: auto; border: 1px solid #ccc; border-radius: 8px; padding: 16px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <table class="table" style="width: 100%; border-collapse: collapse; text-align: left; font-family: LINESeed-RG;">
+            <thead style="font-family: LINESeed-BD; position: sticky; top: 0; background-color: #f9f9f9; z-index: 1; border-bottom: 2px solid #ddd;">
+                <tr>
+                    <th scope="col" style="padding: 12px;">#</th>
+                    <th scope="col" style="padding: 12px;">이름</th>
+                    <th scope="col" style="padding: 12px;">전화번호</th>
+                    <th scope="col" style="padding: 12px; min-width: 150px;">제품명</th>
+                    <th scope="col" style="padding: 12px; text-align: center;">수량</th>
+                    <th scope="col" style="padding: 12px;">우편번호</th>
+                    <th scope="col" style="padding: 12px; min-width: 200px;">주소</th>
+                    <th scope="col" style="padding: 12px; text-align: center;">배송상태</th>
+                    <th scope="col" style="padding: 12px; text-align: center;">운송장번호</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    for (let i = 0; i < response.data.length; i++) {
+      cardDataHTML += `
+        <tr style="border-bottom: 1px solid #ddd;">
+            <th scope="row" style="font-family: LINESeed-BD; padding: 12px; text-align: center;">${
+              i + 1
+            }</th>
+            <td style="padding: 12px;">${response.data[i].user_name}</td>
+            <td style="padding: 12px;">${response.data[i].user_phone}</td>
+            <td style="padding: 12px;">
+            <a href="/reborn-remake/${
+              response.data[i].product_id
+            }" style="color: black">${response.data[i].product_name}
+            </a>
+            </td>
+            <td style="padding: 12px; text-align: center;">${
+              response.data[i].items_quantity
+            }</td>
+            <td style="padding: 12px;">${response.data[i].orders_postcode}</td>
+            <td style="padding: 12px;">${response.data[i].orders_address} ${
+        response.data[i].orders_detail_address
+      } ${response.data[i].orders_extra_address}</td>
+            <td style="padding: 12px; text-align: center;">
+            <select class="form-select" style="width: 110px; text-align: center;" id="status-${
+              response.data[i].items_id
+            }" onchange="updateData(${
+        response.data[i].items_id
+      }, 'status',  this.value)">
+                <option value="결제완료" ${
+                  response.data[i].items_status === "결제완료" ? "selected" : ""
+                }>결제완료</option>
+                <option value="배송중" ${
+                  response.data[i].items_status === "배송중" ? "selected" : ""
+                }>배송중</option>
+                <option value="배송완료" ${
+                  response.data[i].items_status === "배송완료" ? "selected" : ""
+                }>배송완료</option>
+            </select>
+            </td>
+            <td style="padding: 12px; text-align: center;">
+                <input type="text" class="form-control" id="tracking-${
+                  response.data[i].items_id
+                }" placeholder="${
+        response.data[i].items_tracking_number
+      }" oninput="updateData(${
+        response.data[i].items_id
+      }, 'tracking_number',  this.value)"/>
+            </td>
+        </tr>
+    `;
+    }
+
+    cardDataHTML += `
+            </tbody>
+        </table>
+    </div>
+    `;
+
+    document.getElementById("sellingRemake").innerHTML = cardDataHTML;
   } else if (path === "manage-admin") {
     // 관리자 변경
     cardDataHTML += `
@@ -301,17 +404,41 @@ async function adminManage(path, searchValue, sortValue) {
   }
 
   document.getElementById("adminManageTitle").innerHTML = title;
-  document.getElementById("contentContainer").innerHTML = cardDataHTML;
+
+  if (path !== "selling-reborn-remake")
+    document.getElementById("contentContainer").innerHTML = cardDataHTML;
 }
 
-// 에코 마켓 생성 승인
-async function checkCreateMarket(market_id) {
-  const check = confirm("이 요청을 승인하여 에코 마켓을 생성하시겠습니까?");
+// 에코 마켓 승인 요청 수정
+async function updateIsVerified(market_id, is_verified) {
+  const reason = document.getElementById("rejectionReason").value;
+  const check =
+    is_verified === "approved"
+      ? confirm("이 요청을 승인하시겠습니까?")
+      : confirm("이 요청을 반려하시겠습니까?");
 
   if (check) {
+    if (is_verified === "rejected") {
+      if (reason === "") {
+        alert("반려 이유를 작성해주세요.");
+        return;
+      }
+
+      // 반려 사유
+      await axios.post(
+        `${window.API_SERVER_URL}/market/rejection/${market_id}`,
+        { reason },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+    }
+
     await axios.patch(
       `${window.API_SERVER_URL}/market/request/check/${market_id}`,
-      null,
+      { is_verified },
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
@@ -319,24 +446,56 @@ async function checkCreateMarket(market_id) {
       }
     );
 
-    alert("요청이 승인되었습니다.");
+    alert("정상 처리되었습니다.");
     location.reload(true);
   }
 }
 
-// 에코 마켓 삭제 승인
-async function checkDeleteMarket(market_id) {
-  const check = confirm("이 요청을 승인하여 에코 마켓을 삭제하시겠습니까?");
+// 에코 마켓 삭제 요청 수정
+async function checkDeleteMarket(market_id, is_deletion_requested) {
+  const reason = document.getElementById("rejectionReason").value;
+  const check =
+    is_deletion_requested === "approved"
+      ? confirm("이 요청을 승인하시겠습니까?")
+      : confirm("이 요청을 반려하시겠습니까?");
 
   if (check) {
-    await axios.delete(`${window.API_SERVER_URL}/market/${market_id}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-      },
-    });
+    if (is_deletion_requested === "rejected") {
+      if (reason === "") {
+        alert("반려 이유를 작성해주세요.");
+        return;
+      }
 
-    alert("성공적으로 삭제되었습니다.");
+      // 반려 사유
+      await axios.post(
+        `${window.API_SERVER_URL}/market/rejection/${market_id}`,
+        { reason },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+    }
+
+    // 삭제 반려
+    await axios.delete(
+      `${window.API_SERVER_URL}/market/${market_id}?is_deletion_requested=${is_deletion_requested}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      }
+    );
+
+    alert("정상 처리되었습니다.");
     location.reload(true);
+  }
+}
+
+function preventEnter(event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
   }
 }
 
@@ -356,6 +515,19 @@ async function deleteRequest(request_id) {
 
     location.reload(true);
   }
+}
+
+// 리본 리메이크 판매 상태 변경
+async function updateData(item_id, name, value) {
+  await axios.patch(
+    `${window.API_SERVER_URL}/billing/item/${item_id}`,
+    { [name]: value },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    }
+  );
 }
 
 // 사용자 유형 변경

@@ -17,74 +17,110 @@ Date        Author      Status      Description
 2024.11.22  이유민      Modified    상품 요청 모달 디자인 변경
 2024.12.04  이유민      Modified    API 경로 수정
 2024.12.17  이유민      Modified    코드 리팩토링
+2025.01.22  이유민      Modified    무한 스크롤 추가
 */
-window.addEventListener("load", () => {
-  rebornRemake();
+let currentPage = 1; // 현재 페이지
+let isLoading = false; // 데이터 로드 상태
+let hasMoreData = true; // 추가 데이터 여부
+const container = document.getElementById("remakeContainer");
+
+window.addEventListener("load", async () => {
+  // 관리자인지 확인
+  if (localStorage.getItem("access_token")) {
+    const response = await axios.get(`${window.API_SERVER_URL}/users/my`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    });
+
+    // 관리자일 때만 제품 생성 버튼 생김
+    if (response.data.role === "admin")
+      document.getElementById("remakeProductCreateBtn").style.display = "";
+  }
+
+  await rebornRemake(currentPage);
 });
 
-async function rebornRemake() {
-  const container = document.getElementById("remakeContainer");
+// 무한 스크롤 관련
+window.addEventListener("scroll", async () => {
+  const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+
+  if (
+    scrollTop + clientHeight >= scrollHeight - 100 &&
+    hasMoreData &&
+    !isLoading
+  ) {
+    isLoading = true; // 로딩 시작
+    currentPage++; // 다음 페이지 증가
+    await rebornRemake(currentPage);
+    isLoading = false; // 로딩 완료
+  }
+});
+
+async function rebornRemake(page) {
+  if (!hasMoreData) return;
+
+  isLoading = true;
   let contentHTML = "";
 
   try {
-    const products = await axios.get(`${window.API_SERVER_URL}/remake/product`);
+    const products = await axios.get(
+      `${window.API_SERVER_URL}/remake/product?page=${page}`
+    );
 
-    for (let i = 0; i < products.data.length; i++) {
+    if (products.data.products.length === 0) {
+      hasMoreData = false; // 더 이상 데이터가 없으면 플래그 변경
+      isLoading = false;
+      return;
+    }
+
+    for (let i = 0; i < products.data.products.length; i++) {
       // html
       if (i % 3 === 0) {
         contentHTML += `<div class="card-contents"`;
 
-        i === 0
-          ? (contentHTML += `">`)
+        currentPage === 1 && i === 0
+          ? (contentHTML += `>`)
           : (contentHTML += ` style="margin-top: 47px">`);
       }
 
       contentHTML += `
-        <a href="/reborn-remake/${products.data[i].id}">
+        <a href="/reborn-remake/${products.data.products[i].id}">
           <div class="card" style="width: 18rem">
               <img src="${window.API_SERVER_URL}/${
-        products.data[i].product_image_url[0]
+        products.data.products[i].product_image_url[0]
       }" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
               <div class="card-body">
                   <h5 class="card-title">${
-                    products.data[i].name.length > 12
-                      ? products.data[i].name.slice(0, 12) + "..."
-                      : products.data[i].name
+                    products.data.products[i].name.length > 12
+                      ? products.data.products[i].name.slice(0, 12) + "..."
+                      : products.data.products[i].name
                   }</h5>
-                  <p class="card-text">${products.data[i].matter}</p>
+                  <p class="card-text">${products.data.products[i].matter}</p>
                   <p class="card-text" style="color: #6c757d">${Number(
-                    products.data[i].price
+                    products.data.products[i].price
                   ).toLocaleString()}원</p>
               </div>
           </div>
         </a>
         `;
 
-      if (products.data.length % 3 !== 0 && i === products.data.length - 1) {
+      if (
+        products.data.products.length % 3 !== 0 &&
+        i === products.data.products.length - 1
+      ) {
         contentHTML += `<div class="card" style="width: 18rem; visibility: hidden;"></div>`;
 
-        if (products.data.length % 3 === 1)
+        if (products.data.products.length % 3 === 1)
           contentHTML += `<div class="card" style="width: 18rem; visibility: hidden;"></div>`;
       }
 
-      if (i % 3 === 2 || i === products.data.length - 1)
+      if (i % 3 === 2 || i === products.data.products.length - 1)
         contentHTML += `</div>`;
     }
 
-    container.innerHTML = contentHTML;
-
-    // 관리자인지 확인
-    if (localStorage.getItem("access_token")) {
-      const response = await axios.get(`${window.API_SERVER_URL}/users/my`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      });
-
-      // 관리자일 때만 제품 생성 버튼 생김
-      if (response.data.role === "admin")
-        document.getElementById("remakeProductCreateBtn").style.display = "";
-    }
+    container.innerHTML += contentHTML;
+    isLoading = false; // 로드 상태 비활성화
   } catch (err) {
     console.error(err);
   }
@@ -96,6 +132,7 @@ function setModalContent(type) {
     alert("로그인 후 이용 가능합니다.");
 
     location.href = "/login";
+    return;
   }
 
   const modalTitle = document.getElementById("modalTitle");

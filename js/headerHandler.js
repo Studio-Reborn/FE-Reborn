@@ -19,6 +19,8 @@ Date        Author      Status      Description
 2024.12.05  이유민      Modified    채팅 폴더명 변경
 2024.12.10  이유민      Modified    새 채팅 표시 추가
 2024.12.30  이유민      Modified    예외 처리 코드 수정
+2025.01.16  이유민      Modified    장바구니 UI 추가
+2025.01.18  이유민      Modified    내 마켓 추가
 */
 const currentChatId = window.location.pathname.split("/").pop();
 const newChats = JSON.parse(localStorage.getItem("newChats")) || [];
@@ -81,34 +83,39 @@ async function loginCheckInHeader() {
     }
 
     document.getElementById("loginCheck").innerHTML = `
-      <div class="dropdown">
-        <div style="margin-right: 100px; display: flex; align-items: center; cursor: pointer" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-          <p style="font-family: LINESeed-BD; font-size: 19px; margin: 0; line-height: 45px;">${nickname}</p>
-          <div style="position: relative; display: inline-block;">
-            <img
-              src="${window.API_SERVER_URL}/${profileImageUrl}"
-              style="width: 45px; height: 45px; border-radius: 50%; margin-left: 10px;"
-            />
-            <span
-              id="newChatIndicator"
-              style="display: none; position: absolute; top: -5px; right: -5px; width: 12px; height: 12px; background-color: #FFCD39; border-radius: 50%;"
-            ></span>
-          </div>
+      <div style="display: flex; align-items: center;">
+        <div class="dropdown">
+            <div style="margin-right: 20px; display: flex; align-items: center; cursor: pointer" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+              <p style="font-family: LINESeed-BD; font-size: 19px; margin: 0; line-height: 45px;">${nickname}</p>
+              <div style="position: relative; display: inline-block;">
+                <img
+                  src="${window.API_SERVER_URL}/${profileImageUrl}"
+                  style="width: 45px; height: 45px; border-radius: 50%; margin-left: 10px;"
+                />
+                <span
+                  id="newChatIndicator"
+                  style="display: none; position: absolute; top: -5px; right: -5px; width: 12px; height: 12px; background-color: #FFCD39; border-radius: 50%;"
+                ></span>
+              </div>
+            </div>
+
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="margin-top: 25px; margin-right: 50px">
+            <li><a class="dropdown-item" href="/mypage">마이페이지</a></li>
+            <li><a class="dropdown-item" href="/mymarket">내 마켓</a></li>
+            <li><a class="dropdown-item" href="/chat">
+              <div style="position: relative; display: inline-block;">내 채팅
+                <span
+                  id="newChatDropdown"
+                  style="display: none; position: absolute; top: 0px; right: -7px; width: 7px; height: 7px; background-color: #FFCD39; border-radius: 50%;">
+                </span>
+              </div>
+            </a></li>
+            <li id="adminDropDown" style="display: none"><a class="dropdown-item" href="/admin">관리자</a></li>
+            <li><a class="dropdown-item" href="/login" onclick="logout()">로그아웃</a></li>
+          </ul>
         </div>
 
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="margin-top: 25px; margin-right: 50px">
-          <li><a class="dropdown-item" href="/login" onclick="logout()">로그아웃</a></li>
-          <li><a class="dropdown-item" href="/chat">
-            <div style="position: relative; display: inline-block;">내 채팅
-              <span
-                id="newChatDropdown"
-                style="display: none; position: absolute; top: 0px; right: -7px; width: 7px; height: 7px; background-color: #FFCD39; border-radius: 50%;">
-              </span>
-            </div>
-          </a></li>
-          <li><a class="dropdown-item" href="/mypage">마이페이지</a></li>
-          <li id="adminDropDown" style="display: none"><a class="dropdown-item" href="/admin">관리자</a></li>
-        </ul>
+        <img id="cartImg" src="/assets/icons/cart.svg" style="height: 35px; width: 35px; margin-right: 80px; cursor: pointer" onclick="moveCart()" />
       </div>
     `;
 
@@ -127,6 +134,10 @@ async function loginCheckInHeader() {
   }
 
   if (localStorage.getItem("access_token")) verifyToken();
+}
+
+function moveCart() {
+  location.href = "/cart";
 }
 
 // 로그아웃

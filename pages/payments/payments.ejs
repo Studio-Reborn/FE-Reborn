@@ -9,6 +9,8 @@ Date        Author      Status      Description
 2024.11.05  이유민      Modified    결제 페이지 추가
 2024.11.25  이유민      Modified    결제 API 연동
 2024.12.17  이유민      Modified    결제 카드 디자인 수정
+2025.01.17  이유민      Modified    결제 코드 리팩토링
+2025.01.19  이유민      Modified    전화번호 입력 코드 리팩토링
 -->
 <div style="max-width: 738px; margin: 0 auto; padding-top: 36px">
   <!-- 주문상품 수 -->
@@ -20,27 +22,7 @@ Date        Author      Status      Description
   <hr id="gray-500" style="width: 738px; padding-top: 16px;" />
 
   <!-- 주문상품 -->
-  <div class="card mb-3" style="width: 738px; height: 245px">
-    <div class="row g-0" style="height: 100%">
-      <div class="col-md-4" style="height: 100%">
-        <img id="productImage" src="" class="img-fluid rounded-start" alt="..." style="width: 100%; height: 100%; object-fit: cover" />
-      </div>
-      <div class="col-md-8">
-        <div class="card-body">
-          <h5 id="productTitle" class="card-title" style="font-family: LINESeed-BD"></h5>
-          <p class="card-text">
-            <small class="text-body-secondary" style="font-family: LINESeed-RG">
-              <div><span id="productMarket"></span> 배송</div>
-              <div>
-                <span id="productPrice"></span>원 <span id="productCount"></span>개
-              </div>
-              <!-- <div id="productOption">두꺼운 코스터</div> -->
-            </small>
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div id="paymentsProductContainer"></div>
 
   <!-- 수평선 -->
   <hr id="gray-500" style="width: 738px; margin-top: 32px;" />
@@ -54,9 +36,9 @@ Date        Author      Status      Description
   <div style="margin-top: 20px; margin-bottom: 20px">
     <div style="display: flex; margin-bottom: 10px">
       <input type="text" class="form-control" id="orderName" placeholder="*이름" aria-label="name" style="width: 268px" />
-      <input type="text" class="form-control" id="orderPhone" placeholder="*전화번호" aria-label="phone" style="width: 430px; margin-left: auto" />
+      <input type="text" class="form-control" id="orderPhone" placeholder="*전화번호" aria-label="phone" style="width: 430px; margin-left: auto" oninput="formatPhoneNumber(this)" />
     </div>
-    <div style="display: flex; margin-bottom: 10px">
+    <div style=" display: flex; margin-bottom: 10px">
       <input type="text" class="form-control" id="sample6_postcode" placeholder="*우편번호" style="width: 268px" />
       <input type="button" class="global-btn" onclick="sample6_execDaumPostcode()" value="우편번호 찾기" style="margin-left: 40px;">
     </div>

@@ -1,13 +1,11 @@
 <!-- 
-File Name : login
-Description : 로그인 화면
+File Name : find
+Description : 아이디 찾기 및 비밀번호 찾기 페이지
 Author : 이유민
 
 History
 Date        Author      Status      Description
-2024.11.05  이유민      Created     
-2024.11.05  이유민      Modified    로그인 추가
-2024.11.07  이유민      Modified    API 연동
+2025.01.19  이유민      Created     
 2025.01.19  이유민      Modified    아이디 찾기 및 비밀번호 찾기 API 연동
 -->
 <div style="
@@ -36,26 +34,15 @@ Date        Author      Status      Description
       align-items: center;
       border-radius: 20px;
     ">
-    <!-- 이메일 입력 -->
-    <div class="form-floating mb-3" style="width: 373px">
-      <input type="email" class="form-control" id="email" placeholder="이메일">
-      <label for="floatingInput">이메일</label>
-    </div>
-
-    <!-- 비밀번호 입력 -->
-    <div class="form-floating mb-3" style="width: 373px">
-      <input type="password" class="form-control" id="password" placeholder="비밀번호">
-      <label for="floatingInput">비밀번호</label>
-    </div>
+    <div id="inputContainer"></div>
 
     <!-- 경고문구 -->
     <p style="color: #e35d6a; font-family: LINESeed-BD; font-size: 14px; block: none" id="warningText">
     </p>
 
-    <!-- 로그인 버튼 -->
+    <!-- 버튼 -->
     <div>
-      <button type="button" class="global-btn" style="width: 373px" id="loginBtn">
-        로그인
+      <button id="dataFindBtn" type="button" class="global-btn" style="width: 373px" onclick="findBtnClick()">
       </button>
     </div>
   </div>
@@ -63,13 +50,9 @@ Date        Author      Status      Description
   <!-- 칸 아래 -->
   <div class="login-texts" style="display: flex; padding-top: 18px">
     <div>
-      <a href="/auth">회원가입</a>
-    </div>
-    <div style="padding-left: 30px; padding-right: 30px"><a href="/find/email">아이디 찾기</a></div>
-    <div>
-      <a href="/find/password">비밀번호 찾기</a>
+      <a href="/login">로그인 화면으로 돌아가기</a>
     </div>
   </div>
 </div>
 
-<script src="/js/auth/loginHandler.js"></script>
+<script src="/js/auth/findHandler.js"></script>

@@ -1,0 +1,73 @@
+<!-- 
+File Name : mymarket-click
+Description : 내 마켓 상세 조회 핸들러
+Author : 이유민
+
+History
+Date        Author      Status      Description
+2025.01.18  이유민      Created     
+2025.01.18  이유민      Modified    내 마켓 추가
+2025.01.19  이유민      Modified    상점명 클릭 코드 리팩토링
+2025.01.20  이유민      Modified    반려 관련 기능 및 UI 추가
+2025.01.21  이유민      Modified    마켓 신청 철회 추가
+-->
+<div style="max-width: 738px; margin: 0 auto; padding-top: 36px">
+  <!-- 제목 -->
+  <span id="marketTitle" style="font-family: LINESeed-BD; font-size: 45px; cursor: pointer" onclick="titleClick()">
+  </span>
+
+  <!-- 수평선 -->
+  <hr id="gray-500" style="width: 738px; padding-top: 16px;" />
+
+
+  <div id="rejectedDeleteMarket" style="display: none">
+    <div id="rejectedTitle" style="font-family: LINESeed-BD; font-size: 30px; display: block;">마켓 삭제 반려 사유<span style="font-family: LINESeed-RG; font-size: 15px; color: #6c757d">(클릭 시 사유를 제거할 수 있습니다.)</span></div>
+    <div id="rejectedReason" style="cursor: pointer; font-family: LINESeed-RG; color: #E35D6A; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); padding: 10px; margin-top: 20px; margin-bottom: 20px"></div>
+    <hr id="gray-500" style="width: 738px; padding-top: 16px;" />
+  </div>
+
+  <div id="rejectedCreateMarket" style="display: none">
+    <div id="rejectedTitle" style="font-family: LINESeed-BD; font-size: 30px; display: block;">마켓 생성</div>
+    <div style="display: flex; align-items: flex-start; gap: 20px; padding: 20px;">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+        <img id="marketProfile" src="" style="height: 180px; width: 180px; object-fit: cover; cursor: pointer; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);" data-profile-id="" onclick="document.getElementById('inputGroupFile01').click();" />
+
+        <div style="display: flex; gap: 10px;">
+          <button class="global-btn" style="" onclick="marketRetry()">재신청</button>
+          <button class="global-btn" style="background-color: #E35D6A; color: #fff;" onclick="deleteMarket()">신청 철회</button>
+        </div>
+      </div>
+
+      <div style="flex: 1;">
+        <div class="form-floating mb-3" style="width: 100%; margin-bottom: 10px;">
+          <input type="text" class="form-control" id="marketName" placeholder="마켓명">
+          <label for="marketName">마켓명</label>
+        </div>
+
+        <div class="form-floating mb-3" style="width: 100%;">
+          <textarea id="marketDescription" class="form-control" rows="6" style="resize: none; height: 157px;" placeholder="마켓 설명"></textarea>
+          <label for="marketDescription">마켓 설명</label>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; align-items: center; justify-content: flex-start; gap: 10px; font-family: LINESeed-BD; margin-bottom: 20px;">
+      <span>반려 사유:</span>
+      <span id="createRejectedReason" style="font-family: LINESeed-RG; color: #E35D6A;"></span>
+    </div>
+
+    <hr id="gray-500" style="width: 738px; padding-top: 16px;" />
+    <input type="file" class="form-control" id="inputGroupFile01" style="display: none" onchange="uploadFile()">
+  </div>
+
+
+
+  <span style="font-family: LINESeed-BD; font-size: 30px; display: block;">
+    주문 현황 <span style="font-family: LINESeed-RG; font-size: 20px; color: #6c757d">(배송상태 및 운송장번호는 값 변경 시 바로 저장됩니다.)</span>
+  </span>
+</div>
+
+<div id="sellingContainer" style="max-width: 95%; margin: auto; padding: 20px;">
+</div>
+
+<script src="/js/mymarket/clickHandler.js"></script>

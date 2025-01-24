@@ -21,17 +21,20 @@ Date        Author      Status      Description
 2024.12.19  이유민      Modified    후기 API 연동
 2024.12.28  이유민      Modified    후기 수정 및 삭제 API 연동
 2024.12.30  이유민      Modified    디버깅 코드 제거
+2025.01.16  이유민      Modified    장바구니 API 연동
+2025.01.17  이유민      Modified    결제 코드 리팩토링
+2025.01.19  이유민      Modified    좋아요, 장바구니 및 결제 코드 리팩토링
 */
 const likeImg = document.getElementById("likeImg");
 const likesNumber = document.getElementById("likesNumber");
 const reviewContainer = document.getElementById("reviewContainer");
 const reviewsNumber = document.getElementById("reviewsNumber");
 
-window.addEventListener("load", () => {
-  const pathSegments = window.location.pathname.split("/");
-  const market_id = parseInt(pathSegments[2], 10);
-  const id = pathSegments[3];
+const pathSegments = window.location.pathname.split("/");
+const market_id = parseInt(pathSegments[2], 10);
+const id = pathSegments[3];
 
+window.addEventListener("load", () => {
   readProductInfo(market_id, id);
   productLike(id);
   productReview(id);
@@ -150,20 +153,6 @@ async function productLike(id) {
       } else {
         likeImg.src = `${window.location.origin}/assets/icons/heart-fill.svg`;
       }
-
-      likeImg.addEventListener("click", async () => {
-        await axios.post(
-          `${window.API_SERVER_URL}/like/product`,
-          { product_id: id },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-          }
-        );
-
-        location.reload(true);
-      });
     }
 
     // 좋아요 수 관련
@@ -175,6 +164,26 @@ async function productLike(id) {
   } catch (err) {
     console.error(err);
   }
+}
+
+async function likeImageClick() {
+  if (!localStorage.getItem("access_token")) {
+    alert("로그인 후 이용 가능합니다.");
+    location.href = "/login";
+    return;
+  }
+
+  await axios.post(
+    `${window.API_SERVER_URL}/like/product`,
+    { product_id: id },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    }
+  );
+
+  location.reload(true);
 }
 
 // 후기
@@ -315,22 +324,51 @@ function increaseQuantity() {
   ).toLocaleString()}원`;
 }
 
-document.getElementById("orderBtn").addEventListener("click", async () => {
-  try {
-    await axios.post(`/api/save-session-data`, {
-      dataType: "productData",
-      data: {
+// 장바구니 버튼
+async function cartBtnClick() {
+  if (!localStorage.getItem("access_token")) {
+    alert("로그인 후 이용 가능합니다.");
+    location.href = "/login";
+    return;
+  }
+
+  await axios.post(
+    `${window.API_SERVER_URL}/cart`,
+    {
+      product_id: id,
+      quantity: Number(document.getElementById("quantityInput").value),
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    }
+  );
+
+  alert("장바구니에 추가되었습니다.");
+}
+
+// 결제 버튼
+async function orderBtnClick() {
+  if (!localStorage.getItem("access_token")) {
+    alert("로그인 후 이용 가능합니다.");
+    location.href = "/login";
+    return;
+  }
+
+  await axios.post(`/api/save-session-data`, {
+    dataType: "productData",
+    data: [
+      {
         product_id: productData.id,
         product_cnt: totalCnt,
         product_price: productData.price,
       },
-    });
+    ],
+  });
 
-    window.location.href = "/payments";
-  } catch (err) {
-    console.error(err);
-  }
-});
+  window.location.href = "/payments";
+}
 
 // 모달 함수
 async function setModalContent(type, element) {
@@ -398,12 +436,6 @@ async function setModalContent(type, element) {
             <input class="form-check-input" type="radio" name="productStatus" id="statusStop" value="판매중단">
             <label class="form-check-label" for="statusStop">
               판매중단
-            </label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="productStatus" id="statusHidden" value="숨김">
-            <label class="form-check-label" for="statusHidden">
-              숨김
             </label>
           </div>
         </div>

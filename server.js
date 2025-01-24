@@ -34,6 +34,9 @@ app.get("/login", (req, res) => {
 app.get("/auth", (req, res) => {
   res.render("../pages/auth/auth", { currentPage: "auth" });
 });
+app.get("/find/:name", (req, res) => {
+  res.render("../pages/auth/find", { currentPage: "auth" });
+});
 app.get("/user/:id", (req, res) => {
   res.render("../pages/pre-loved/pre-loved-user", { currentPage: "user" });
 });
@@ -118,6 +121,21 @@ app.get("/chat", (req, res) => {
 app.get("/chat/:id", (req, res) => {
   res.render("../pages/chat/chat-detail", {
     currentPage: "chat",
+  });
+});
+app.get("/cart", (req, res) => {
+  res.render("../pages/cart/cart", {
+    currentPage: "cart",
+  });
+});
+app.get("/mymarket", (req, res) => {
+  res.render("../pages/mymarket/mymarket", {
+    currentPage: "mymarket",
+  });
+});
+app.get("/mymarket/:id", (req, res) => {
+  res.render("../pages/mymarket/mymarket-click", {
+    currentPage: "mymarket",
   });
 });
 app.get("/404", (req, res) => {

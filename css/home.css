@@ -1,0 +1,60 @@
+.info-card {
+  width: 30%;
+  padding: 20px;
+  background-color: #d1e7dd;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s;
+  text-align: center;
+  cursor: pointer;
+}
+
+/* 카드 hover 효과 */
+.info-card:hover {
+  transform: scale(1.05);
+  background-color: #b0e0e6;
+  /* 파우더 블루 색상 */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* 제목 스타일 */
+.info-card h3 {
+  font-size: 24px;
+  color: #479f76;
+  margin-bottom: 15px;
+}
+
+/* 본문 텍스트 스타일 */
+.info-card p {
+  font-size: 16px;
+  color: #6c757d;
+  line-height: 1.6;
+}
+
+.info-card p strong {
+  color: #000000;
+}
+
+/* 전체 배치 조정 */
+@media (max-width: 768px) {
+  .info-card {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  div[style*="padding: 60px"] {
+    padding: 30px;
+  }
+}
+
+/* 애니메이션 효과 */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}

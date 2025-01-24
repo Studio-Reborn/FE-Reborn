@@ -23,6 +23,8 @@ Date        Author      Status      Description
 2024.12.30  이유민      Modified    리본 리메이크 구매내역 API 연동
 2025.01.06  이유민      Modified    작성한 후기 물건 클릭 시 페이지 이동 추가
 2025.01.06  이유민      Modified    등급 API 연동
+2025.01.18  이유민      Modified    리본 리메이크 후기 API 연동
+2025.01.20  이유민      Modified    오류 수정
 */
 const userNickname = document.getElementById("userNickname");
 const userProfileImage = document.getElementById("userProfileImage");
@@ -293,7 +295,7 @@ async function sellPreLoved() {
       <div class="card mb-3" style="width: 738px; height: 191px">
         <div class="row g-0" style="height: 100%">
           <div class="col-md-4" style="height: 100%">
-            <img src="${window.API_SERVER_URL}/${preLovedSell.data[i].product_image[0]}" class="img-fluid rounded-start" alt="상품이미지" style="height: 100%;  width: auto; object-fit: cover" />`;
+            <img src="${window.API_SERVER_URL}/${preLovedSell.data[i].product_image[0]}" class="img-fluid rounded-start" alt="상품이미지" style="height: 100%; width: 100%; object-fit: cover;" />`;
 
     if (preLovedSell.data[i].product_status !== "판매중") {
       purchasePreLovedHTML += `<!-- 반투명 오버레이 -->
@@ -356,7 +358,7 @@ async function buyPreLoved() {
           <div class="col-md-4" style="height: 100%">
             <img src="${window.API_SERVER_URL}/${
       response.data[i].product_image[0]
-    }" class="img-fluid rounded-start" alt="상품이미지" style="height: 100%;  width: auto; object-fit: cover" />
+    }" class="img-fluid rounded-start" alt="상품이미지" style="height: 100%; width: 100%; object-fit: cover;" />
           </div>
           <div class="col-md-8" style="left: 0">
             <div class="card-body">
@@ -420,7 +422,7 @@ async function buyEcoMarket() {
           <div class="col-md-4" style="height: 100%">
             <img src="${window.API_SERVER_URL}/${
       ecoMarketPurchase.data[i].product_image[0]
-    }" class="img-fluid rounded-start" alt="상품이미지" style="height: 100%;  width: auto; object-fit: cover" />
+    }" class="img-fluid rounded-start" alt="상품이미지" style="height: 100%; width: 100%; object-fit: cover;" />
           </div>
           <div class="col-md-8" style="left: 0">
             <div class="card-body">
@@ -473,6 +475,14 @@ async function buyRebornRemake() {
     document.getElementById("purchaseRebornAll").style.display = "none"; // 전체보기 비활성화
   }
 
+  // 후기 작성하기 버튼 클릭 관련
+  document.addEventListener("click", (event) => {
+    if (event.target.classList.contains("open-modal-btn")) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
+  });
+
   for (let i = 0; i < rebornPurchase.data.length; i++) {
     if (i > 1) break; // 최대 2개 출력
 
@@ -483,7 +493,7 @@ async function buyRebornRemake() {
           <div class="col-md-4" style="height: 100%">
             <img src="${window.API_SERVER_URL}/${
       rebornPurchase.data[i].product_image[0]
-    }" class="img-fluid rounded-start" alt="상품이미지" style="height: 100%;  width: auto; object-fit: cover" />
+    }" class="img-fluid rounded-start" alt="상품이미지" style="height: 100%; width: 100%; object-fit: cover;" />
           </div>
           <div class="col-md-8" style="left: 0">
             <div class="card-body">
@@ -497,6 +507,16 @@ async function buyRebornRemake() {
       rebornPurchase.data[i].product_quantity
     }개
                 </small>
+                ${
+                  rebornPurchase.data[i].has_review === 0
+                    ? `<div>
+                  <button class="global-btn open-modal-btn" style="margin-top: 20px"
+                  data-product-id="${rebornPurchase.data[i].product_id}"
+                  data-items-id="${rebornPurchase.data[i].items_id}"
+                  data-bs-toggle="modal" data-bs-target="#modalContainer" onclick="setModalContent('createReview', this)">후기 작성하기</button>
+                </div>`
+                    : ""
+                }
               </p>
             </div>
           </div>
@@ -547,7 +567,9 @@ async function writeReview() {
                   ${Number(
                     reviews.data[i].product_price
                   ).toLocaleString()}원 (${
-        reviews.data[i].market_name.length > 20
+        reviews.data[i].market_name === null
+          ? "삭제된 마켓"
+          : reviews.data[i].market_name.length > 20
           ? `${reviews.data[i].market_name.slice(0, 20)}...`
           : reviews.data[i].market_name
       } 판매)
