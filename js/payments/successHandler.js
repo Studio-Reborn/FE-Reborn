@@ -11,6 +11,7 @@ Date        Author      Status      Description
 2025.01.17  이유민      Modified    결제 코드 리팩토링
 2025.01.17  이유민      Modified    장바구니 결제 시 장바구니 아이템 삭제 추가
 2025.01.18  이유민      Modified    name 및 phone 추가
+2025.01.19  이유민      Modified    쇼핑 계속하기 연동
 */
 window.addEventListener("load", () => {
   if (!localStorage.getItem("access_token")) {
@@ -144,4 +145,8 @@ async function confirm() {
   } catch (err) {
     console.error(err);
   }
+}
+
+function goShopping() {
+  history.go(-3);
 }

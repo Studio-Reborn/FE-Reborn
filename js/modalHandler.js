@@ -26,6 +26,8 @@ Date        Author      Status      Description
 2024.12.17  이유민      Modified    제품 id 타입 수정
 2024.12.28  이유민      Modified    후기 API 연동
 2025.01.10  이유민      Modified    리본 리메이크 제품 추천 UI 수정 및 링크 추가
+2025.01.20  이유민      Modified    모달 코드 리팩토링
+2025.01.22  이유민      Modified    예외 처리 코드 수정
 */
 document
   .getElementById("modalSubmitBtn")
@@ -73,6 +75,7 @@ document
         preLoved();
 
         // 입력칸 초기화
+        document.getElementById("preLovedProductImages").value = "";
         document.getElementById("productName").value = "";
         document.getElementById("productPrice").value = "";
         document.getElementById("productDetail").value = "";
@@ -304,6 +307,7 @@ document
         modal.hide();
 
         // 입력칸 초기화
+        document.getElementById("ecoMarketProfileImage").value = "";
         document.getElementById("ecoMarketName").value = "";
         document.getElementById("ecoMarketDetail").value = "";
         document
@@ -548,6 +552,10 @@ document
         return;
       }
     } catch (err) {
+      if (err.response.data.statusCode === 409) {
+        alert(err.response.data.message);
+        return;
+      }
       console.error(err);
     }
   });

@@ -16,6 +16,7 @@ Date        Author      Status      Description
 2025.01.10  이유민      Modified    후기 UI 수정
 2025.01.16  이유민      Modified    장바구니 API 연동
 2025.01.17  이유민      Modified    결제 코드 리팩토링
+2025.01.19  이유민      Modified    좋아요, 장바구니 및 결제 코드 리팩토링
 */
 const productData = {
   name: "",
@@ -120,20 +121,6 @@ async function productLike(id) {
       } else {
         likeImg.src = `${window.location.origin}/assets/icons/heart-fill.svg`;
       }
-
-      likeImg.addEventListener("click", async () => {
-        await axios.post(
-          `${window.API_SERVER_URL}/like/product`,
-          { product_id: id },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-          }
-        );
-
-        location.reload(true);
-      });
     }
 
     // 좋아요 수 관련
@@ -145,6 +132,26 @@ async function productLike(id) {
   } catch (err) {
     console.error(err);
   }
+}
+
+async function likeImageClick() {
+  if (!localStorage.getItem("access_token")) {
+    alert("로그인 후 이용 가능합니다.");
+    location.href = "/login";
+    return;
+  }
+
+  await axios.post(
+    `${window.API_SERVER_URL}/like/product`,
+    { product_id: id },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    }
+  );
+
+  location.reload(true);
 }
 
 // 후기
@@ -264,7 +271,13 @@ function increaseQuantity() {
 }
 
 // 장바구니 버튼
-document.getElementById("cartBtn").addEventListener("click", async () => {
+async function cartBtnClick() {
+  if (!localStorage.getItem("access_token")) {
+    alert("로그인 후 이용 가능합니다.");
+    location.href = "/login";
+    return;
+  }
+
   await axios.post(
     `${window.API_SERVER_URL}/cart`,
     {
@@ -278,28 +291,30 @@ document.getElementById("cartBtn").addEventListener("click", async () => {
     }
   );
   alert("장바구니에 추가되었습니다.");
-});
+}
 
 // 결제 버튼
-document.getElementById("orderBtn").addEventListener("click", async () => {
-  try {
-    await axios.post(`/api/save-session-data`, {
-      dataType: "productData",
-      data: [
-        {
-          product_id: productData.id,
-          product_cnt: totalCnt,
-          product_price: productData.price,
-          category: "reborn",
-        },
-      ],
-    });
-
-    window.location.href = "/payments";
-  } catch (err) {
-    console.error(err);
+async function orderBtnClick() {
+  if (!localStorage.getItem("access_token")) {
+    alert("로그인 후 이용 가능합니다.");
+    location.href = "/login";
+    return;
   }
-});
+
+  await axios.post(`/api/save-session-data`, {
+    dataType: "productData",
+    data: [
+      {
+        product_id: productData.id,
+        product_cnt: totalCnt,
+        product_price: productData.price,
+        category: "reborn",
+      },
+    ],
+  });
+
+  window.location.href = "/payments";
+}
 
 // 카드 클릭 이벤트
 document.addEventListener("click", (event) => {
