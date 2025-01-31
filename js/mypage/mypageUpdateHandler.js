@@ -14,6 +14,7 @@ Date        Author      Status      Description
 2024.12.30  이유민      Modified    예외 처리 코드 수정
 2025.01.09  이유민      Modified    사용자 정보 수정 코드 리팩토링
 2025.01.19  이유민      Modified    회원 탈퇴 API 연동
+2025.01.31  이유민      Modified    이미지 경로 수정
 */
 // 토큰 없을 경우 마이페이지 접근 금지
 window.addEventListener("load", () => {
@@ -112,7 +113,7 @@ async function getUserInfo() {
 
     userNickname.placeholder = response.data.nickname;
     userDescription.placeholder = response.data.description;
-    userProfileImg.src = `${window.API_SERVER_URL}/${response.data.profile_image_url}`;
+    userProfileImg.src = `${window.IMAGE_SERVER_URL}${response.data.profile_image_url}`;
   } catch (err) {
     console.error(err);
   }

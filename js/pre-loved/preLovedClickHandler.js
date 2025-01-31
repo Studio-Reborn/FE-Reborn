@@ -22,6 +22,7 @@ Date        Author      Status      Description
 2025.01.07  이유민      Modified    판매자 정보 페이지 연동
 2025.01.17  이유민      Modified    디버깅 코드 제거
 2025.01.19  이유민      Modified    좋아요 코드 리팩토링
+2025.01.31  이유민      Modified    이미지 경로 수정
 */
 const productName = document.getElementById("productName");
 const productPrice = document.getElementById("productPrice");
@@ -60,12 +61,12 @@ const caretRightBtn = document.getElementById("caretRightBtn");
 
 caretLeftBtn.addEventListener("click", () => {
   currentIndex = (currentIndex - 1 + imageList.length) % imageList.length;
-  mainImage.src = `${window.API_SERVER_URL}/${imageList[currentIndex]}`;
+  mainImage.src = `${window.IMAGE_SERVER_URL}${imageList[currentIndex]}`;
 });
 
 caretRightBtn.addEventListener("click", () => {
   currentIndex = (currentIndex + 1) % imageList.length;
-  mainImage.src = `${window.API_SERVER_URL}/${imageList[currentIndex]}`;
+  mainImage.src = `${window.IMAGE_SERVER_URL}${imageList[currentIndex]}`;
 });
 
 // 정보 읽기
@@ -102,7 +103,7 @@ async function readProductData(id) {
     );
 
     userName.innerHTML = user.data.nickname;
-    userProfile.src = `${window.API_SERVER_URL}/${profile.data.url}`;
+    userProfile.src = `${window.IMAGE_SERVER_URL}${profile.data.url}`;
     productData.seller_id = user.data.id;
 
     // 상품 이미지
@@ -110,7 +111,7 @@ async function readProductData(id) {
       `${window.API_SERVER_URL}/product-image/${product.data.product_image_id}`
     );
     imageList = productImages.data.url;
-    mainImage.src = `${window.API_SERVER_URL}/${imageList[0]}`;
+    mainImage.src = `${window.IMAGE_SERVER_URL}${imageList[0]}`;
 
     // 로그인 상태일 때, 제품 판매자와 본인 확인하기
     if (localStorage.getItem("access_token")) {

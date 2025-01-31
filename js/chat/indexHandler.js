@@ -9,6 +9,7 @@ Date        Author      Status      Description
 2024.12.09  이유민      Modified    내 채팅 API 연동
 2024.12.30  이유민      Modified    디버깅 코드 제거
 2025.01.19  이유민      Modified    채팅 이미지 코드 리팩토링
+2025.01.31  이유민      Modified    이미지 경로 수정
 */
 const myChatContainer = document.getElementById("myChatContainer");
 const newChatList = JSON.parse(localStorage.getItem("newChats")) || [];
@@ -47,7 +48,7 @@ async function getMyChatAll() {
             <div class="card mb-3" style="width: 738px; height: 200px">
                 <div class="row g-0" style="height: 100%">
                     <div class="col-md-4" style="height: 100%;">
-                        <img src="${window.API_SERVER_URL}/${
+                        <img src="${window.IMAGE_SERVER_URL}${
       myChat.data[i].product_image[0]
     }" class="img-fluid rounded-start" alt="상품 이미지" style="height: 100%; width: 100%; object-fit: cover;" />
                     </div>

@@ -12,6 +12,7 @@ Date        Author      Status      Description
 2025.01.02  이유민      Modified    검색 및 정렬 API 연동
 2025.01.18  이유민      Modified    마켓별 후기 수 API 연동
 2025.01.23  이유민      Modified    무한 스크롤 추가
+2025.01.31  이유민      Modified    이미지 경로 수정
 */
 let searchValue = undefined;
 let sortValue = document.getElementById("marketSort").value;
@@ -119,7 +120,7 @@ async function readMarketAll(searchValue, sortValue, page) {
           <div class="card mb-3" style="width: 562px; overflow: hidden; display: flex; flex-direction: column;">
             <div class="row g-0">
               <div class="col-md-4">
-                <img src="${window.API_SERVER_URL}/${
+                <img src="${window.IMAGE_SERVER_URL}${
         markets.data.data[i].profile_image_url
       }" class="img-fluid rounded-start" alt="마켓커버" style="width: 200px; height: 200px; object-fit: cover;" />
               </div>

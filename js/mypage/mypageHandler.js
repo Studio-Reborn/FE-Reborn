@@ -25,6 +25,7 @@ Date        Author      Status      Description
 2025.01.06  이유민      Modified    등급 API 연동
 2025.01.18  이유민      Modified    리본 리메이크 후기 API 연동
 2025.01.20  이유민      Modified    오류 수정
+2025.01.31  이유민      Modified    이미지 경로 수정
 */
 const userNickname = document.getElementById("userNickname");
 const userProfileImage = document.getElementById("userProfileImage");
@@ -100,7 +101,7 @@ async function getUserInfo() {
     });
 
     userNickname.innerHTML = user.data.nickname;
-    userProfileImage.src = `${window.API_SERVER_URL}/${profile.data.url}`;
+    userProfileImage.src = `${window.IMAGE_SERVER_URL}${profile.data.url}`;
     userLevel.innerHTML = level.data.level_name;
 
     sellPreLoved(); // 중고거래 판매 내역
@@ -165,7 +166,7 @@ async function likeProduct() {
         <a href="${productLink}">
           <div class="card" style="width: 200px; height: 220px">
             <div style="position: relative; width: 200px; height: 130px;">
-              <img src="${window.API_SERVER_URL}/${likesData[i].product_image_url[0]}" class="card-img-top" alt="..." style="width: 100%; height: 100%; object-fit: cover;" />
+              <img src="${window.IMAGE_SERVER_URL}${likesData[i].product_image_url[0]}" class="card-img-top" alt="..." style="width: 100%; height: 100%; object-fit: cover;" />
             `;
 
     // 어떤 제품인지 표시
@@ -238,7 +239,7 @@ async function likeMarket() {
     likeMarketHTML += `
         <a href="/eco-market/${likes.data[i].market_id}">
           <div class="card" style="width: 200px; height: 220px">
-            <img src="${window.API_SERVER_URL}/${likes.data[i].market_profile_url}" class="card-img-top" alt="..." style="height: 130px; object-fit: cover" />
+            <img src="${window.IMAGE_SERVER_URL}${likes.data[i].market_profile_url}" class="card-img-top" alt="..." style="height: 130px; object-fit: cover" />
             <div class="card-body" style="overflow-y: auto; height: 90px;">
               <h5 class="card-title">${likes.data[i].market_name}</h5>
             </div>
@@ -295,7 +296,7 @@ async function sellPreLoved() {
       <div class="card mb-3" style="width: 738px; height: 191px">
         <div class="row g-0" style="height: 100%">
           <div class="col-md-4" style="height: 100%">
-            <img src="${window.API_SERVER_URL}/${preLovedSell.data[i].product_image[0]}" class="img-fluid rounded-start" alt="상품이미지" style="height: 100%; width: 100%; object-fit: cover;" />`;
+            <img src="${window.IMAGE_SERVER_URL}${preLovedSell.data[i].product_image[0]}" class="img-fluid rounded-start" alt="상품이미지" style="height: 100%; width: 100%; object-fit: cover;" />`;
 
     if (preLovedSell.data[i].product_status !== "판매중") {
       purchasePreLovedHTML += `<!-- 반투명 오버레이 -->
@@ -356,7 +357,7 @@ async function buyPreLoved() {
       <div class="card mb-3" style="width: 738px; height: 191px">
         <div class="row g-0" style="height: 100%">
           <div class="col-md-4" style="height: 100%">
-            <img src="${window.API_SERVER_URL}/${
+            <img src="${window.IMAGE_SERVER_URL}${
       response.data[i].product_image[0]
     }" class="img-fluid rounded-start" alt="상품이미지" style="height: 100%; width: 100%; object-fit: cover;" />
           </div>
@@ -471,7 +472,7 @@ async function buyRebornRemake() {
   );
 
   if (rebornPurchase.data.length === 0) {
-    document.getElementById("nullEcoMarketPurchase").style.display = "block";
+    document.getElementById("nullRebornRemakePurchase").style.display = "block";
     document.getElementById("purchaseRebornAll").style.display = "none"; // 전체보기 비활성화
   }
 
@@ -491,7 +492,7 @@ async function buyRebornRemake() {
       <div class="card mb-3" style="width: 738px; height: 191px">
         <div class="row g-0" style="height: 100%">
           <div class="col-md-4" style="height: 100%">
-            <img src="${window.API_SERVER_URL}/${
+            <img src="${window.IMAGE_SERVER_URL}${
       rebornPurchase.data[i].product_image[0]
     }" class="img-fluid rounded-start" alt="상품이미지" style="height: 100%; width: 100%; object-fit: cover;" />
           </div>
@@ -554,7 +555,7 @@ async function writeReview() {
             <div id="marketProfileContainer" style="display: flex; align-items: center;" data-location-link="${
               reviews.data[i].market_id
             }/${reviews.data[i].review_product_id}">
-              <img src="${window.API_SERVER_URL}/${
+              <img src="${window.IMAGE_SERVER_URL}${
         reviews.data[i].product_image_url[0]
       }" alt="상품 이미지" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
               <div>

@@ -17,6 +17,7 @@ Date        Author      Status      Description
 2025.01.16  이유민      Modified    장바구니 API 연동
 2025.01.17  이유민      Modified    결제 코드 리팩토링
 2025.01.19  이유민      Modified    좋아요, 장바구니 및 결제 코드 리팩토링
+2025.01.31  이유민      Modified    이미지 경로 수정
 */
 const productData = {
   name: "",
@@ -45,12 +46,12 @@ const caretRightBtn = document.getElementById("caretRightBtn");
 
 caretLeftBtn.addEventListener("click", () => {
   currentIndex = (currentIndex - 1 + imageList.length) % imageList.length;
-  mainImage.src = `${window.API_SERVER_URL}/${imageList[currentIndex]}`;
+  mainImage.src = `${window.IMAGE_SERVER_URL}${imageList[currentIndex]}`;
 });
 
 caretRightBtn.addEventListener("click", () => {
   currentIndex = (currentIndex + 1) % imageList.length;
-  mainImage.src = `${window.API_SERVER_URL}/${imageList[currentIndex]}`;
+  mainImage.src = `${window.IMAGE_SERVER_URL}${imageList[currentIndex]}`;
 });
 
 // 정보
@@ -65,7 +66,7 @@ async function readProductData(id) {
     );
 
     imageList = product.data.product_image_url;
-    mainImage.src = `${window.API_SERVER_URL}/${imageList[0]}`;
+    mainImage.src = `${window.IMAGE_SERVER_URL}${imageList[0]}`;
 
     productName.innerHTML = product.data.name;
     productPrice.innerHTML = `${Number(product.data.price).toLocaleString()}원`;
@@ -184,7 +185,7 @@ async function productReview(id) {
     <div style="display: flex; align-items: center; justify-content: space-between;">
       <!-- 프로필 및 닉네임 -->
       <div style="display: flex; align-items: center;">
-        <img src="${window.API_SERVER_URL}/${
+        <img src="${window.IMAGE_SERVER_URL}${
           reviews.data[i].user_profile_url
         }" alt="프로필 이미지" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
         <div>

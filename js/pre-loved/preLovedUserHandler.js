@@ -11,6 +11,7 @@ Date        Author      Status      Description
 2025.01.09  이유민      Modified    검색, 정렬 및 판매중인 제품만 API 연동
 2025.01.21  이유민      Modified    UI 수정
 2025.01.23  이유민      Modified    무한 스크롤 추가
+2025.01.31  이유민      Modified    이미지 경로 수정
 */
 let searchValue = undefined;
 let sortValue = document.getElementById("userProductSort").value;
@@ -117,10 +118,10 @@ async function getUserInfo() {
 
     document.getElementById(
       "userProfileImageBig"
-    ).src = `${window.API_SERVER_URL}/${user.data.profile_image_url}`;
+    ).src = `${window.IMAGE_SERVER_URL}${user.data.profile_image_url}`;
     document.getElementById(
       "userProfileImageSmall"
-    ).src = `${window.API_SERVER_URL}/${user.data.profile_image_url}`;
+    ).src = `${window.IMAGE_SERVER_URL}${user.data.profile_image_url}`;
     document.getElementById("userName").innerHTML = user.data.nickname;
     document.getElementById("userDescription").innerHTML =
       user.data.description === ""
@@ -169,7 +170,7 @@ async function readProductsInfo(searchValue, sortValue, statusValue, page) {
     containerHTML += `
           <a href="/pre-loved/${products.data.data[i].product_id}">
             <div class="card" style="width: 18rem">
-              <img src="${window.API_SERVER_URL}/${products.data.data[i].product_image[0]}" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />`;
+              <img src="${window.IMAGE_SERVER_URL}${products.data.data[i].product_image[0]}" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />`;
 
     if (products.data.data[i].product_status !== "판매중")
       containerHTML += `<!-- 반투명 오버레이 -->

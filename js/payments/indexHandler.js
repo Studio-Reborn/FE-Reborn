@@ -12,6 +12,7 @@ Date        Author      Status      Description
 2025.01.17  이유민      Modified    결제 코드 리팩토링
 2025.01.17  이유민      Modified    장바구니 결제 시 장바구니 아이템 삭제 추가
 2025.01.19  이유민      Modified    전화번호 입력 코드 리팩토링
+2025.01.31  이유민      Modified    이미지 경로 수정
 */
 // 토큰 없을 경우 접근 금지
 window.addEventListener("load", () => {
@@ -63,7 +64,7 @@ async function readProductInfo() {
         <div class="card mb-3" style="width: 738px; height: 245px">
           <div class="row g-0" style="height: 100%">
             <div class="col-md-4" style="height: 100%">
-              <img src="${window.API_SERVER_URL}/${
+              <img src="${window.IMAGE_SERVER_URL}${
         info.data.product_image_url[0]
       }" class="img-fluid rounded-start" alt="..." style="width: 100%; height: 100%; object-fit: cover" />
             </div>

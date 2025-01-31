@@ -16,6 +16,7 @@ Date        Author      Status      Description
 2024.12.30  이유민      Modified    결제 날짜 표시 오류 수정
 2025.01.06  이유민      Modified    작성한 후기 물건 클릭 시 페이지 이동 추가
 2025.01.18  이유민      Modified    리본 리메이크 후기 API 연동
+2025.01.31  이유민      Modified    이미지 경로 수정
 */
 window.addEventListener("load", () => {
   const pathSegments = window.location.pathname.split("/");
@@ -141,7 +142,7 @@ async function mypageHistory(name) {
             <div class="card mb-3" style="width: 738px; height: 191px">
                 <div class="row g-0" style="height: 100%">
                 <div class="col-md-4" style="height: 100%">
-                    <img src="${window.API_SERVER_URL}/${
+                    <img src="${window.IMAGE_SERVER_URL}${
         cardData.data[i].product_image[0]
       }" class="img-fluid rounded-start" alt="제품 이미지" style="height: 100%; width: 100%; object-fit: cover;" />`;
 
@@ -220,7 +221,7 @@ function likeProduct(likesData) {
       <a href="${productLink}">
         <div class="card" style="width: 200px; height: 220px">
           <div style="position: relative; width: 200px; height: 130px;">
-            <img src="${window.API_SERVER_URL}/${likesData[i].product_image_url[0]}" class="card-img-top" alt="제품이미지" style="width: 100%; height: 100%; object-fit: cover;" />
+            <img src="${window.IMAGE_SERVER_URL}${likesData[i].product_image_url[0]}" class="card-img-top" alt="제품이미지" style="width: 100%; height: 100%; object-fit: cover;" />
      `;
 
     // 어떤 제품인지 표시
@@ -286,7 +287,7 @@ function likeMarket(likesData) {
     resultHtml += `
       <a href="/eco-market/${likesData[i].market_id}">
         <div class="card" style="width: 200px; height: 220px">
-          <img src="${window.API_SERVER_URL}/${likesData[i].market_profile_url}" class="card-img-top" alt="..." style="height: 130px; object-fit: cover" />
+          <img src="${window.IMAGE_SERVER_URL}${likesData[i].market_profile_url}" class="card-img-top" alt="..." style="height: 130px; object-fit: cover" />
           <div class="card-body" style="overflow-y: auto; height: 90px;">
             <h5 class="card-title">${likesData[i].market_name}</h5>
           </div>
@@ -332,7 +333,7 @@ function writeReview(reviewData) {
             <div id="marketProfileContainer" style="display: flex; align-items: center;" data-location-link="${
               reviewData[i].market_id
             }/${reviewData[i].review_product_id}">
-              <img src="${window.API_SERVER_URL}/${
+              <img src="${window.IMAGE_SERVER_URL}${
       reviewData[i].product_image_url[0]
     }" alt="상품 이미지" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
               <div>

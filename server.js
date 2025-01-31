@@ -151,7 +151,8 @@ app.get("/config.js", (req, res) => {
     `window.API_SERVER_URL = "${
       process.env.API_SERVER_URL || "http://localhost:4000"
     }";
-    window.TOSS_CLIENT_KEY = "${process.env.TOSS_CLIENT_KEY}";`
+    window.TOSS_CLIENT_KEY = "${process.env.TOSS_CLIENT_KEY}";
+    window.IMAGE_SERVER_URL = "${process.env.IMAGE_SERVER_URL}";`
   );
 });
 

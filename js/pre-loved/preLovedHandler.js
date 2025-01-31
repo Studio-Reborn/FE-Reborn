@@ -23,6 +23,7 @@ Date        Author      Status      Description
 2025.01.08  이유민      Modified    판매중 제품만 보기 API 연동
 2025.01.09  이유민      Modified    오류 수정
 2025.01.22  이유민      Modified    무한 스크롤 추가
+2025.01.31  이유민      Modified    이미지 경로 수정
 */
 let searchValue = undefined;
 let sortValue = document.getElementById("preLovedSort").value;
@@ -156,7 +157,7 @@ async function preLoved(searchValue, sortValue, statusValue, page) {
       <a href="/pre-loved/${products.data.products[i].id}">
         <div class="card" style="width: 18rem">
           <img
-            src="${window.API_SERVER_URL}/${productImages.data.url[0]}"
+            src="${window.IMAGE_SERVER_URL}${productImages.data.url[0]}"
             class="card-img-top"
             alt="..."
             style="height: 214px; object-fit: cover"
@@ -164,7 +165,7 @@ async function preLoved(searchValue, sortValue, statusValue, page) {
 
       if (products.data.products[i].status !== "판매중")
         contentHTML += `<!-- 반투명 오버레이 -->
-          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 214px; 
+          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 214px;
               background-color: rgba(255, 255, 255, 0.5);">
             <span style="font-family: LINESeed-BD; font-size: 30px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #E35D6A">
             ${products.data.products[i].status}

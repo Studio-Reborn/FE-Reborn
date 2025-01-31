@@ -20,6 +20,7 @@ Date        Author      Status      Description
 2025.01.19  이유민      Modified    좋아요 코드 리팩토링
 2025.01.21  이유민      Modified    UI 수정
 2025.01.23  이유민      Modified    무한 스크롤 추가
+2025.01.31  이유민      Modified    이미지 경로 수정
 */
 const id = window.location.pathname.split("/").pop();
 
@@ -116,10 +117,10 @@ async function readMarketInfo(id) {
 
     document.getElementById(
       "marketProfileImageBig"
-    ).src = `${window.API_SERVER_URL}/${profile.data.url}`;
+    ).src = `${window.IMAGE_SERVER_URL}${profile.data.url}`;
     document.getElementById(
       "marketProfileImageSmall"
-    ).src = `${window.API_SERVER_URL}/${profile.data.url}`;
+    ).src = `${window.IMAGE_SERVER_URL}${profile.data.url}`;
 
     profileImageId = profile.data.id;
 
@@ -178,7 +179,7 @@ async function readMarketProducts(id, searchValue, sortValue, page) {
       containerHTML += `
         <a href="/eco-market/${id}/${products.data.data[i].id}">
           <div class="card" style="width: 18rem">
-            <img src="${window.API_SERVER_URL}/${
+            <img src="${window.IMAGE_SERVER_URL}${
         products.data.data[i].product_image_url[0]
       }" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
             <div class="card-body">

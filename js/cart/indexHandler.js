@@ -10,6 +10,7 @@ Date        Author      Status      Description
 2025.01.17  이유민      Modified    결제 시 사용될 세션 코드 추가
 2025.01.17  이유민      Modified    문구 추가
 2025.01.17  이유민      Modified    장바구니 결제 시 장바구니 아이템 삭제 추가
+2025.01.31  이유민      Modified    이미지 경로 수정
 */
 const cartContainer = document.getElementById("cartContainer");
 const totalPriceContainer = document.getElementById("totalPriceContainer");
@@ -64,7 +65,7 @@ async function readMyCart() {
         items.data[i].product_id
       }" 
         style="cursor: pointer">
-            <img src="${window.API_SERVER_URL}/${
+            <img src="${window.IMAGE_SERVER_URL}${
         items.data[i].product_image_url[0]
       }" class="cart-item-image" alt="상품 이미지">
             <div class="cart-item-details">

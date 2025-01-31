@@ -12,6 +12,7 @@ Date        Author      Status      Description
 2025.01.17  이유민      Modified    장바구니 결제 시 장바구니 아이템 삭제 추가
 2025.01.18  이유민      Modified    name 및 phone 추가
 2025.01.19  이유민      Modified    쇼핑 계속하기 연동
+2025.01.31  이유민      Modified    이미지 경로 수정
 */
 window.addEventListener("load", () => {
   if (!localStorage.getItem("access_token")) {
@@ -66,7 +67,7 @@ async function confirm() {
         <div class="card mb-3" style="width: 738px; height: 245px">
           <div class="row g-0" style="height: 100%">
             <div class="col-md-4" style="height: 100%">
-              <img src="${window.API_SERVER_URL}/${
+              <img src="${window.IMAGE_SERVER_URL}${
         session.data.product_info[i].product_image
       }" class="img-fluid rounded-start" alt="..." style="width: 100%; height: 100%; object-fit: cover" />
             </div>

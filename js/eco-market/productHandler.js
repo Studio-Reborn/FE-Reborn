@@ -24,6 +24,7 @@ Date        Author      Status      Description
 2025.01.16  이유민      Modified    장바구니 API 연동
 2025.01.17  이유민      Modified    결제 코드 리팩토링
 2025.01.19  이유민      Modified    좋아요, 장바구니 및 결제 코드 리팩토링
+2025.01.31  이유민      Modified    이미지 경로 수정
 */
 const likeImg = document.getElementById("likeImg");
 const likesNumber = document.getElementById("likesNumber");
@@ -64,12 +65,12 @@ const caretRightBtn = document.getElementById("caretRightBtn");
 
 caretLeftBtn.addEventListener("click", () => {
   currentIndex = (currentIndex - 1 + imageList.length) % imageList.length;
-  mainImage.src = `${window.API_SERVER_URL}/${imageList[currentIndex]}`;
+  mainImage.src = `${window.IMAGE_SERVER_URL}${imageList[currentIndex]}`;
 });
 
 caretRightBtn.addEventListener("click", () => {
   currentIndex = (currentIndex + 1) % imageList.length;
-  mainImage.src = `${window.API_SERVER_URL}/${imageList[currentIndex]}`;
+  mainImage.src = `${window.IMAGE_SERVER_URL}${imageList[currentIndex]}`;
 });
 
 async function readProductInfo(market_id, id) {
@@ -86,7 +87,7 @@ async function readProductInfo(market_id, id) {
 
     document.getElementById(
       "marketProfile"
-    ).src = `${window.API_SERVER_URL}/${info.data.market_profile_url}`;
+    ).src = `${window.IMAGE_SERVER_URL}${info.data.market_profile_url}`;
 
     document.getElementById("marketProductName").innerHTML = info.data.name;
     document.getElementById("marketProductPrice").innerHTML = `${Number(
@@ -97,7 +98,7 @@ async function readProductInfo(market_id, id) {
     imageList = info.data.product_image_url;
     document.getElementById(
       "marketProductImages"
-    ).src = `${window.API_SERVER_URL}/${imageList[0]}`;
+    ).src = `${window.IMAGE_SERVER_URL}${imageList[0]}`;
 
     // 객체에 값 저장
     productData.name = info.data.name;
@@ -216,7 +217,7 @@ async function productReview(id) {
     <div style="display: flex; align-items: center; justify-content: space-between;">
       <!-- 프로필 및 닉네임 -->
       <div style="display: flex; align-items: center;">
-        <img src="${window.API_SERVER_URL}/${
+        <img src="${window.IMAGE_SERVER_URL}${
           reviews.data[i].user_profile_url
         }" alt="프로필 이미지" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
         <div>

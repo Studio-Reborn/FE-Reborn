@@ -18,6 +18,7 @@ Date        Author      Status      Description
 2024.12.04  이유민      Modified    API 경로 수정
 2024.12.17  이유민      Modified    코드 리팩토링
 2025.01.22  이유민      Modified    무한 스크롤 추가
+2025.01.31  이유민      Modified    이미지 경로 수정
 */
 let currentPage = 1; // 현재 페이지
 let isLoading = false; // 데이터 로드 상태
@@ -87,7 +88,7 @@ async function rebornRemake(page) {
       contentHTML += `
         <a href="/reborn-remake/${products.data.products[i].id}">
           <div class="card" style="width: 18rem">
-              <img src="${window.API_SERVER_URL}/${
+              <img src="${window.IMAGE_SERVER_URL}${
         products.data.products[i].product_image_url[0]
       }" class="card-img-top" alt="..." style="height: 214px; object-fit: cover" />
               <div class="card-body">

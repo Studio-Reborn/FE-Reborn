@@ -13,6 +13,7 @@ Date        Author      Status      Description
 2025.01.20  이유민      Modified    코드 리팩토링
 2025.01.20  이유민      Modified    반려 관련 기능 및 UI 추가
 2025.01.21  이유민      Modified    반려 이유 작성 추가
+2025.01.31  이유민      Modified    이미지 경로 수정
 */
 const pathSegments = window.location.pathname.split("/")[2];
 let searchValue = undefined;
@@ -83,7 +84,7 @@ async function adminManage(path, searchValue, sortValue) {
         <div class="card mb-3" style="width: 738px; height: 191px; cursor: default">
             <div class="row g-0" style="height: 100%">
                 <div class="col-md-4" style="height: 100%">
-                    <img src="${window.API_SERVER_URL}/${
+                    <img src="${window.IMAGE_SERVER_URL}${
         response.data[i].market_profile_image
       }" class="img-fluid rounded-start" alt="프로필" style="height: 100%; width: 100%; object-fit: cover" />
                 </div>
@@ -146,12 +147,16 @@ async function adminManage(path, searchValue, sortValue) {
     }
   } else if (path === "delete-eco-market") {
     // 에코마켓 삭제
+    if (response.data.length === 0) {
+      cardDataHTML += `<span style="font-family: LINESeed-RG; font-size: 20px; color: #6c757d;">에코 마켓 삭제 요청이 없습니다.</span>`;
+    }
+
     for (let i = 0; i < response.data.length; i++) {
       cardDataHTML += `
             <div class="card mb-3" style="width: 738px; height: 191px; cursor: default">
                 <div class="row g-0" style="height: 100%">
                     <div class="col-md-4" style="height: 100%">
-                        <img src="${window.API_SERVER_URL}/${
+                        <img src="${window.IMAGE_SERVER_URL}${
         response.data[i].market_profile_image
       }" class="img-fluid rounded-start" alt="프로필" style="height: 100%; width: 100%; object-fit: cover" />
                     </div>

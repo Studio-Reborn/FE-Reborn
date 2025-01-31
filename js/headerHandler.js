@@ -21,6 +21,7 @@ Date        Author      Status      Description
 2024.12.30  이유민      Modified    예외 처리 코드 수정
 2025.01.16  이유민      Modified    장바구니 UI 추가
 2025.01.18  이유민      Modified    내 마켓 추가
+2025.01.31  이유민      Modified    이미지 경로 수정
 */
 const currentChatId = window.location.pathname.split("/").pop();
 const newChats = JSON.parse(localStorage.getItem("newChats")) || [];
@@ -89,7 +90,7 @@ async function loginCheckInHeader() {
               <p style="font-family: LINESeed-BD; font-size: 19px; margin: 0; line-height: 45px;">${nickname}</p>
               <div style="position: relative; display: inline-block;">
                 <img
-                  src="${window.API_SERVER_URL}/${profileImageUrl}"
+                  src="${window.IMAGE_SERVER_URL}${profileImageUrl}"
                   style="width: 45px; height: 45px; border-radius: 50%; margin-left: 10px;"
                 />
                 <span
