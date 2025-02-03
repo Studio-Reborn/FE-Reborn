@@ -13,6 +13,7 @@ Date        Author      Status      Description
 2025.01.20  이유민      Modified    반려 관련 기능 및 UI 추가
 2025.01.21  이유민      Modified    반려 이유 작성 추가
 2025.01.22  이유민      Modified    예외 처리 코드 수정
+2025.02.03  이유민      Modified    이미지 경로 수정
 */
 const id = window.location.pathname.split("/").pop();
 const marketTitle = document.getElementById("marketTitle");
@@ -49,7 +50,7 @@ async function myMarket(id) {
       "data-profile-id",
       `${info.data[0].market_profile_id}`
     );
-    marketProfile.src = `${window.API_SERVER_URL}/${info.data[0].market_profile_url}`;
+    marketProfile.src = `${window.IMAGE_SERVER_URL}${info.data[0].market_profile_url}`;
     marketName.value = info.data[0].market_name;
     marketDescription.textContent = info.data[0].market_detail;
 
@@ -278,7 +279,7 @@ async function uploadFile() {
         }
       );
 
-      marketProfile.src = `${window.API_SERVER_URL}/${response.data.url}`;
+      marketProfile.src = `${window.IMAGE_SERVER_URL}${response.data.url}`;
       marketProfile.setAttribute("data-profile-id", `${response.data.id}`);
 
       alert(

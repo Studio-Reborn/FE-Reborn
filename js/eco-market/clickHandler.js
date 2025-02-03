@@ -21,6 +21,7 @@ Date        Author      Status      Description
 2025.01.21  이유민      Modified    UI 수정
 2025.01.23  이유민      Modified    무한 스크롤 추가
 2025.01.31  이유민      Modified    이미지 경로 수정
+2025.02.03  이유민      Modified    이미지 경로 수정
 */
 const id = window.location.pathname.split("/").pop();
 
@@ -309,7 +310,7 @@ async function marketReviewAll(id) {
       <div id="productProfile" style="display: flex; align-items: center;" data-location-link="${id}/${
           reviews.data[i].product_id
         }">
-        <img src="${window.API_SERVER_URL}/${
+        <img src="${window.IMAGE_SERVER_URL}${
           reviews.data[i].product_image_url[0]
         }" alt="프로필 이미지" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
         <div>

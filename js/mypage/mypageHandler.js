@@ -26,6 +26,7 @@ Date        Author      Status      Description
 2025.01.18  이유민      Modified    리본 리메이크 후기 API 연동
 2025.01.20  이유민      Modified    오류 수정
 2025.01.31  이유민      Modified    이미지 경로 수정
+2025.02.03  이유민      Modified    이미지 경로 수정
 */
 const userNickname = document.getElementById("userNickname");
 const userProfileImage = document.getElementById("userProfileImage");
@@ -421,7 +422,7 @@ async function buyEcoMarket() {
       <div class="card mb-3" style="width: 738px; height: 191px">
         <div class="row g-0" style="height: 100%">
           <div class="col-md-4" style="height: 100%">
-            <img src="${window.API_SERVER_URL}/${
+            <img src="${window.IMAGE_SERVER_URL}${
       ecoMarketPurchase.data[i].product_image[0]
     }" class="img-fluid rounded-start" alt="상품이미지" style="height: 100%; width: 100%; object-fit: cover;" />
           </div>

@@ -7,6 +7,7 @@ History
 Date        Author      Status      Description
 2025.01.19  이유민      Created     
 2025.01.19  이유민      Modified    아이디 찾기 및 비밀번호 찾기 API 연동
+2025.02.03  이유민      Modified    이미지 경로 수정
 */
 const path = window.location.pathname.split("/").pop();
 
@@ -85,7 +86,7 @@ async function findBtnClick() {
       inputContainer.innerHTML = `
     <div style="padding: 20px; text-align: center;">
         <div>
-            <img id="profileImage" src="${window.API_SERVER_URL}/${user.data.profile_image_url}" alt="프로필 이미지" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;" />
+            <img id="profileImage" src="${window.IMAGE_SERVER_URL}${user.data.profile_image_url}" alt="프로필 이미지" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;" />
         </div>
 
         <!-- 이메일 -->
