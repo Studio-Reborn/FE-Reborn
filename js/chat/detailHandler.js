@@ -9,6 +9,7 @@ Date        Author      Status      Description
 2024.12.05  이유민      Modified    채팅 API 연동
 2024.12.17  이유민      Modified    판매자 확인 추가
 2024.12.30  이유민      Modified    중고거래 판매 완료 API 연동
+2025.02.03  이유민      Modified    서버 아이디 수정
 */
 const chat_id = window.location.pathname.split("/").pop();
 let message = "";
@@ -50,7 +51,7 @@ socket.on(`${chat_id}`, async (data) => {
             ${data.content}
         </p>
     `;
-  } else if (data.sender_id === 5) {
+  } else if (data.sender_id === 1) {
     message += `
         <div class="server">
           ${data.content}
@@ -133,7 +134,7 @@ async function loadPreviousMessages(chat_id) {
                     ${response.data.messages[i].messages_content}
                 </p>
             `;
-      } else if (response.data.messages[i].messages_sender_id === 5) {
+      } else if (response.data.messages[i].messages_sender_id === 1) {
         previousMessage += `
                 <div class="server">
                   ${response.data.messages[i].messages_content}
@@ -190,7 +191,7 @@ function renderButtons(response, user) {
       // 메시지 전송
       socket.emit("message", {
         chat_id,
-        sender_id: 5, // 리본 공식 계정
+        sender_id: 1, // 리본 공식 계정
         content: `${response.data.chat.seller_nickname} 님이 ${response.data.chat.buyer_nickname} 님에게 물품을 판매합니다.`,
       });
     };
@@ -217,7 +218,7 @@ function renderButtons(response, user) {
       // 메시지 전송
       socket.emit("message", {
         chat_id,
-        sender_id: 5, // 리본 공식 계정
+        sender_id: 1, // 리본 공식 계정
         content: `거래를 취소합니다.`,
       });
     };
@@ -255,7 +256,7 @@ function renderButtons(response, user) {
       // 메시지 전송
       socket.emit("message", {
         chat_id,
-        sender_id: 5, // 리본 공식 계정
+        sender_id: 1, // 리본 공식 계정
         content: `거래를 종료합니다.`,
       });
     };
